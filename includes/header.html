@@ -1,0 +1,53 @@
+<!-- TOP BANNER -->
+<div class="top-banner">
+  <div class="top-banner-left">
+    <span class="top-banner-text">최고의 렌트카 서비스, 해태렌트카에서</span>
+  </div>
+  <div class="top-banner-right">
+    <a href="#" class="top-banner-login" id="loginBtn">로그인 / 회원가입</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="logo">
+    <svg class="logo-icon" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 24L12 6L22 20L32 6L42 24" stroke="#E53935" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="46" cy="8" r="3.5" fill="#E53935"/>
+    </svg>
+    HAETAE
+  </a>
+  <nav class="header-nav">
+    <a href="about.html" data-page="about">회사소개</a>
+    <a href="monthly.html" data-page="monthly">월렌트</a>
+    <a href="longterm.html" data-page="longterm">저신용 장기렌트</a>
+    <a href="used.html" data-page="used">중고차 장기렌트</a>
+  </nav>
+  <button class="btn-header-quote" id="headerQuoteBtn">견적문의</button>
+  <button class="hamburger" id="hamburgerBtn" aria-label="메뉴">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <a href="about.html" class="mobile-nav-link">회사소개</a>
+  <a href="monthly.html" class="mobile-nav-link">월렌트</a>
+  <a href="longterm.html" class="mobile-nav-link">저신용 장기렌트</a>
+  <a href="used.html" class="mobile-nav-link">중고차 장기렌트</a>
+  <button class="btn-mobile-quote mobile-nav-link" id="mobileQuoteBtn">견적문의</button>
+</nav>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" id="loginClose">&times;</button>
+    <h3>로그인</h3>
+    <p>해태렌트카 회원 서비스에 로그인하세요.</p>
+    <input class="modal-input" type="text" placeholder="아이디" id="modalId">
+    <input class="modal-input" type="password" placeholder="비밀번호" id="modalPw">
+    <button class="modal-btn" id="modalLoginBtn">로그인</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
