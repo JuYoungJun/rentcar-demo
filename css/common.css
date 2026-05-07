@@ -200,14 +200,14 @@ input, select, textarea { font-family: inherit; }
   position: relative;
   overflow: hidden;
   aspect-ratio: 1204 / 305;
-  max-height: 360px;
   background: #f2f2f2;
 }
 .hero-slide {
   position: absolute;
   inset: 0;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 0.9s ease;
 }
