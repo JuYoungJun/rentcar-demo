@@ -137,6 +137,10 @@ window.addEventListener('load', () => {
   const engine = new Top5RankingEngine();
   const top5 = engine.getTopN(carDatabase);
   document.getElementById('bestCarName').textContent = top5[0].name;
+  if (top5[0].image) {
+    const bestImg = document.querySelector('.best-car-img .img-placeholder');
+    if (bestImg) bestImg.style.backgroundImage = `url('${carImageUrl(top5[0].image)}')`;
+  }
   const list = document.getElementById('top5List');
   top5.forEach((car, i) => {
     const li = document.createElement('li');

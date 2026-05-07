@@ -95,19 +95,24 @@
 
   /* ── Car Database ── */
   window.carDatabase = [
-    { id:1,  name:'K5 DL3',              tags:['무심사','무보증'],            price:650000,  badge:'1개월',  category:['monthly','longterm'],         inquiries:42, views:320, contracts:18 },
-    { id:2,  name:'더 뉴 카니발',         tags:['19년식','무심사','무보증'],   price:750000,  badge:'1개월',  category:['monthly','longterm'],         inquiries:38, views:280, contracts:15 },
-    { id:3,  name:'벤츠 E200 아방가르드', tags:['24년식','무심사','무보증'],   price:2200000, badge:'1개월',  category:['monthly','longterm','used'],  inquiries:55, views:510, contracts:22 },
-    { id:4,  name:'제네시스 G80',         tags:['24년식','무심사'],           price:1800000, badge:'1개월',  category:['monthly'],                    inquiries:67, views:620, contracts:30 },
-    { id:5,  name:'벤츠 E200',           tags:['23년식','무보증'],           price:1900000, badge:'1개월',  category:['monthly'],                    inquiries:50, views:450, contracts:25 },
-    { id:6,  name:'BMW 320i',            tags:['23년식','무심사'],           price:1500000, badge:'1개월',  category:['monthly'],                    inquiries:45, views:400, contracts:20 },
-    { id:7,  name:'볼보 S60',            tags:['22년식','무보증'],           price:1200000, badge:'1개월',  category:['monthly','longterm'],          inquiries:30, views:250, contracts:12 },
-    { id:8,  name:'아반떼 CN7',           tags:['무심사','무보증'],           price:450000,  badge:'48개월', category:['longterm'],                   inquiries:35, views:300, contracts:14 },
-    { id:9,  name:'쏘나타 DN8',           tags:['23년식','무심사'],           price:550000,  badge:'48개월', category:['longterm','used'],             inquiries:28, views:220, contracts:10 },
-    { id:10, name:'그랜저 IG',            tags:['22년식','무보증'],           price:850000,  badge:'48개월', category:['monthly','longterm','used'],   inquiries:33, views:270, contracts:13 },
-    { id:11, name:'K5 DL3',              tags:['무심사','무보증'],           price:650000,  badge:'48개월', category:['longterm','used'],             inquiries:40, views:310, contracts:17 },
-    { id:12, name:'더 뉴 카니발',         tags:['19년식','무심사','무보증'],  price:750000,  badge:'48개월', category:['longterm','used'],             inquiries:36, views:275, contracts:14 },
+    { id:1,  name:'K5 DL3',              tags:['무심사','무보증'],            price:650000,  badge:'1개월',  category:['monthly','longterm'],         inquiries:42, views:320, contracts:18, image:'K5 DL3.png' },
+    { id:2,  name:'더 뉴 카니발',         tags:['19년식','무심사','무보증'],   price:750000,  badge:'1개월',  category:['monthly','longterm'],         inquiries:38, views:280, contracts:15, image:'더 뉴 카니발.png' },
+    { id:3,  name:'벤츠 E200 아방가르드', tags:['24년식','무심사','무보증'],   price:2200000, badge:'1개월',  category:['monthly','longterm','used'],  inquiries:55, views:510, contracts:22, image:'벤츠 E200 아방가르드.png' },
+    { id:4,  name:'제네시스 G80',         tags:['24년식','무심사'],           price:1800000, badge:'1개월',  category:['monthly'],                    inquiries:67, views:620, contracts:30, image:'제네시스_G80.png' },
+    { id:5,  name:'벤츠 E200',           tags:['23년식','무보증'],           price:1900000, badge:'1개월',  category:['monthly'],                    inquiries:50, views:450, contracts:25, image:'벤츠 E200 아방가르드.png' },
+    { id:6,  name:'BMW 320i',            tags:['23년식','무심사'],           price:1500000, badge:'1개월',  category:['monthly'],                    inquiries:45, views:400, contracts:20, image:'제네시스_G80.png' },
+    { id:7,  name:'볼보 S60',            tags:['22년식','무보증'],           price:1200000, badge:'1개월',  category:['monthly','longterm'],          inquiries:30, views:250, contracts:12, image:'제네시스_G80.png' },
+    { id:8,  name:'아반떼 CN7',           tags:['무심사','무보증'],           price:450000,  badge:'48개월', category:['longterm'],                   inquiries:35, views:300, contracts:14, image:'K5 DL3.png' },
+    { id:9,  name:'쏘나타 DN8',           tags:['23년식','무심사'],           price:550000,  badge:'48개월', category:['longterm','used'],             inquiries:28, views:220, contracts:10, image:'K5 DL3.png' },
+    { id:10, name:'그랜저 IG',            tags:['22년식','무보증'],           price:850000,  badge:'48개월', category:['monthly','longterm','used'],   inquiries:33, views:270, contracts:13, image:'제네시스_G80.png' },
+    { id:11, name:'K5 DL3',              tags:['무심사','무보증'],           price:650000,  badge:'48개월', category:['longterm','used'],             inquiries:40, views:310, contracts:17, image:'K5 DL3.png' },
+    { id:12, name:'더 뉴 카니발',         tags:['19년식','무심사','무보증'],  price:750000,  badge:'48개월', category:['longterm','used'],             inquiries:36, views:275, contracts:14, image:'더 뉴 카니발.png' },
   ];
+
+  /* ── Image URL helper ── */
+  window.carImageUrl = function(file) {
+    return 'images/' + encodeURI(file).replace(/'/g, '%27');
+  };
 
   /* ── Render car cards ── */
   window.renderCarCards = function(containerId, cars, badgeOverride, pageCategory) {
@@ -118,7 +123,7 @@
     temp.innerHTML = cars.map(car => `
       <div class="card" data-car="${car.name}" data-id="${car.id}" data-price="${car.price.toLocaleString()}">
         <div class="card-thumb">
-          <div class="card-thumb-inner"></div>
+          <div class="card-thumb-inner"${car.image ? ` style="background-image:url('${carImageUrl(car.image)}')"` : ''}></div>
           ${(badgeOverride || car.badge) ? `<div class="card-badge">${badgeOverride || car.badge}</div>` : ''}
         </div>
         <div class="card-name">${car.name}</div>
