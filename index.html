@@ -14,7 +14,10 @@
 <div id="header-include"></div>
 
 <!-- HERO -->
-<div class="hero"></div>
+<div class="hero" id="heroSlider">
+  <div class="hero-slide active" style="background-image:url('images/banner_1.png')"></div>
+  <div class="hero-slide" style="background-image:url('images/banner_2.png')"></div>
+</div>
 
 <!-- MAIN -->
 <div class="main-content">
@@ -119,6 +122,17 @@
 <script src="js/common.js" defer></script>
 <script>
 window.addEventListener('load', () => {
+  // HERO slider (auto-rotate, no UI)
+  const heroSlides = document.querySelectorAll('#heroSlider .hero-slide');
+  if (heroSlides.length > 1) {
+    let heroIdx = 0;
+    setInterval(() => {
+      heroSlides[heroIdx].classList.remove('active');
+      heroIdx = (heroIdx + 1) % heroSlides.length;
+      heroSlides[heroIdx].classList.add('active');
+    }, 4500);
+  }
+
   // TOP 5
   const engine = new Top5RankingEngine();
   const top5 = engine.getTopN(carDatabase);
