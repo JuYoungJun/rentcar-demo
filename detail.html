@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>차량 상세 - 해태렌트카</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/pages.css">
+<style>
+.detail-wrap{max-width:975px;margin:0 auto;padding:0}
+.breadcrumb{padding:14px 20px;font-size:13px;color:var(--text-light)}
+.breadcrumb a{color:var(--text-light);transition:color .2s}
+.breadcrumb a:hover{color:var(--red)}
+.breadcrumb span{margin:0 6px}
+.detail-image{width:100%;display:flex;align-items:center;justify-content:center;padding:10px 20px 16px;background:var(--white)}
+.detail-image .img-placeholder{width:55%;aspect-ratio:16/9;background:linear-gradient(145deg,#d5d5d5,#b8b8b8);border-radius:8px}
+.detail-info{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:0 20px 20px}
+.detail-badge{display:inline-block;background:var(--red);color:var(--white);font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:6px}
+.detail-car-name{font-size:20px;font-weight:900;color:var(--dark);margin-bottom:2px}
+.detail-year{font-size:12px;color:var(--text-light)}
+.detail-info-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.detail-price{font-size:20px;font-weight:900;color:var(--dark)}
+.btn-inquire{background:var(--red);color:var(--white);border:none;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap}
+.btn-inquire:hover{background:var(--red-hover)}
+.detail-banners{display:flex;flex-direction:column}
+.detail-banners img{width:100%;display:block}
+.detail-banners .clickable{cursor:pointer}
+@media(max-width:800px){
+  .detail-wrap{max-width:100%}
+}
+@media(max-width:480px){
+  .breadcrumb{padding:10px 16px;font-size:12px}
+  .detail-image{padding:10px 16px 12px}
+  .detail-image .img-placeholder{width:70%}
+  .detail-info{padding:0 16px 16px;flex-direction:column;align-items:flex-start}
+  .detail-info-right{width:100%;justify-content:space-between}
+}
+</style>
+</head>
+<body data-page="monthly">
+<div id="header-include"></div>
+
+<div class="detail-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">홈</a><span>&gt;</span>
+    <a href="monthly.html" id="bcCategory">월렌트</a><span>&gt;</span>
+    <span id="bcCarName">2021 K5 DL3</span>
+  </div>
+
+  <div class="detail-image"><div class="img-placeholder"></div></div>
+
+  <div class="detail-info">
+    <div class="detail-info-left">
+      <div class="detail-badge" id="detailBadge">1개월</div>
+      <div class="detail-car-name" id="detailName">K5 DL3</div>
+      <div class="detail-year" id="detailYear">2023년식</div>
+    </div>
+    <div class="detail-info-right">
+      <div class="detail-price" id="detailPrice">650,000 원</div>
+      <button class="btn-inquire" id="btnInquire">문의하기</button>
+    </div>
+  </div>
+
+  <div class="detail-banners">
+    <img src="images/banner-red.png" alt="모든 렌트카 무심사 무보증">
+    <img src="images/banner-dark.png" alt="신용이 낮아도 지금 바로 시작하는 장기렌트" class="clickable" id="bannerCta">
+    <img src="images/banner-service.png" alt="해태렌트카에서는 전부 가능합니다">
+  </div>
+</div>
+
+<div id="footer-include"></div>
+
+<script src="js/common.js" defer></script>
+<script>
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const carId = parseInt(params.get('id')) || 1;
+  const fromPage = params.get('from') || 'monthly';
+  const car = carDatabase.find(c => c.id === carId) || carDatabase[0];
+
+  if (car) {
+    document.getElementById('bcCarName').textContent = car.name;
+    document.getElementById('detailName').textContent = car.name;
+    document.getElementById('detailBadge').textContent = car.badge || '1개월';
+    document.getElementById('detailPrice').textContent = car.price.toLocaleString() + ' 원';
+    document.getElementById('detailYear').textContent = (car.year || 2023) + '년식';
+    document.title = car.name + ' - 해태렌트카';
+
+    const bcCat = document.getElementById('bcCategory');
+    if (fromPage === 'longterm') { bcCat.href = 'longterm.html'; bcCat.textContent = '저신용 장기렌트'; document.body.dataset.page = 'longterm'; }
+    else if (fromPage === 'used') { bcCat.href = 'used.html'; bcCat.textContent = '중고차 장기렌트'; document.body.dataset.page = 'used'; }
+    else { bcCat.href = 'monthly.html'; bcCat.textContent = '월렌트'; document.body.dataset.page = 'monthly'; }
+  }
+
+  document.getElementById('btnInquire').onclick = () => window.location.href = 'index.html#contact';
+  document.getElementById('bannerCta').onclick = () => window.location.href = 'index.html#contact';
+});
+</script>
+</body>
+</html>

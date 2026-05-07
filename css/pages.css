@@ -1,0 +1,382 @@
+/* ══════════════════════════════
+   SUB PAGE STYLES
+   ══════════════════════════════ */
+
+/* Active nav link */
+.header-nav a.active {
+  color: var(--red);
+  font-weight: 700;
+}
+.header-nav a.active::after {
+  width: 100%;
+}
+
+/* Page Title */
+.page-title {
+  text-align: center;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 900;
+  color: var(--dark);
+  padding: 48px 0 32px;
+}
+
+/* ══════════════════════════════
+   ABOUT PAGE
+   ══════════════════════════════ */
+.about-section {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 60px var(--side-pad) 80px;
+  text-align: center;
+}
+.about-logo { margin-bottom: 40px; }
+.about-logo svg { width: 80px; height: 52px; }
+.about-logo-text {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: var(--dark);
+  margin-top: 10px;
+}
+.about-heading {
+  font-size: clamp(22px, 3.5vw, 28px);
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+.about-subheading {
+  font-size: clamp(15px, 2vw, 17px);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+.about-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ══════════════════════════════
+   MAP SECTION
+   ══════════════════════════════ */
+.map-section {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--side-pad) 80px;
+}
+.map-inner {
+  border-top: 1px solid var(--border);
+  padding-top: 48px;
+}
+.map-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 24px;
+}
+.map-container {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+}
+.map-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #aaa;
+  font-size: 14px;
+}
+.map-info {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.map-info-item {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+.map-info-item strong {
+  color: var(--dark);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.map-info-item span {
+  color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+  .map-container { height: 280px; }
+  .map-info { flex-direction: column; gap: 12px; }
+}
+@media (max-width: 480px) {
+  .map-container { height: 220px; }
+}
+
+/* ══════════════════════════════
+   CAR LIST PAGES (월렌트, 저신용, 중고차)
+   ══════════════════════════════ */
+.car-list-page {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--side-pad) 80px;
+}
+
+/* Sort bar */
+.sort-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text);
+  background: none;
+  border: 1px solid transparent;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.sort-btn:hover {
+  background: var(--bg-light);
+  border-color: var(--border);
+}
+.sort-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sort-icon span {
+  display: block;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+}
+.sort-icon span:nth-child(1) { width: 16px; }
+.sort-icon span:nth-child(2) { width: 16px; }
+.sort-icon span:nth-child(3) { width: 16px; }
+
+.sort-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 50;
+  min-width: 140px;
+  padding: 6px 0;
+}
+.sort-dropdown.open { display: block; }
+.sort-option {
+  display: block;
+  width: 100%;
+  padding: 10px 18px;
+  font-size: 13px;
+  color: var(--text);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.sort-option:hover { background: var(--bg-light); }
+.sort-option.active { color: var(--red); font-weight: 600; }
+
+/* Car grid for list pages */
+.car-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+@media (max-width: 768px) {
+  .car-list-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+@media (max-width: 480px) {
+  .car-list-grid { grid-template-columns: 1fr; gap: 20px; }
+  .page-title { padding: 32px 0 24px; }
+}
+
+/* ══════════════════════════════
+   ABOUT — STATS
+   ══════════════════════════════ */
+.about-stats {
+  background: var(--bg-light);
+  padding: 48px var(--side-pad);
+}
+.about-stats-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+.stat-number {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-size: 14px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* ══════════════════════════════
+   ABOUT — VALUES
+   ══════════════════════════════ */
+.about-values {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 56px var(--side-pad);
+}
+.about-values-title {
+  text-align: center;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 40px;
+}
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.value-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.value-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+}
+.value-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: var(--red);
+}
+.value-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.value-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.value-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════
+   ABOUT — PROCESS
+   ══════════════════════════════ */
+.about-process {
+  background: var(--dark);
+  padding: 56px var(--side-pad);
+}
+.about-process-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+.about-process-title {
+  text-align: center;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 40px;
+}
+.process-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.process-step {
+  text-align: center;
+  flex: 1;
+  max-width: 200px;
+}
+.process-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+.process-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.process-step-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.7;
+}
+.process-arrow {
+  font-size: 20px;
+  color: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+/* ABOUT RESPONSIVE */
+@media (max-width: 768px) {
+  .about-stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .values-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  .process-steps { flex-wrap: wrap; gap: 24px; }
+  .process-arrow { display: none; }
+  .about-section { padding: 40px 16px 60px; }
+}
+@media (max-width: 480px) {
+  .about-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .about-stats { padding: 32px 16px; }
+  .about-values { padding: 40px 16px; }
+  .about-process { padding: 40px 16px; }
+  .about-section { padding: 32px 16px 48px; }
+  .about-heading { font-size: 20px; }
+  .about-logo svg { width: 60px; height: 40px; }
+  .about-logo-text { font-size: 20px; }
+  .process-step { max-width: none; width: 45%; }
+  .map-section { padding: 0 16px 60px; }
+  .car-list-page { padding: 0 16px 60px; }
+}

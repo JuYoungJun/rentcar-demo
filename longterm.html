@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>저신용 장기렌트 - 해태렌트카</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="longterm">
+<div id="header-include"></div>
+<div class="car-list-page">
+  <h1 class="page-title">저신용 장기렌트</h1>
+  <div class="sort-bar">
+    <button class="sort-btn" id="sortBtn">
+      <span>추천순</span>
+      <div class="sort-icon"><span></span><span></span><span></span></div>
+    </button>
+    <div class="sort-dropdown" id="sortDropdown">
+      <button class="sort-option active" data-sort="recommend">추천순</button>
+      <button class="sort-option" data-sort="price-low">가격 낮은 순</button>
+      <button class="sort-option" data-sort="price-high">가격 높은 순</button>
+    </div>
+  </div>
+  <div class="car-list-grid" id="carListGrid"></div>
+</div>
+<div id="footer-include"></div>
+<script src="js/common.js" defer></script>
+<script>
+window.addEventListener('load', () => {
+
+    const cars = carDatabase.filter(c => c.category.includes('longterm'));
+    const fullList = [...cars, ...cars, ...cars].slice(0, 12);
+    renderCarCards('carListGrid', fullList, '48개월', 'longterm');
+    initSortBar('carListGrid', fullList, '48개월', 'longterm');
+
+});
+</script>
+</body>
+</html>
