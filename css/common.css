@@ -91,8 +91,6 @@ input, select, textarea { font-family: inherit; }
   flex-shrink: 0;
 }
 .logo-img {
-  height: 48px;
-  width: auto;
   display: block;
 }
 .header-nav {
