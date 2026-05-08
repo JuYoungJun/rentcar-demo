@@ -75,7 +75,7 @@
     'genesis-g80.webp',
   ];
   const AVAILABLE_BANNERS = [
-    'banner-1.webp', 'banner-2.webp', 'banner-3.webp', 'banner-4.webp', 'banner-5.webp',
+    'banner_1.png', 'banner_2.png', 'banner_3.png', 'banner_4.png', 'banner_5.png',
   ];
 
   /* ── STATE ───────────────────────────────────────── */
