@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사업자정보확인 - 해태렌트카</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="legal">
+
+<div id="header-include"></div>
+
+<main class="legal-doc">
+  <h1 class="legal-title">사업자정보확인</h1>
+  <span class="legal-effective">최종 갱신 2026년 5월 8일</span>
+
+  <div class="legal-intro">
+    아래 정보는 「전자상거래 등에서의 소비자보호에 관한 법률」 및 「부가가치세법」에 따라 공개되는 사업자 정보입니다.
+  </div>
+
+  <section class="legal-section">
+    <h2>1. 사업자 기본 정보</h2>
+    <table class="legal-table">
+      <tr><th>상호</th><td>해태렌트카</td></tr>
+      <tr><th>대표자</th><td>홍길동</td></tr>
+      <tr><th>사업자등록번호</th><td>000-00-00000</td></tr>
+      <tr><th>통신판매업 신고번호</th><td>제2026-광주광산-0000호</td></tr>
+      <tr><th>업태 / 종목</th><td>서비스업 / 자동차 임대업</td></tr>
+    </table>
+  </section>
+
+  <section class="legal-section">
+    <h2>2. 연락처 및 소재지</h2>
+    <table class="legal-table">
+      <tr><th>본사 / 지점</th><td id="bizBranchName">해태렌트카 광주지점</td></tr>
+      <tr><th>주소</th><td>광주광역시 광산구 (실제 주소 기재)</td></tr>
+      <tr><th>대표 전화</th><td id="bizPhone">0000-0000</td></tr>
+      <tr><th>이메일</th><td>contact@haetae-rentcar.example</td></tr>
+      <tr><th>운영시간</th><td id="bizHours">평일 09:00 - 18:00 / 주말 10:00 - 16:00</td></tr>
+    </table>
+  </section>
+
+  <section class="legal-section">
+    <h2>3. 개인정보 보호책임자</h2>
+    <table class="legal-table">
+      <tr><th>성명</th><td>해태렌트카 개인정보 보호책임자</td></tr>
+      <tr><th>연락처</th><td id="bizPrivacyPhone">0000-0000</td></tr>
+      <tr><th>이메일</th><td>privacy@haetae-rentcar.example</td></tr>
+    </table>
+    <p>개인정보 처리에 관한 자세한 사항은 <a href="privacy.html" style="color:#E53935;text-decoration:underline">개인정보처리방침</a>을 참고하시기 바랍니다.</p>
+  </section>
+
+  <section class="legal-section">
+    <h2>4. 호스팅 서비스 제공자</h2>
+    <table class="legal-table">
+      <tr><th>제공자</th><td>GitHub Pages (GitHub, Inc.)</td></tr>
+      <tr><th>형태</th><td>정적 웹사이트 호스팅</td></tr>
+    </table>
+  </section>
+
+  <section class="legal-section">
+    <h2>5. 사업자 정보 확인</h2>
+    <p>위 사업자정보의 진위 여부는 아래 기관 홈페이지에서 확인하실 수 있습니다.</p>
+    <ul>
+      <li>국세청 사업자등록 상태 조회: <a href="https://www.hometax.go.kr" target="_blank" rel="noopener" style="color:#E53935;text-decoration:underline">www.hometax.go.kr</a></li>
+      <li>공정거래위원회 통신판매사업자 조회: <a href="https://www.ftc.go.kr" target="_blank" rel="noopener" style="color:#E53935;text-decoration:underline">www.ftc.go.kr</a></li>
+    </ul>
+  </section>
+
+  <div class="legal-note">
+    ⚠ 본 페이지의 사업자 정보는 데모용 예시입니다. 실제 운영 시 사업자등록번호·대표자명·통신판매업 신고번호·주소 등은 등기·등록된 정확한 정보로 교체해야 합니다.
+  </div>
+</main>
+
+<div id="footer-include"></div>
+
+<script src="js/common.js" defer></script>
+<script>
+// 사이트 설정에서 연락처/지점 정보를 자동 반영
+window.addEventListener('load', () => {
+  if (typeof loadSettings !== 'function') return;
+  const s = loadSettings();
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('bizPhone', s.contactPhone);
+  set('bizPrivacyPhone', s.contactPhone);
+  set('bizBranchName', s.branchName);
+  set('bizHours', s.branchHours);
+});
+</script>
+</body>
+</html>
