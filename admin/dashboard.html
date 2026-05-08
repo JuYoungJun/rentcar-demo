@@ -41,6 +41,23 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="1.5"/><path d="M21 15l-5-5L5 19"/></svg>
         배너 관리
       </button>
+      <button class="admin-nav-item" data-tab="inquiries">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        문의 관리
+        <span class="nav-badge" id="navInquiryBadge" hidden>0</span>
+      </button>
+      <button class="admin-nav-item" data-tab="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        사이트 정보
+      </button>
+      <button class="admin-nav-item" data-tab="about">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        회사소개
+      </button>
+      <button class="admin-nav-item" data-tab="images">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        이미지 업로드
+      </button>
       <button class="admin-nav-item" data-tab="overview">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
         개요 / 통계
@@ -162,7 +179,217 @@
       </div>
     </section>
 
+    <!-- ── INQUIRIES ── -->
+    <section class="tab-panel" id="tab-inquiries" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">문의 관리</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="markAllReadBtn">모두 읽음 처리</button>
+          <button class="btn btn-danger-ghost" id="clearInquiriesBtn">전체 삭제</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="toolbar">
+          <input type="search" id="inquirySearch" placeholder="이름, 차량명, 연락처 검색...">
+          <select id="inquiryFilter">
+            <option value="">전체</option>
+            <option value="unread">미읽음</option>
+            <option value="read">읽음</option>
+          </select>
+          <span style="font-size:12px;color:var(--text-light);margin-left:auto" id="inquiryCount"></span>
+        </div>
+        <div class="panel-body" style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:40px"></th>
+                <th style="width:100px">접수일</th>
+                <th style="width:80px">유형</th>
+                <th>차량 / 카테고리</th>
+                <th>이름</th>
+                <th>연락처</th>
+                <th style="width:80px">출처</th>
+                <th style="text-align:right">동작</th>
+              </tr>
+            </thead>
+            <tbody id="inquiriesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SETTINGS ── -->
+    <section class="tab-panel" id="tab-settings" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">사이트 정보</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetSettingsBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="saveSettingsBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">상단 / 푸터</div></div>
+        <div class="panel-body">
+          <div class="field">
+            <label>상단 배너 문구</label>
+            <input type="text" id="set_topBannerText" maxlength="50">
+          </div>
+          <div class="field">
+            <label>푸터 회사 소개 (줄바꿈 가능)</label>
+            <textarea id="set_footerDesc" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label>푸터 저작권 문구</label>
+            <input type="text" id="set_footerCopyright">
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">대표 연락처 (메인 / 견적 페이지)</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>대표 전화</label>
+              <input type="text" id="set_contactPhone">
+            </div>
+            <div class="field">
+              <label>운영시간 (줄바꿈 가능)</label>
+              <textarea id="set_contactHours" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">지점 정보 (회사소개 지도 영역)</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>지점 이름</label>
+              <input type="text" id="set_branchName">
+            </div>
+            <div class="field">
+              <label>지점 운영시간</label>
+              <input type="text" id="set_branchHours">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section class="tab-panel" id="tab-about" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">회사소개 페이지</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetAboutBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="saveAboutBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">히어로 본문</div></div>
+        <div class="panel-body">
+          <div class="field">
+            <label>제목</label>
+            <input type="text" id="abt_heading">
+          </div>
+          <div class="field">
+            <label>부제목 (줄바꿈 가능)</label>
+            <textarea id="abt_subheading" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label>설명문</label>
+            <textarea id="abt_description" rows="6"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">통계 4개</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>1번 라벨</label>
+              <input type="text" id="abt_stat1Label">
+            </div>
+            <div class="field">
+              <label>1번 숫자</label>
+              <input type="number" id="abt_stat1Value" min="0">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>2번 라벨</label>
+              <input type="text" id="abt_stat2Label">
+            </div>
+            <div class="field">
+              <label>2번 숫자</label>
+              <input type="number" id="abt_stat2Value" min="0">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>3번 라벨</label>
+              <input type="text" id="abt_stat3Label">
+            </div>
+            <div class="field">
+              <label>3번 숫자</label>
+              <input type="number" id="abt_stat3Value" min="0">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>4번 라벨</label>
+              <input type="text" id="abt_stat4Label">
+            </div>
+            <div class="field">
+              <label>4번 숫자</label>
+              <input type="number" id="abt_stat4Value" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── IMAGES ── -->
+    <section class="tab-panel" id="tab-images" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">이미지 업로드</h1>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">새 이미지 업로드</div></div>
+        <div class="panel-body">
+          <div class="upload-zone">
+            <input type="file" id="imgUploadInput" accept="image/*" multiple hidden>
+            <button class="btn btn-primary" id="imgUploadBtn">파일 선택</button>
+            <span class="field-hint" style="margin-left:12px">JPEG / PNG / WebP 등 이미지 파일. 업로드된 이미지는 차량/배너에서 즉시 선택할 수 있습니다.</span>
+          </div>
+          <div class="upload-meta">
+            <span>저장 용량: <strong id="imgStorageBytes">0</strong> / ~5MB (브라우저 localStorage)</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">업로드된 이미지</div></div>
+        <div class="panel-body">
+          <div class="img-grid" id="uploadedImageGrid"></div>
+        </div>
+      </div>
+    </section>
+
   </main>
+</div>
+
+<!-- ── 문의 상세 모달 ── -->
+<div class="modal-bg" id="inquiryModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>문의 상세</h3>
+      <button class="modal-close-x" id="inquiryModalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="inquiryModalBody"></div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" id="inquiryModalCancel">닫기</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── 차량 편집 모달 ── -->
@@ -200,7 +427,7 @@
         <div class="field">
           <label>이미지</label>
           <select id="cf_image"></select>
-          <span class="field-hint">images/ 폴더의 파일 중 선택. 새 이미지는 FTP로 업로드 후 페이지 새로고침.</span>
+          <span class="field-hint">images/ 폴더의 파일 또는 "이미지 업로드" 탭에서 올린 이미지 중 선택.</span>
         </div>
 
         <div class="field">

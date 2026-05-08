@@ -152,10 +152,178 @@
     localStorage.removeItem(BANNER_KEY);
   };
 
-  /* ── Image URL helper ── */
-  window.carImageUrl = function(file) {
-    return 'images/' + encodeURI(file).replace(/'/g, '%27');
+  /* ── Settings (관리자가 변경하는 사이트 공통 정보) ── */
+  const DEFAULT_SETTINGS = {
+    topBannerText: '최고의 렌트카 서비스, 해태렌트카에서',
+    contactPhone: '0000-0000',
+    contactHours: '평일 오전 9:00 - 오후 6:00\n주말 오전 10:00 - 오후 4:00',
+    branchName: '해태렌트카 광주지점',
+    branchHours: '평일 09:00 - 18:00 / 주말 10:00 - 16:00',
+    footerDesc: '안전과 투명한 운영을 최우선으로\n믿고 맡길 수 있는 렌트카 서비스',
+    footerCopyright: '© 2026 해태렌트카. All rights reserved.',
   };
+  const SETTINGS_KEY = 'rentcar_settings';
+  window.DEFAULT_SETTINGS = DEFAULT_SETTINGS;
+  window.loadSettings = function() {
+    try {
+      const saved = localStorage.getItem(SETTINGS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') return Object.assign({}, DEFAULT_SETTINGS, parsed);
+      }
+    } catch (e) {}
+    return Object.assign({}, DEFAULT_SETTINGS);
+  };
+  window.saveSettings = function(obj) {
+    const merged = Object.assign({}, window.loadSettings(), obj || {});
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
+    return merged;
+  };
+  window.resetSettings = function() {
+    localStorage.removeItem(SETTINGS_KEY);
+  };
+
+  /* ── About content (회사소개 페이지 본문) ── */
+  const DEFAULT_ABOUT = {
+    heading: '설명을 넣어주세요',
+    subheading: '합리적인 요금과 다양한 차량 라인업을 통해\n고객의 이동을 편리하게 지원하는 렌트카 전문 기업입니다.',
+    description: '경차부터 고급 세단, SUV까지 폭넓은 선택지를 제공하여 다양한 니즈를 충족합니다. 단기·장기 렌트는 물론, 기업 고객을 위한 맞춤형 차량 운영 서비스도 지원합니다. 정기적인 점검과 체계적인 관리로 항상 최상의 차량 상태를 유지합니다. 간편한 예약 시스템과 신속한 배차로 이용 편의성을 극대화했습니다. 고객 중심의 서비스와 투명한 운영으로 신뢰를 쌓아가고 있습니다. 이동의 가치를 높이는 모빌리티 파트너로서 일상과 비즈니스를 함께합니다.',
+    stat1Label: '누적 고객 수', stat1Value: 15000,
+    stat2Label: '보유 차량', stat2Value: 500,
+    stat3Label: '고객 만족도 (%)', stat3Value: 98,
+    stat4Label: '전국 지점', stat4Value: 8,
+  };
+  const ABOUT_KEY = 'rentcar_about';
+  window.DEFAULT_ABOUT = DEFAULT_ABOUT;
+  window.loadAbout = function() {
+    try {
+      const saved = localStorage.getItem(ABOUT_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') return Object.assign({}, DEFAULT_ABOUT, parsed);
+      }
+    } catch (e) {}
+    return Object.assign({}, DEFAULT_ABOUT);
+  };
+  window.saveAbout = function(obj) {
+    const merged = Object.assign({}, window.loadAbout(), obj || {});
+    localStorage.setItem(ABOUT_KEY, JSON.stringify(merged));
+    return merged;
+  };
+  window.resetAbout = function() {
+    localStorage.removeItem(ABOUT_KEY);
+  };
+
+  /* ── 업로드된 이미지 (base64 데이터 URL 사전, 키=표시이름) ── */
+  const UPLOAD_KEY = 'rentcar_uploaded_images';
+  window.loadUploadedImages = function() {
+    try {
+      const saved = localStorage.getItem(UPLOAD_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') return parsed;
+      }
+    } catch (e) {}
+    return {};
+  };
+  window.saveUploadedImages = function(map) {
+    localStorage.setItem(UPLOAD_KEY, JSON.stringify(map || {}));
+  };
+  window.addUploadedImage = function(name, dataUrl) {
+    const map = window.loadUploadedImages();
+    map[name] = dataUrl;
+    window.saveUploadedImages(map);
+  };
+  window.removeUploadedImage = function(name) {
+    const map = window.loadUploadedImages();
+    delete map[name];
+    window.saveUploadedImages(map);
+  };
+
+  /* ── 문의 (폼 제출 캡처) ── */
+  const INQUIRY_KEY = 'rentcar_inquiries';
+  window.loadInquiries = function() {
+    try {
+      const saved = localStorage.getItem(INQUIRY_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [];
+  };
+  window.saveInquiries = function(list) {
+    localStorage.setItem(INQUIRY_KEY, JSON.stringify(list || []));
+  };
+  window.addInquiry = function(data) {
+    const list = window.loadInquiries();
+    const id = list.reduce((m, i) => Math.max(m, i.id || 0), 0) + 1;
+    const item = Object.assign({
+      id,
+      createdAt: new Date().toISOString(),
+      isRead: false,
+    }, data || {});
+    list.unshift(item);
+    window.saveInquiries(list);
+    return item;
+  };
+
+  /* ── 이미지 URL 리졸버 (uploaded:, data:, http://, 일반 파일명 처리) ── */
+  window.resolveImageUrl = function(spec, baseDir) {
+    if (!spec) return '';
+    const s = String(spec);
+    if (s.indexOf('uploaded:') === 0) {
+      const name = s.slice(9);
+      const uploads = window.loadUploadedImages();
+      return uploads[name] || '';
+    }
+    if (s.indexOf('data:') === 0 || s.indexOf('http') === 0) return s;
+    return (baseDir || 'images/') + encodeURI(s).replace(/'/g, '%27');
+  };
+
+  /* ── Image URL helper (차량/일반) ── */
+  window.carImageUrl = function(file) {
+    return window.resolveImageUrl(file, 'images/');
+  };
+
+  /* ── 사이트 설정을 페이지 DOM에 주입 ── */
+  function applySiteSettings() {
+    const s = window.loadSettings();
+    const set = (id, val, useHtml) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (useHtml) el.innerHTML = String(val).replace(/\n/g, '<br>');
+      else el.textContent = String(val);
+    };
+    set('topBannerText', s.topBannerText, false);
+    set('footerBrandDesc', s.footerDesc, true);
+    set('footerCopyright', s.footerCopyright, false);
+    set('contactPhone', s.contactPhone, false);
+    set('contactHours', s.contactHours, true);
+    set('quotePhone', s.contactPhone, false);
+    set('quoteHours', s.contactHours, true);
+    set('mapBranchName', s.branchName, false);
+    set('mapBranchHours', s.branchHours, false);
+  }
+  window.applySiteSettings = applySiteSettings;
+
+  /* ── 회사소개 페이지 콘텐츠 주입 ── */
+  function applyAboutContent() {
+    if (document.body.dataset.page !== 'about') return;
+    const a = window.loadAbout();
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    const setHtml = (id, v) => { const el = document.getElementById(id); if (el) el.innerHTML = String(v).replace(/\n/g, '<br>'); };
+    setText('aboutHeading', a.heading);
+    setHtml('aboutSubheading', a.subheading);
+    setText('aboutDescription', a.description);
+    for (let i = 1; i <= 4; i++) {
+      const v = document.getElementById('stat' + i + 'Value');
+      const l = document.getElementById('stat' + i + 'Label');
+      if (v) v.dataset.count = String(a['stat' + i + 'Value']);
+      if (l) l.textContent = a['stat' + i + 'Label'];
+    }
+  }
+  window.applyAboutContent = applyAboutContent;
 
   /* ── Render car cards ── */
   window.renderCarCards = function(containerId, cars, badgeOverride, pageCategory) {
@@ -270,6 +438,8 @@
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', async () => {
     await loadIncludes();
+    applySiteSettings();
+    applyAboutContent();
     initFadeUp();
     // Fade in page
     requestAnimationFrame(() => {

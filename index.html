@@ -90,8 +90,8 @@
     <div class="contact-left fade-up">
       <div class="contact-label">견적 문의</div>
       <div class="contact-desc">안전과 투명한 운영을 최우선으로<br>믿고 맡길 수 있는 렌트카 서비스를 제공합니다.</div>
-      <div class="contact-phone">0000-0000</div>
-      <div class="contact-hours">평일 오전 9:00 - 오후 6:00<br>주말 오전 10:00 - 오후 4:00</div>
+      <div class="contact-phone" id="contactPhone">0000-0000</div>
+      <div class="contact-hours" id="contactHours">평일 오전 9:00 - 오후 6:00<br>주말 오전 10:00 - 오후 4:00</div>
     </div>
     <div class="contact-form fade-up">
       <select id="formCategory">
@@ -123,7 +123,7 @@ window.addEventListener('load', () => {
   const banners = (typeof loadBanners === 'function') ? loadBanners() : [];
   const heroEl = document.getElementById('heroSlider');
   heroEl.innerHTML = banners.map((b, i) =>
-    `<div class="hero-slide${i === 0 ? ' active' : ''}" style="background-image:url('images/${b}')"></div>`
+    `<div class="hero-slide${i === 0 ? ' active' : ''}" style="background-image:url('${resolveImageUrl(b)}')"></div>`
   ).join('');
   const heroSlides = heroEl.querySelectorAll('.hero-slide');
   if (heroSlides.length > 1) {
@@ -179,12 +179,16 @@ window.addEventListener('load', () => {
     const car = document.getElementById('formCar').value.trim();
     const name = document.getElementById('formName').value.trim();
     const phone = document.getElementById('formPhone').value.trim();
+    const message = document.getElementById('formMessage').value.trim();
     const priv = document.getElementById('formPrivacy').checked;
     if (!cat) return showToast('카테고리를 선택해주세요.');
     if (!car) return showToast('차량명을 입력해주세요.');
     if (!name) return showToast('이름을 입력해주세요.');
     if (!phone) return showToast('연락처를 입력해주세요.');
     if (!priv) return showToast('개인정보 취급방침에 동의해주세요.');
+    if (typeof addInquiry === 'function') {
+      addInquiry({ source: 'index', type: '견적', category: cat, carName: car, name, phone, message });
+    }
     showToast('견적 문의가 접수되었습니다!');
     document.getElementById('formCategory').selectedIndex = 0;
     ['formCar','formName','formPhone','formMessage'].forEach(id => document.getElementById(id).value = '');

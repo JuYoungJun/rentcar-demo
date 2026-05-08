@@ -197,8 +197,8 @@
     </div>
     <div class="quote-info-title">전화 상담</div>
     <div class="quote-info-text">
-      평일 09:00 - 18:00 / 주말 10:00 - 16:00
-      <strong>0000-0000</strong>
+      <span id="quoteHours">평일 09:00 - 18:00 / 주말 10:00 - 16:00</span>
+      <strong id="quotePhone">0000-0000</strong>
     </div>
   </div>
   <div class="quote-info-card">
@@ -397,6 +397,15 @@ window.addEventListener('load', () => {
     if (!ph) return showToast('연락처를 입력해주세요.');
     if (!exp) return showToast('운전 경력을 선택해주세요.');
     if (!priv) return showToast('개인정보 취급방침에 동의해주세요.');
+
+    const startDate = document.getElementById('formStartDate').value.trim();
+    const message = document.getElementById('formMessage').value.trim();
+    if (typeof addInquiry === 'function') {
+      addInquiry({
+        source: 'quote', type: '견적', category: cat, carName: car,
+        region, period, name, phone: ph, startDate, experience: exp, message
+      });
+    }
 
     showToast('견적 문의가 접수되었습니다! 빠르게 연락드리겠습니다.');
 
