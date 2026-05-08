@@ -66,14 +66,13 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--dark);
   margin-bottom: 8px;
 }
-.login-logo svg { width: 36px; height: 24px; }
+.login-logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
 .login-sub {
   text-align: center;
   font-size: 13px;
@@ -152,13 +151,14 @@ input, select, textarea { font-family: inherit; }
   border-bottom: 1px solid rgba(255,255,255,0.08);
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: var(--white);
 }
-.admin-brand svg { width: 30px; height: 20px; }
+.admin-brand img {
+  height: 28px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
 .admin-nav {
   display: flex;
   flex-direction: column;
@@ -592,6 +592,7 @@ input, select, textarea { font-family: inherit; }
     padding: 10px 14px;
   }
   .admin-brand { padding: 0 12px 0 0; border: none; border-right: 1px solid rgba(255,255,255,0.08); margin-right: 8px; }
+  .admin-brand img { height: 22px; }
   .admin-nav {
     flex-direction: row;
     padding: 0;

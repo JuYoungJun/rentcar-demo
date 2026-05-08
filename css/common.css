@@ -88,14 +88,13 @@ input, select, textarea { font-family: inherit; }
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--dark);
   flex-shrink: 0;
 }
-.logo-icon { width: 36px; height: 24px; }
+.logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
 .header-nav {
   display: flex;
   align-items: center;
@@ -582,14 +581,16 @@ input, select, textarea { font-family: inherit; }
 .footer-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--white);
   margin-bottom: 16px;
 }
-.footer-logo svg { width: 32px; height: 20px; }
+.footer-logo img {
+  height: 30px;
+  width: auto;
+  display: block;
+  /* 어두운 푸터 배경에서 가시성 위해 화이트로 변환 */
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
 .footer-brand-desc {
   font-size: 13px;
   line-height: 1.8;
@@ -682,8 +683,8 @@ input, select, textarea { font-family: inherit; }
   .footer-brand-desc { font-size: 12px; margin-bottom: 16px; }
   .footer-social a { width: 32px; height: 32px; }
   .footer-social a svg { width: 14px; height: 14px; }
-  .footer-logo { font-size: 16px; margin-bottom: 12px; }
-  .footer-logo svg { width: 28px; height: 18px; }
+  .footer-logo { margin-bottom: 12px; }
+  .footer-logo img { height: 24px; }
   .footer-col-title { font-size: 13px; margin-bottom: 10px; }
   .footer-col ul { gap: 8px; }
   .footer-col ul li a { font-size: 12px; }
@@ -872,8 +873,7 @@ input, select, textarea { font-family: inherit; }
 
   /* Header */
   .header { height: 54px; padding: 0 16px; }
-  .logo { font-size: 16px; letter-spacing: 2px; gap: 6px; }
-  .logo-icon { width: 28px; height: 18px; }
+  .logo-img { height: 24px; }
   .mobile-nav { top: 54px; }
 
   /* Hero */
