@@ -116,17 +116,6 @@
 .map-info-item span {
   color: var(--text-light);
 }
-.map-info-item span a {
-  color: var(--text);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 1px;
-  transition: color .15s;
-}
-.map-info-item span a:hover {
-  color: #E53935;
-  border-bottom-color: #E53935;
-}
 
 @media (max-width: 768px) {
   .map-container { height: 280px; }
