@@ -17,6 +17,9 @@
 <div class="hero" id="heroSlider">
   <div class="hero-slide active" style="background-image:url('images/banner_1.png')"></div>
   <div class="hero-slide" style="background-image:url('images/banner_2.png')"></div>
+  <div class="hero-slide" style="background-image:url('images/banner_3.png')"></div>
+  <div class="hero-slide" style="background-image:url('images/banner_4.png')"></div>
+  <div class="hero-slide" style="background-image:url('images/banner_5.png')"></div>
 </div>
 
 <!-- MAIN -->
@@ -43,7 +46,7 @@
     <div class="search-field-wrap">
       <div class="search-field" id="dateField">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        <span id="dateText">날짜 선택</span>
+        <span id="dateText">기간 선택</span>
       </div>
       <div class="dropdown-panel" id="dateDropdown">
         <div class="dropdown-item" data-value="1개월">1개월</div>
@@ -145,7 +148,7 @@ window.addEventListener('load', () => {
   top5.forEach((car, i) => {
     const li = document.createElement('li');
     li.innerHTML = `<span class="top5-num ${i < 3 ? 'red' : 'gray'}">${i+1}</span>${car.name}`;
-    li.onclick = () => showToast(`${car.name} 상세 페이지로 이동합니다.`);
+    li.onclick = () => { window.location.href = `detail.html?id=${car.id}&from=monthly`; };
     list.appendChild(li);
   });
 
