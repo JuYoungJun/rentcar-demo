@@ -322,7 +322,7 @@ input, select, textarea { font-family: inherit; }
   width: 100%;
   max-width: 360px;
   aspect-ratio: 9/5;
-  background-color: var(--bg-light);
+  background-color: transparent;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -387,7 +387,7 @@ input, select, textarea { font-family: inherit; }
 .card-thumb {
   width: 100%;
   aspect-ratio: 4/3;
-  background: var(--bg-light);
+  background: transparent;
   border-radius: 10px;
   position: relative;
   overflow: visible;
@@ -397,7 +397,7 @@ input, select, textarea { font-family: inherit; }
 }
 .card-thumb-inner {
   width: 100%; height: 100%;
-  background-color: var(--bg-light);
+  background-color: transparent;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
