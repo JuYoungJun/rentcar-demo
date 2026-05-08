@@ -125,9 +125,18 @@
     <script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
     <script charset="UTF-8">
       (function renderRoughmap() {
+        var attempts = 0;
+        function ready() {
+          return window.daum && daum.roughmap && typeof daum.roughmap.Lander === 'function';
+        }
         function render() {
           var el = document.getElementById('daumRoughmapContainer1778211784921');
-          if (!el || !window.daum || !daum.roughmap) { setTimeout(render, 50); return; }
+          if (!el) return;
+          if (!ready()) {
+            if (++attempts > 100) { console.warn('[roughmap] Lander not loaded'); return; }
+            setTimeout(render, 100);
+            return;
+          }
           var w = Math.floor(el.parentElement.clientWidth || 1040);
           var h = w >= 768 ? 400 : (w >= 480 ? 280 : 220);
           el.innerHTML = '';
