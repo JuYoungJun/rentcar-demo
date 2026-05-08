@@ -14,13 +14,7 @@
 <div id="header-include"></div>
 
 <!-- HERO -->
-<div class="hero" id="heroSlider">
-  <div class="hero-slide active" style="background-image:url('images/banner_1.png')"></div>
-  <div class="hero-slide" style="background-image:url('images/banner_2.png')"></div>
-  <div class="hero-slide" style="background-image:url('images/banner_3.png')"></div>
-  <div class="hero-slide" style="background-image:url('images/banner_4.png')"></div>
-  <div class="hero-slide" style="background-image:url('images/banner_5.png')"></div>
-</div>
+<div class="hero" id="heroSlider"></div>
 
 <!-- MAIN -->
 <div class="main-content">
@@ -125,8 +119,13 @@
 <script src="js/common.js" defer></script>
 <script>
 window.addEventListener('load', () => {
-  // HERO slider (auto-rotate, no UI)
-  const heroSlides = document.querySelectorAll('#heroSlider .hero-slide');
+  // HERO slider — render from banner list (admin can override via localStorage)
+  const banners = (typeof loadBanners === 'function') ? loadBanners() : [];
+  const heroEl = document.getElementById('heroSlider');
+  heroEl.innerHTML = banners.map((b, i) =>
+    `<div class="hero-slide${i === 0 ? ' active' : ''}" style="background-image:url('images/${b}')"></div>`
+  ).join('');
+  const heroSlides = heroEl.querySelectorAll('.hero-slide');
   if (heroSlides.length > 1) {
     let heroIdx = 0;
     setInterval(() => {

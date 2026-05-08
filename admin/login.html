@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>관리자 로그인 - 해태렌트카</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<script src="auth.js" defer></script>
+</head>
+<body>
+
+<div class="demo-bar">
+  <strong>데모 환경 안내</strong> — 이 관리자 페이지는 동작 시연용이며, 데이터는 브라우저(localStorage)에만 저장됩니다.
+</div>
+
+<div class="login-page">
+  <form class="login-card" id="loginForm">
+    <div class="login-logo">
+      <svg viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 24L12 6L22 20L32 6L42 24" stroke="#E53935" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="46" cy="8" r="3.5" fill="#E53935"/>
+      </svg>
+      HAETAE
+    </div>
+    <div class="login-sub">관리자 페이지</div>
+
+    <div class="login-error" id="loginError"></div>
+
+    <div class="login-form">
+      <input type="text" id="loginId" placeholder="아이디" autocomplete="username" required>
+      <input type="password" id="loginPw" placeholder="비밀번호" autocomplete="current-password" required>
+      <button type="submit" class="login-btn">로그인</button>
+    </div>
+
+    <div class="login-hint">
+      <strong>데모 자격증명</strong>
+      ID: <code>admin</code> / PW: <code>admin1234</code><br>
+      운영 시 Cafe24 PHP + MySQL 등 서버 측 인증으로 교체하세요.
+    </div>
+
+    <a href="../index.html" class="login-back">← 홈으로 돌아가기</a>
+  </form>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  document.documentElement.classList.add('loaded');
+  AdminAuth.redirectIfAuthed();
+
+  const form = document.getElementById('loginForm');
+  const errBox = document.getElementById('loginError');
+  const submitBtn = form.querySelector('.login-btn');
+
+  function showError(msg) {
+    errBox.textContent = msg;
+    errBox.classList.add('show');
+  }
+  function clearError() {
+    errBox.textContent = '';
+    errBox.classList.remove('show');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const id = document.getElementById('loginId').value.trim();
+    const pw = document.getElementById('loginPw').value;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '로그인 중...';
+    try {
+      const result = await AdminAuth.login(id, pw);
+      if (result.ok) {
+        window.location.href = 'dashboard.html';
+        return;
+      }
+      showError(result.error || '로그인에 실패했습니다.');
+      document.getElementById('loginPw').value = '';
+    } catch (err) {
+      showError('예상치 못한 오류가 발생했습니다.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '로그인';
+    }
+  });
+});
+</script>
+</body>
+</html>
