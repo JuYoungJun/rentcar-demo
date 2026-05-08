@@ -91,7 +91,7 @@ input, select, textarea { font-family: inherit; }
   flex-shrink: 0;
 }
 .logo-img {
-  height: 32px;
+  height: 48px;
   width: auto;
   display: block;
 }
@@ -584,7 +584,7 @@ input, select, textarea { font-family: inherit; }
   margin-bottom: 16px;
 }
 .footer-logo img {
-  height: 30px;
+  height: 44px;
   width: auto;
   display: block;
   /* 어두운 푸터 배경에서 가시성 위해 화이트로 변환 */
@@ -684,7 +684,7 @@ input, select, textarea { font-family: inherit; }
   .footer-social a { width: 32px; height: 32px; }
   .footer-social a svg { width: 14px; height: 14px; }
   .footer-logo { margin-bottom: 12px; }
-  .footer-logo img { height: 24px; }
+  .footer-logo img { height: 36px; }
   .footer-col-title { font-size: 13px; margin-bottom: 10px; }
   .footer-col ul { gap: 8px; }
   .footer-col ul li a { font-size: 12px; }
@@ -872,9 +872,9 @@ input, select, textarea { font-family: inherit; }
   .top-banner-login { font-size: 11px; }
 
   /* Header */
-  .header { height: 54px; padding: 0 16px; }
-  .logo-img { height: 24px; }
-  .mobile-nav { top: 54px; }
+  .header { height: 60px; padding: 0 16px; }
+  .logo-img { height: 38px; }
+  .mobile-nav { top: 60px; }
 
   /* Hero */
   .hero { height: 120px; }
