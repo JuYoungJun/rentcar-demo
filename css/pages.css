@@ -117,8 +117,9 @@
   color: var(--text-light);
 }
 
-/* 카카오 지도퍼가기 위젯 내부 주소바만 숨김 */
-.root_daum_roughmap_landing .roughmap_lander_address {
+/* 카카오 지도퍼가기 위젯 내부 주소·전화 영역 숨김 */
+.root_daum_roughmap_landing .address,
+.root_daum_roughmap_landing .phone {
   display: none !important;
 }
 .root_daum_roughmap_landing {
