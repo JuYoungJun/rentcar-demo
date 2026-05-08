@@ -117,12 +117,8 @@
   color: var(--text-light);
 }
 
-/* 카카오 지도퍼가기 위젯 내부 주소/정보 바 숨김 */
-.root_daum_roughmap_landing .wrap_controllers,
-.root_daum_roughmap_landing .roughmap_lander_address,
-.root_daum_roughmap_landing .roughmap_maker_label,
-.root_daum_roughmap_landing > p,
-.root_daum_roughmap_landing .cont {
+/* 카카오 지도퍼가기 위젯 내부 주소바만 숨김 */
+.root_daum_roughmap_landing .roughmap_lander_address {
   display: none !important;
 }
 .root_daum_roughmap_landing {

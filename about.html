@@ -125,13 +125,6 @@
     <script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
     <script charset="UTF-8">
       (function renderRoughmap() {
-        function hideAddressStrip(el) {
-          // 위젯 내부에 자동 삽입되는 주소·정보 영역만 숨김 (지도 iframe은 유지)
-          Array.prototype.forEach.call(el.children, function(child) {
-            if (child.tagName === 'IFRAME' || child.querySelector('iframe')) return;
-            child.style.display = 'none';
-          });
-        }
         function render() {
           var el = document.getElementById('daumRoughmapContainer1778211784921');
           if (!el || !window.daum || !daum.roughmap) { setTimeout(render, 50); return; }
@@ -144,8 +137,6 @@
             "mapWidth": String(w),
             "mapHeight": String(h)
           }).render();
-          setTimeout(function() { hideAddressStrip(el); }, 300);
-          setTimeout(function() { hideAddressStrip(el); }, 1200);
         }
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', render);
