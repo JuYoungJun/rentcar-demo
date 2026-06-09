@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>렌트카 견적문의 (24시간 접수·1시간 회신) | 해태렌트카</title>
+<meta name="description" content="해태렌트카 렌트카 견적문의 — 카테고리·차량명·지역·기간·운전경력을 남기시면 전담 상담사가 맞춤 견적을 안내합니다. 24시간 온라인 접수, 영업시간 기준 1시간 이내 회신.">
+<meta name="keywords" content="렌트카 견적,월렌트 견적,장기렌트 견적,중고차 렌트 견적,무심사 견적,무보증 견적,해태렌트카 견적">
+<meta name="author" content="해태렌트카">
+<meta name="publisher" content="해태렌트카">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="geo.region" content="KR-29">
+<meta name="geo.placename" content="광주광역시 광산구">
+<meta name="geo.position" content="35.1399;126.7935">
+<meta name="ICBM" content="35.1399, 126.7935">
+<link rel="canonical" href="https://www.haetae-rentcar.com/quote.html">
+<link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/quote.html">
+<link rel="alternate" hreflang="x-default" href="https://www.haetae-rentcar.com/quote.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="해태렌트카">
+<meta property="og:title" content="렌트카 견적문의 (24시간 접수·1시간 회신) | 해태렌트카">
+<meta property="og:description" content="카테고리·차량명·지역·기간·운전경력을 남기시면 전담 상담사가 맞춤 견적을 안내합니다. 24시간 접수, 1시간 이내 회신.">
+<meta property="og:url" content="https://www.haetae-rentcar.com/quote.html">
+<meta property="og:image" content="https://www.haetae-rentcar.com/images/banner_1.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="해태렌트카 견적문의">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="렌트카 견적문의 (24시간 접수·1시간 회신) | 해태렌트카">
+<meta name="twitter:description" content="카테고리·차량명·지역·기간·운전경력을 남기시면 맞춤 견적을 안내합니다.">
+<meta name="twitter:image" content="https://www.haetae-rentcar.com/images/banner_1.webp">
+<meta name="theme-color" content="#E53935">
+<meta name="format-detection" content="telephone=yes">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/icon-192.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" onload="this.onload=null;this.rel=&apos;stylesheet&apos;">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap"></noscript>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/pages.css">
+<script src="js/seo-schema.js" defer></script>
+<style>
+  /* Quote page specific */
+  .quote-hero {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 56px var(--side-pad) 24px;
+    text-align: center;
+  }
+  .quote-hero h1 {
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 900;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+  .quote-hero p {
+    font-size: clamp(14px, 1.8vw, 16px);
+    color: var(--text-light);
+    line-height: 1.8;
+  }
+
+  .quote-info {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 16px var(--side-pad) 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .quote-info-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 22px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .quote-info-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    transform: translateY(-3px);
+  }
+  .quote-info-icon {
+    width: 36px; height: 36px;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  .quote-info-icon svg { width: 100%; height: 100%; }
+  .quote-info-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+  .quote-info-text {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+  .quote-info-text strong {
+    display: block;
+    color: var(--red);
+    font-size: 16px;
+    font-weight: 800;
+    margin-top: 4px;
+  }
+
+  /* Form section: reuses .contact-section dark panel, but full-width single-column inside */
+  .quote-form-wrap .contact-inner {
+    flex-direction: column;
+    gap: 28px;
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .quote-form-wrap .contact-left {
+    flex: none;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .quote-form-wrap .contact-form {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    gap: 12px;
+  }
+  .quote-form-wrap .contact-desc { margin-bottom: 0; }
+  .quote-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* FAQ */
+  .quote-faq {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 64px var(--side-pad) 80px;
+  }
+  .quote-faq-title {
+    text-align: center;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 900;
+    color: var(--dark);
+    margin-bottom: 32px;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 18px 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .faq-q::before {
+    content: 'Q';
+    color: var(--red);
+    font-weight: 900;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  .faq-q-text { flex: 1; }
+  .faq-toggle {
+    width: 22px; height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-toggle { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.8;
+    padding: 0 8px;
+  }
+  .faq-item.open .faq-a {
+    max-height: 240px;
+    padding: 0 8px 18px;
+  }
+  .faq-a::before {
+    content: 'A ';
+    color: var(--text);
+    font-weight: 800;
+    margin-right: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .quote-info { grid-template-columns: 1fr; gap: 14px; padding: 8px 16px 32px; }
+    .quote-grid-2 { grid-template-columns: 1fr; }
+    .quote-hero { padding: 40px 16px 16px; }
+    .quote-faq { padding: 48px 16px 60px; }
+  }
+</style>
+</head>
+<body data-page="quote">
+
+<div id="header-include"></div>
+
+<!-- HERO -->
+<section class="quote-hero fade-up">
+  <h1>견적 문의</h1>
+  <p>
+    원하시는 차량과 조건을 남겨주시면<br>
+    전담 상담사가 빠르게 맞춤 견적을 안내해 드립니다.
+  </p>
+</section>
+
+<!-- INFO CARDS -->
+<section class="quote-info fade-up">
+  <div class="quote-info-card">
+    <div class="quote-info-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.515l.7 2.81a2 2 0 01-.45 1.91L8 11a16 16 0 005 5l1.77-1.47a2 2 0 011.91-.45l2.81.7A2 2 0 0121 16.72V19a2 2 0 01-2 2A16 16 0 013 5z"/></svg>
+    </div>
+    <div class="quote-info-title">전화 상담</div>
+    <div class="quote-info-text">
+      <span id="quoteHours">평일 09:00 - 18:00 / 주말 10:00 - 16:00</span>
+      <strong id="quotePhone">0000-0000</strong>
+    </div>
+  </div>
+  <div class="quote-info-card">
+    <div class="quote-info-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    </div>
+    <div class="quote-info-title">온라인 견적</div>
+    <div class="quote-info-text">
+      24시간 접수 가능, 영업시간 기준
+      <strong>1시간 이내 회신</strong>
+    </div>
+  </div>
+  <div class="quote-info-card">
+    <div class="quote-info-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+    </div>
+    <div class="quote-info-title">개인정보 보호</div>
+    <div class="quote-info-text">
+      입력하신 정보는 견적 상담 목적 외
+      <strong>제3자 제공 없음</strong>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="contact-section quote-form-wrap" id="contact">
+  <div class="contact-inner">
+    <div class="contact-left fade-up">
+      <div class="contact-label">견적 신청서</div>
+      <div class="contact-desc">
+        아래 항목을 작성해주시면 가장 합리적인 조건으로<br>
+        맞춤 견적을 안내해 드립니다.
+      </div>
+    </div>
+
+    <form class="contact-form fade-up" id="quoteForm" onsubmit="return false" aria-labelledby="quoteFormHeading">
+      <h2 id="quoteFormHeading" class="sr-only">견적 문의 폼</h2>
+      <label for="formCategory" class="sr-only">렌트 카테고리</label>
+      <select id="formCategory" name="category" required>
+        <option value="" disabled selected>카테고리를 선택해주세요.</option>
+      </select>
+
+      <label for="formCar" class="sr-only">희망 차량명</label>
+      <input type="text" id="formCar" name="car" placeholder="희망하시는 차량명을 입력해주세요." autocomplete="off">
+
+      <div class="quote-grid-2">
+        <label for="formRegion" class="sr-only">희망 지역</label>
+        <select id="formRegion" name="region" required>
+          <option value="" disabled selected>희망 지역</option>
+        </select>
+        <label for="formPeriod" class="sr-only">희망 기간</label>
+        <select id="formPeriod" name="period" required>
+          <option value="" disabled selected>희망 기간</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="formName" class="sr-only">이름</label>
+        <input type="text" id="formName" name="name" placeholder="이름" autocomplete="name" required>
+        <label for="formPhone" class="sr-only">연락처</label>
+        <input type="tel" id="formPhone" name="phone" placeholder="연락처" autocomplete="tel" required>
+      </div>
+
+      <div class="quote-grid-2">
+        <label for="formStartDate" class="sr-only">희망 인수일</label>
+        <input type="text" id="formStartDate" name="startDate" placeholder="희망 인수일 (예: 2026-05-20)" autocomplete="off">
+        <label for="formExperience" class="sr-only">운전 경력</label>
+        <select id="formExperience" name="experience">
+          <option value="" disabled selected>운전 경력</option>
+        </select>
+      </div>
+
+      <label for="formMessage" class="sr-only">기타 문의사항</label>
+      <textarea id="formMessage" name="message" placeholder="그 외 문의사항이나 요청사항을 자유롭게 적어주세요."></textarea>
+
+      <label class="privacy-label">
+        <input type="checkbox" id="formPrivacy" name="privacy" required> 개인정보 취급방침에 동의합니다.
+      </label>
+
+      <button class="btn-submit" id="submitBtn" type="submit">견적문의하기</button>
+    </form>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="quote-faq fade-up" id="faq">
+  <div class="quote-faq-title">자주 묻는 질문</div>
+  <div class="faq-list" id="faqList"></div>
+</section>
+
+<div id="footer-include"></div>
+
+<script src="js/common.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── SEO / AEO — FAQPage + ContactPage + Breadcrumb ──
+  if (window.HaetaeSEO) {
+    const S = window.HaetaeSEO;
+    try {
+      S.inject([
+        S.webpage({
+          type: 'ContactPage',
+          url: '/quote.html',
+          title: '렌트카 견적문의 — 해태렌트카',
+          description: '24시간 온라인 접수, 영업시간 기준 1시간 이내 회신.',
+          image: '/images/banner_1.webp',
+          breadcrumb: S.breadcrumb([{ name:'홈', url:'/' }, { name:'견적문의', url:'/quote.html' }]),
+          speakableSelectors: ['.quote-hero h1', '.quote-hero p', '.faq-q-text']
+        }),
+        S.faq('/quote.html')
+      ]);
+    } catch (e) {}
+  }
+
+  // ── 폼 드롭다운 옵션 동적 렌더 (관리자 변경 즉시 반영) ──
+  if (typeof loadFormOptions === 'function') {
+    const opts = loadFormOptions();
+    const fill = (id, items, placeholder, valueAlias) => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const current = sel.value;
+      // 카테고리: 표시 라벨과 value 분리 (기존 호환)
+      const html = [`<option value="" disabled ${current ? '' : 'selected'}>${placeholder}</option>`]
+        .concat((items || []).map(v => `<option value="${v}">${v}${valueAlias && valueAlias[v] ? ' ('+valueAlias[v]+')' : ''}</option>`));
+      sel.innerHTML = html.join('');
+      if (current) sel.value = current;
+    };
+    fill('formCategory',   opts.categories,  '카테고리를 선택해주세요.');
+    fill('formRegion',     opts.regions,     '희망 지역');
+    fill('formPeriod',     opts.periods,     '희망 기간');
+    fill('formExperience', opts.experiences, '운전 경력');
+  }
+
+  // ── FAQ 동적 렌더 ──
+  if (typeof loadFaq === 'function') {
+    const list = loadFaq();
+    const wrap = document.getElementById('faqList');
+    if (wrap) {
+      const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+      wrap.innerHTML = list.map(f => `
+        <div class="faq-item">
+          <button class="faq-q" type="button">
+            <span class="faq-q-text">${esc(f.q)}</span>
+            <span class="faq-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </button>
+          <div class="faq-a">${esc(f.a)}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // 연락처 자동 하이픈
+  const phone = document.getElementById('formPhone');
+  phone.oninput = function() {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length >= 8) this.value = v.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+    else if (v.length >= 4) this.value = v.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+    else this.value = v;
+  };
+
+  // select 색상 처리 (선택 시 흰색)
+  ['formCategory','formRegion','formPeriod','formExperience'].forEach(id => {
+    const el = document.getElementById(id);
+    el.onchange = function() { this.classList.add('selected'); };
+  });
+
+  // 인수일 마스킹
+  const startDate = document.getElementById('formStartDate');
+  startDate.oninput = function() {
+    let v = this.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length >= 7) this.value = v.replace(/(\d{4})(\d{2})(\d{0,2})/, '$1-$2-$3');
+    else if (v.length >= 5) this.value = v.replace(/(\d{4})(\d{0,2})/, '$1-$2');
+    else this.value = v;
+  };
+
+  // 제출
+  document.getElementById('submitBtn').onclick = () => {
+    const cat = document.getElementById('formCategory').value;
+    const car = document.getElementById('formCar').value.trim();
+    const region = document.getElementById('formRegion').value;
+    const period = document.getElementById('formPeriod').value;
+    const name = document.getElementById('formName').value.trim();
+    const ph = document.getElementById('formPhone').value.trim();
+    const exp = document.getElementById('formExperience').value;
+    const priv = document.getElementById('formPrivacy').checked;
+
+    if (!cat) return showToast('카테고리를 선택해주세요.');
+    if (!car) return showToast('차량명을 입력해주세요.');
+    if (!region) return showToast('희망 지역을 선택해주세요.');
+    if (!period) return showToast('희망 기간을 선택해주세요.');
+    if (!name) return showToast('이름을 입력해주세요.');
+    if (!ph) return showToast('연락처를 입력해주세요.');
+    if (!exp) return showToast('운전 경력을 선택해주세요.');
+    if (!priv) return showToast('개인정보 취급방침에 동의해주세요.');
+
+    const startDate = document.getElementById('formStartDate').value.trim();
+    const message = document.getElementById('formMessage').value.trim();
+    if (typeof addInquiry === 'function') {
+      addInquiry({
+        source: 'quote', type: '견적', category: cat, carName: car,
+        region, period, name, phone: ph, startDate, experience: exp, message
+      });
+    }
+
+    showToast('견적 문의가 접수되었습니다! 빠르게 연락드리겠습니다.');
+
+    document.querySelectorAll('#formCategory,#formRegion,#formPeriod,#formExperience').forEach(s => {
+      s.selectedIndex = 0;
+      s.classList.remove('selected');
+    });
+    ['formCar','formName','formPhone','formMessage','formStartDate'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('formPrivacy').checked = false;
+  };
+
+  // FAQ 토글
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    btn.onclick = () => {
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    };
+  });
+});
+</script>
+</body>
+</html>

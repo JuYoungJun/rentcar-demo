@@ -1,0 +1,128 @@
+# ───────────────────────────────────────────────
+# 해태렌트카 — robots.txt
+# 일반 검색엔진 + AI 검색·답변엔진(AEO/GEO) 크롤러 정책
+# ───────────────────────────────────────────────
+
+# 모든 일반 크롤러
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /includes/
+Disallow: /docs/
+Disallow: /*?*sort=
+Disallow: /*?*utm_
+
+# 주요 검색엔진 — 명시적 허용 (네이버/다음/구글/빙)
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /includes/
+
+User-agent: Googlebot-Image
+Allow: /images/
+Disallow: /admin/
+
+User-agent: Yeti
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /includes/
+
+User-agent: NaverBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Daum
+Allow: /
+Disallow: /admin/
+
+User-agent: Daumoa
+Allow: /
+Disallow: /admin/
+
+User-agent: bingbot
+Allow: /
+Disallow: /admin/
+
+# ── AI 검색·답변 엔진 (GEO/AEO) ──
+# 사이트 콘텐츠를 답변에 인용하도록 허용
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin/
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin/
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /admin/
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://www.haetae-rentcar.com/sitemap.xml
+
+# Host
+Host: https://www.haetae-rentcar.com

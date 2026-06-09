@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기간약정월렌트 6~24개월 (무심사·무보증) | 해태렌트카</title>
+<meta name="description" content="해태렌트카 기간약정월렌트 6~24개월 — 신용등급 부담 없이 무심사·무보증으로 이용 가능. 약정 기간 동안 월 임대료 고정 할인, 차량 19종 운영. 광주 본점 + 전국 8개 지점.">
+<meta name="keywords" content="기간약정월렌트,장기렌트,6개월 렌트,12개월 렌트,24개월 렌트,무심사 장기렌트,무보증 장기렌트,저신용 장기렌트,법인 장기렌트,해태렌트카">
+<meta name="author" content="해태렌트카">
+<meta name="publisher" content="해태렌트카">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="geo.region" content="KR-29">
+<meta name="geo.placename" content="광주광역시 광산구">
+<meta name="geo.position" content="35.1399;126.7935">
+<meta name="ICBM" content="35.1399, 126.7935">
+<link rel="canonical" href="https://www.haetae-rentcar.com/longterm.html">
+<link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/longterm.html">
+<link rel="alternate" hreflang="x-default" href="https://www.haetae-rentcar.com/longterm.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="해태렌트카">
+<meta property="og:title" content="기간약정월렌트 6~24개월 (무심사·무보증) | 해태렌트카">
+<meta property="og:description" content="신용등급 부담 없이 무심사·무보증으로 이용 가능 — 약정 기간 동안 월 임대료 고정 할인, 차량 19종 운영.">
+<meta property="og:url" content="https://www.haetae-rentcar.com/longterm.html">
+<meta property="og:image" content="https://www.haetae-rentcar.com/images/banner_1.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="해태렌트카 기간약정월렌트">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="기간약정월렌트 6~24개월 (무심사·무보증) | 해태렌트카">
+<meta name="twitter:description" content="신용등급 부담 없이 무심사·무보증으로 이용 가능 — 약정 기간 동안 월 임대료 고정 할인.">
+<meta name="twitter:image" content="https://www.haetae-rentcar.com/images/banner_1.webp">
+<meta name="theme-color" content="#E53935">
+<meta name="format-detection" content="telephone=yes">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/icon-192.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" onload="this.onload=null;this.rel=&apos;stylesheet&apos;">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap"></noscript>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="preload" as="image" href="images/hero_longterm.jpg" fetchpriority="high" media="(min-width: 769px)">
+<link rel="preload" as="image" href="images/hero_longterm_mobile.webp" fetchpriority="high" media="(max-width: 768px)">
+<script src="js/seo-schema.js" defer></script>
+</head>
+<body data-page="longterm">
+<div id="header-include"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-slide active">
+    <picture>
+      <source media="(max-width: 768px)" srcset="images/hero_longterm_mobile.webp">
+      <img src="images/hero_longterm.jpg" alt="12개월 기간약정으로 더욱 합리적으로 — 해태렌트카" fetchpriority="high" decoding="async" width="2400" height="616">
+    </picture>
+  </div>
+</div>
+
+<div class="car-list-page">
+  <h1 class="page-title">12개월 기간약정</h1>
+  <div class="sort-bar">
+    <button class="sort-btn" id="sortBtn">
+      <span>추천순</span>
+      <div class="sort-icon"><span></span><span></span><span></span></div>
+    </button>
+    <div class="sort-dropdown" id="sortDropdown">
+      <button class="sort-option active" data-sort="recommend">추천순</button>
+      <button class="sort-option" data-sort="price-low">가격 낮은 순</button>
+      <button class="sort-option" data-sort="price-high">가격 높은 순</button>
+    </div>
+  </div>
+  <div class="car-list-grid" id="carListGrid"></div>
+</div>
+
+<div id="footer-include"></div>
+<script src="js/common.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const cars = carDatabase.filter(c => c.category.includes('longterm'));
+    renderCarCards('carListGrid', cars, '12개월', 'longterm');
+    initSortBar('carListGrid', cars, '12개월', 'longterm');
+
+    if (window.HaetaeSEO) {
+      const S = window.HaetaeSEO;
+      const prices = cars.map(c => c.price).filter(p => p > 0);
+      try {
+        S.inject([
+          S.webpage({
+            type: 'CollectionPage',
+            url: '/longterm.html',
+            title: '기간약정월렌트 6~24개월 — 해태렌트카',
+            description: '신용 부담 없이 6~24개월 약정으로 월 임대료 고정 할인. 무심사·무보증 옵션 포함.',
+            image: '/images/banner_1.webp',
+            breadcrumb: S.breadcrumb([{ name:'홈', url:'/' }, { name:'기간약정월렌트', url:'/longterm.html' }]),
+            speakableSelectors: ['.page-title']
+          }),
+          S.service({
+            url: '/longterm.html',
+            serviceType: '자동차 임대업 (기간약정월렌트)',
+            name: '기간약정월렌트 (6~24개월 장기)',
+            description: '6~24개월 약정으로 월 임대료 고정 할인 — 무심사·무보증 옵션 포함',
+            lowPrice: prices.length ? Math.min(...prices) : 450000,
+            highPrice: prices.length ? Math.max(...prices) : 1100000,
+            offerCount: cars.length,
+            audience: '저신용자, 자영업자, 법인, 일반 소비자'
+          }),
+          S.vehicleList(cars, 'longterm', '/longterm.html')
+        ]);
+      } catch (e) {}
+    }
+});
+</script>
+</body>
+</html>

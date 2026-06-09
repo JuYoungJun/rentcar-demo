@@ -1,0 +1,42 @@
+# ══════════════════════════════════════════════════════════
+# 관리자 영역 — 추가 보안 정책
+# ══════════════════════════════════════════════════════════
+
+# DirectoryIndex 명시
+DirectoryIndex index.html login.html
+
+# 캐시 완전 차단 (브라우저/프록시)
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-store, no-cache, must-revalidate, private, max-age=0"
+  Header set Pragma "no-cache"
+  Header set Expires "0"
+
+  # 검색 엔진 인덱싱 금지
+  Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+
+  # 강화된 보안 헤더
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "DENY"
+  Header set Referrer-Policy "no-referrer"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+  # CSP — 외부 자원 최소화 (Google Fonts만 허용)
+  Header set Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+</IfModule>
+
+# 인덱싱 차단
+Options -Indexes
+
+# 민감 / 백업 파일 차단
+<FilesMatch "\.(env|sql|log|bak|swp|orig|md|json|lock|inc\.php)$">
+  Require all denied
+</FilesMatch>
+
+# 운영 배포 시 — Basic Auth 활성화 권장 (PHP 인증 백엔드 가동 전 임시방어)
+# AuthType Basic
+# AuthName "Admin Area"
+# AuthUserFile /절대경로/.htpasswd
+# Require valid-user
+#
+# .htpasswd 생성:
+#   htpasswd -c .htpasswd 관리자아이디

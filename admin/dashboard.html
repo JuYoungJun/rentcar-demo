@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<title>관리자 - 해태렌트카</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<script src="auth.js"></script>
+<script>
+  // 가능한 한 빨리 인증 체크 (페이지 콘텐츠 깜빡임 방지)
+  if (!AdminAuth.requireAuth()) { /* redirected */ }
+</script>
+<script src="../js/common.js" defer></script>
+<script src="dashboard.js" defer></script>
+</head>
+<body>
+
+<div class="demo-bar" id="demoBar" hidden>
+  <strong>데모 환경</strong> — 변경사항은 이 브라우저(localStorage)에만 저장됩니다. 다른 기기에선 보이지 않습니다.
+</div>
+
+<div class="admin-layout">
+  <button class="admin-mobile-burger" id="adminBurger" aria-label="메뉴 열기" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+  </button>
+  <div class="admin-sidebar-backdrop" id="adminBackdrop"></div>
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-brand">
+      <img src="../images/logo.png" alt="HAETAE">
+      <button class="admin-mobile-close" id="adminCloseNav" aria-label="메뉴 닫기" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav-group">
+        <div class="admin-nav-group-title">콘텐츠</div>
+        <button class="admin-nav-item active" data-tab="cars">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a1 1 0 00-.8-.4H5.24a2 2 0 00-1.8 1.1L2 11v5h3"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+          차량 관리
+        </button>
+        <button class="admin-nav-item" data-tab="banners">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="1.5"/><path d="M21 15l-5-5L5 19"/></svg>
+          메인 슬라이드 배너
+        </button>
+        <button class="admin-nav-item" data-tab="heroes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          서브페이지 히어로
+        </button>
+        <button class="admin-nav-item" data-tab="inquiries">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          문의 관리
+          <span class="nav-badge" id="navInquiryBadge" hidden>0</span>
+        </button>
+        <button class="admin-nav-item" data-tab="images">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          이미지 업로드
+        </button>
+      </div>
+
+      <div class="admin-nav-group">
+        <div class="admin-nav-group-title">사이트 정보</div>
+        <button class="admin-nav-item" data-tab="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          사이트 정보
+        </button>
+        <button class="admin-nav-item" data-tab="about">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          회사소개
+        </button>
+        <button class="admin-nav-item" data-tab="business">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>
+          사업자 정보
+        </button>
+        <button class="admin-nav-item" data-tab="info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+          이용안내
+        </button>
+        <button class="admin-nav-item" data-tab="faq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          FAQ
+        </button>
+        <button class="admin-nav-item" data-tab="formopts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+          폼 옵션
+        </button>
+        <button class="admin-nav-item" data-tab="legal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l9-4 9 4M3 6v12l9 4 9-4V6M3 6l9 4 9-4M12 22V10"/></svg>
+          약관·개인정보
+        </button>
+      </div>
+
+      <div class="admin-nav-group">
+        <div class="admin-nav-group-title">통계</div>
+        <button class="admin-nav-item" data-tab="overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+          개요 / 통계
+        </button>
+      </div>
+    </nav>
+    <div class="admin-foot">
+      <div class="admin-foot-info">
+        <strong id="userName">관리자</strong>
+        <span id="userRole">role</span>
+      </div>
+      <div class="admin-foot-actions">
+        <button class="admin-foot-btn" id="changePwBtn" title="비밀번호 변경">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          비번 변경
+        </button>
+        <button class="admin-logout" id="logoutBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          로그아웃
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- ── OVERVIEW ── -->
+    <section class="tab-panel" id="tab-overview" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">개요</h1>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">전체 차량</div>
+          <div class="stat-card-value" id="statCarsTotal">0</div>
+          <div class="stat-card-sub">등록된 차량 수</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">월렌트 노출</div>
+          <div class="stat-card-value red" id="statMonthly">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">기간약정월렌트</div>
+          <div class="stat-card-value red" id="statLongterm">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">중고차 장기렌트</div>
+          <div class="stat-card-value red" id="statUsed">0</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">금주 TOP 5 — 최근 7일 활동 기반</div>
+          <button class="btn btn-ghost btn-sm" id="resetActivityBtn" title="조회·문의·계약 활동 로그를 초기화합니다">활동 로그 초기화</button>
+        </div>
+        <div class="panel-body">
+          <table class="tbl">
+            <thead>
+              <tr><th style="width:60px">순위</th><th>차량명</th><th>주간 조회</th><th>주간 문의</th><th>주간 계약</th><th>점수</th></tr>
+            </thead>
+            <tbody id="top5Body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CARS ── -->
+    <section class="tab-panel" id="tab-cars">
+      <div class="admin-header">
+        <h1 class="admin-title">차량 관리</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetCarsBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="addCarBtn">+ 차량 추가</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="toolbar">
+          <input type="search" id="carSearch" placeholder="차량명으로 검색...">
+          <select id="catFilter">
+            <option value="">전체 카테고리</option>
+            <option value="monthly">월렌트</option>
+            <option value="longterm">기간약정월렌트 (6개월~24개월)</option>
+            <option value="used">중고차 장기렌트</option>
+          </select>
+          <span class="toolbar-count" id="carCount"></span>
+        </div>
+        <div class="panel-body" style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:50px">ID</th>
+                <th style="width:80px">이미지</th>
+                <th>차량명</th>
+                <th>연식</th>
+                <th>가격</th>
+                <th>배지</th>
+                <th>카테고리</th>
+                <th>태그</th>
+                <th style="text-align:right">동작</th>
+              </tr>
+            </thead>
+            <tbody id="carsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BANNERS ── -->
+    <section class="tab-panel" id="tab-banners" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">메인 슬라이드 배너 관리</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetBannersBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="addBannerBtn">+ 배너 추가</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">메인 페이지 히어로 슬라이드 — 위에서부터 노출 순서, 각 배너마다 PC/모바일 이미지를 따로 지정</div>
+        </div>
+        <div class="panel-body">
+          <div class="banner-list-v2" id="bannerListV2"></div>
+        </div>
+        <div class="panel-foot-hint">
+          <strong>권장 사이즈</strong> · PC <code>2400 × 608</code> (4:1, 가로형) / 모바일 <code>800 × 1423</code> (9:16, 세로형).<br>
+          업로드 시 자동으로 WebP 최적화됩니다. <strong>모바일 이미지가 없으면 PC 이미지가 그대로 노출됩니다 (잘림 발생 가능).</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HEROES (서브페이지 히어로 배너) ── -->
+    <section class="tab-panel" id="tab-heroes" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">서브페이지 히어로 배너 <span class="header-meta">자동 저장</span></h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetHeroesBtn">기본값 복원</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">월렌트 · 12개월 기간약정 · 중고차 페이지 상단 배너 (PC + 모바일 각각)</div></div>
+        <div class="panel-body">
+          <div class="hero-banner-grid" id="heroBannerGrid"></div>
+          <p class="field-hint" style="margin-top:14px">
+            <strong>PC 이미지</strong>: 가로형 권장 사이즈 <code>2400 × 608</code> (4:1).<br>
+            <strong>모바일 이미지</strong>: 세로형 권장 사이즈 <code>800 × 1423</code> (9:16). 모바일에서 <code>(max-width: 768px)</code> 일 때 노출.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INQUIRIES ── -->
+    <section class="tab-panel" id="tab-inquiries" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">문의 관리</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost btn-sm" id="exportInquiriesBtn">CSV 내보내기</button>
+          <button class="btn btn-ghost" id="markAllReadBtn">모두 읽음 처리</button>
+          <button class="btn btn-danger-ghost" id="clearInquiriesBtn">전체 삭제</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="toolbar">
+          <input type="search" id="inquirySearch" placeholder="이름, 차량명, 연락처 검색...">
+          <select id="inquiryFilter">
+            <option value="">전체</option>
+            <option value="unread">미읽음</option>
+            <option value="read">읽음</option>
+          </select>
+          <select id="inquiryStatusFilter">
+            <option value="">전체 상태</option>
+            <option value="new">신규</option>
+            <option value="contacted">상담중</option>
+            <option value="quoted">견적완료</option>
+            <option value="contracted">계약완료</option>
+            <option value="cancelled">취소</option>
+          </select>
+          <span class="toolbar-count" id="inquiryCount"></span>
+        </div>
+        <div class="panel-body" style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:36px"></th>
+                <th style="width:120px">접수일</th>
+                <th style="width:90px">상태</th>
+                <th>차량 / 카테고리</th>
+                <th>이름</th>
+                <th>연락처</th>
+                <th style="width:70px">출처</th>
+                <th style="text-align:right">동작</th>
+              </tr>
+            </thead>
+            <tbody id="inquiriesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BUSINESS INFO ── -->
+    <section class="tab-panel" id="tab-business" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">사업자 정보</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetBusinessBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="saveBusinessBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">법적 사업자 표시 (business.html 노출 정보)</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field"><label>상호</label><input type="text" id="biz_companyName"></div>
+            <div class="field"><label>대표자명</label><input type="text" id="biz_ceoName"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>사업자등록번호</label><input type="text" id="biz_bizRegNumber" placeholder="000-00-00000"></div>
+            <div class="field"><label>통신판매업 신고번호</label><input type="text" id="biz_onlineSalesNumber"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>업태 / 종목</label><input type="text" id="biz_industry"></div>
+            <div class="field"><label>대표 이메일</label><input type="email" id="biz_contactEmail"></div>
+          </div>
+          <div class="field">
+            <label>본사 / 지점 주소</label>
+            <input type="text" id="biz_address" placeholder="광주광역시 광산구 ...">
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">개인정보 보호책임자</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field"><label>성명/직책</label><input type="text" id="biz_privacyOfficerName"></div>
+            <div class="field"><label>연락처 (비우면 대표 연락처)</label><input type="text" id="biz_privacyPhone"></div>
+          </div>
+          <div class="field">
+            <label>개인정보 이메일</label>
+            <input type="email" id="biz_privacyEmail">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section class="tab-panel" id="tab-faq" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">자주 묻는 질문 (quote.html)</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetFaqBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="addFaqBtn">+ 질문 추가</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">위에서부터 노출 순서. 드래그 대신 화살표로 이동.</div></div>
+        <div class="panel-body" id="faqList"></div>
+      </div>
+    </section>
+
+    <!-- ── INFO PAGE ── -->
+    <section class="tab-panel" id="tab-info" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">이용안내 페이지 (info.html)</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetInfoBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="addInfoSectionBtn">+ 섹션 추가</button>
+          <button class="btn btn-primary" id="saveInfoBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">서두 문구 — 페이지 최상단에 노출되는 안내 문장</div></div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="info_intro">안내 문구</label>
+            <textarea id="info_intro" rows="3" maxlength="400" placeholder="예) 해태렌트카의 렌트 절차와 필요 서류를 안내해 드립니다. 추가 문의는 견적 문의 또는 전화로 연락 주세요."></textarea>
+            <span class="field-hint">방문자가 이용안내 페이지에 들어왔을 때 가장 먼저 읽는 문장입니다. 2~3 문장이 적당합니다.</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">섹션 (제목 + 본문) — 순서대로 노출, ↕로 위치 변경, ×로 제거</div></div>
+        <div class="panel-body" id="infoSectionList"></div>
+      </div>
+    </section>
+
+    <!-- ── FORM OPTIONS ── -->
+    <section class="tab-panel" id="tab-formopts" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">폼 드롭다운 옵션 (견적 문의 폼) <span class="header-meta">자동 저장</span></h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetFormOptsBtn">기본값 복원</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">견적 문의 폼에 노출되는 선택지 — 각 칸의 + 또는 Enter 로 항목 추가, 칩 옆 ×로 제거, ↕로 순서 변경</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>카테고리</label>
+              <div class="chip-editor" id="fo_categories" data-key="categories" data-placeholder="예: 법인 렌트"></div>
+            </div>
+            <div class="field">
+              <label>희망 지역</label>
+              <div class="chip-editor" id="fo_regions" data-key="regions" data-placeholder="예: 세종"></div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>희망 기간</label>
+              <div class="chip-editor" id="fo_periods" data-key="periods" data-placeholder="예: 60개월"></div>
+            </div>
+            <div class="field">
+              <label>운전 경력</label>
+              <div class="chip-editor" id="fo_experiences" data-key="experiences" data-placeholder="예: 10년 이상"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SETTINGS ── -->
+    <section class="tab-panel" id="tab-settings" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">사이트 정보</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetSettingsBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="saveSettingsBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">상단 / 푸터</div></div>
+        <div class="panel-body">
+          <div class="field">
+            <label>상단 배너 문구</label>
+            <input type="text" id="set_topBannerText" maxlength="50">
+          </div>
+          <div class="field">
+            <label>푸터 회사 소개 (줄바꿈 가능)</label>
+            <textarea id="set_footerDesc" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label>푸터 저작권 문구</label>
+            <input type="text" id="set_footerCopyright">
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">대표 연락처 (메인 / 견적 페이지)</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>대표 전화</label>
+              <input type="text" id="set_contactPhone">
+            </div>
+            <div class="field">
+              <label>운영시간 (줄바꿈 가능)</label>
+              <textarea id="set_contactHours" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">지점 정보 (회사소개 지도 영역)</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>지점 이름</label>
+              <input type="text" id="set_branchName">
+            </div>
+            <div class="field">
+              <label>지점 운영시간</label>
+              <input type="text" id="set_branchHours">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">차량 상세 페이지 — 기본 안내 배너 (모든 차량 공통)</div></div>
+        <div class="panel-body">
+          <div class="field">
+            <label>기본 안내 배너 이미지</label>
+            <div class="image-picker">
+              <select id="set_defaultDetailBanner">
+                <option value="">(없음 — 비어둠)</option>
+              </select>
+              <button type="button" class="btn btn-ghost btn-sm" id="setDetailBannerUploadBtn">컴퓨터에서 업로드</button>
+              <input type="file" id="setDetailBannerUploadInput" accept="image/*" hidden>
+            </div>
+            <div class="image-preview" id="setDetailBannerPreview"></div>
+            <span class="field-hint">차량별로 별도 이미지를 설정하지 않으면 이 이미지가 모든 차량 상세 페이지 하단에 표시됩니다. 기본값은 <code>images/detail-page.webp</code>.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section class="tab-panel" id="tab-about" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">회사소개 페이지</h1>
+        <div class="admin-actions">
+          <button class="btn btn-ghost" id="resetAboutBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="saveAboutBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">히어로 본문</div></div>
+        <div class="panel-body">
+          <div class="field">
+            <label>제목</label>
+            <input type="text" id="abt_heading">
+          </div>
+          <div class="field">
+            <label>부제목 (줄바꿈 가능)</label>
+            <textarea id="abt_subheading" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label>설명문</label>
+            <textarea id="abt_description" rows="6"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">통계 4개</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>1번 라벨</label>
+              <input type="text" id="abt_stat1Label">
+            </div>
+            <div class="field">
+              <label>1번 숫자</label>
+              <input type="number" id="abt_stat1Value" min="0">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>2번 라벨</label>
+              <input type="text" id="abt_stat2Label">
+            </div>
+            <div class="field">
+              <label>2번 숫자</label>
+              <input type="number" id="abt_stat2Value" min="0">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>3번 라벨</label>
+              <input type="text" id="abt_stat3Label">
+            </div>
+            <div class="field">
+              <label>3번 숫자</label>
+              <input type="number" id="abt_stat3Value" min="0">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>4번 라벨</label>
+              <input type="text" id="abt_stat4Label">
+            </div>
+            <div class="field">
+              <label>4번 숫자</label>
+              <input type="number" id="abt_stat4Value" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LEGAL (Terms / Privacy) ── -->
+    <section class="tab-panel" id="tab-legal" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">약관·개인정보처리방침</h1>
+        <div class="admin-actions">
+          <select id="legalDocSelect" class="header-select">
+            <option value="terms">이용약관 (terms.html)</option>
+            <option value="privacy">개인정보처리방침 (privacy.html)</option>
+          </select>
+          <button class="btn btn-ghost" id="resetLegalBtn">기본값 복원</button>
+          <button class="btn btn-primary" id="addLegalSectionBtn">+ 조항 추가</button>
+          <button class="btn btn-primary" id="saveLegalBtn">저장</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">문서 메타</div></div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field"><label>문서 제목</label><input type="text" id="legal_title"></div>
+            <div class="field"><label>시행일자 표시 (예: 시행일자 2026년 5월 8일)</label><input type="text" id="legal_effective"></div>
+          </div>
+          <div class="field">
+            <label>서두 안내문</label>
+            <textarea id="legal_intro" rows="3" placeholder="문서 최상단에 노출되는 안내 문장을 입력하세요."></textarea>
+          </div>
+          <div class="field">
+            <label>문서 하단 주석 (선택)</label>
+            <textarea id="legal_note" rows="2" placeholder="예) [안내] 실제 운영 시 법무 검토 후 사용하시기 바랍니다."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">조항 / 섹션</div></div>
+        <div class="panel-body" id="legalSectionList"></div>
+      </div>
+    </section>
+
+    <!-- ── IMAGES ── -->
+    <section class="tab-panel" id="tab-images" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">이미지 업로드</h1>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">새 이미지 업로드</div></div>
+        <div class="panel-body">
+          <div class="upload-zone-v2" id="uploadZone" tabindex="0">
+            <input type="file" id="imgUploadInput" accept="image/*" multiple hidden>
+            <div class="uz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+            </div>
+            <div class="uz-title">이미지를 드래그 / 붙여넣기 (Ctrl+V) / 파일 선택</div>
+            <div class="uz-sub">JPEG·PNG·WebP·HEIC — 업로드 시 자동으로 WebP 최적화 (최대 1600px, ~80% 품질). 차량 / 배너에서 즉시 선택 가능합니다.</div>
+            <button class="btn btn-primary" id="imgUploadBtn" type="button">파일 선택</button>
+            <div class="uz-progress" id="uploadProgress" hidden>
+              <div class="uz-progress-bar"><div class="uz-progress-fill" id="uploadProgressFill"></div></div>
+              <div class="uz-progress-text" id="uploadProgressText">최적화 중…</div>
+            </div>
+          </div>
+          <div class="upload-meta">
+            <span>저장 용량: <strong id="imgStorageBytes">0</strong> / ~5MB (브라우저 localStorage)</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">업로드된 이미지</div></div>
+        <div class="panel-body">
+          <div class="img-grid" id="uploadedImageGrid"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ── 문의 상세 모달 ── -->
+<div class="modal-bg" id="inquiryModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>문의 상세</h3>
+      <button class="modal-close-x" id="inquiryModalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="inquiryModalBody"></div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" id="inquiryModalCancel">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 차량 편집 모달 ── -->
+<div class="modal-bg" id="carModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="carModalTitle">차량 추가</h3>
+      <button class="modal-close-x" id="carModalClose">&times;</button>
+    </div>
+    <form id="carForm" autocomplete="off">
+      <div class="modal-body">
+        <input type="hidden" id="cf_id">
+        <div class="field-row">
+          <div class="field">
+            <label>차량명 *</label>
+            <input type="text" id="cf_name" required maxlength="40">
+          </div>
+          <div class="field">
+            <label>연식</label>
+            <input type="number" id="cf_year" min="1990" max="2099" placeholder="예: 2024">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>가격 (원/월) *</label>
+            <input type="number" id="cf_price" required min="0" step="10000">
+          </div>
+          <div class="field">
+            <label>배지</label>
+            <input type="text" id="cf_badge" placeholder="예: 1개월 / 48개월" maxlength="10">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>이미지</label>
+          <div class="image-picker">
+            <select id="cf_image"></select>
+            <button type="button" class="btn btn-ghost btn-sm" id="cfImageUploadBtn" title="컴퓨터에서 직접 업로드 (자동 최적화)">컴퓨터에서 업로드</button>
+            <input type="file" id="cfImageUploadInput" accept="image/*" hidden>
+          </div>
+          <div class="image-preview" id="cfImagePreview" hidden></div>
+          <span class="field-hint">목록에서 선택하거나, 컴퓨터에서 직접 업로드하세요. 업로드 시 자동으로 1600px·WebP로 최적화됩니다.</span>
+        </div>
+
+        <div class="field">
+          <label>카테고리 (1개 이상 선택)</label>
+          <div class="cat-checks">
+            <label><input type="checkbox" value="monthly" name="cf_cat"> 월렌트</label>
+            <label><input type="checkbox" value="longterm" name="cf_cat"> 기간약정월렌트 (6개월~24개월)</label>
+            <label><input type="checkbox" value="used" name="cf_cat"> 중고차 장기렌트</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>태그 (쉼표로 구분)</label>
+          <input type="text" id="cf_tags" placeholder="예: 무심사, 무보증, 24년식">
+        </div>
+
+        <div class="form-section-divider">
+          <div class="form-section-title">차량 상세 페이지 (detail.html)에 노출될 정보</div>
+          <button type="button" class="btn btn-ghost btn-sm" id="cfPreviewDetailBtn" title="현재 차량의 상세 페이지 미리보기 열기">상세 페이지 미리보기</button>
+        </div>
+        <p class="form-section-hint">아래 항목들은 사용자가 차량 카드를 클릭했을 때 보이는 <strong>차량 상세 페이지</strong>에 자동 노출됩니다. 비워두면 해당 항목은 페이지에서 숨겨집니다.</p>
+
+        <div class="field-row">
+          <div class="field">
+            <label>연료 종류</label>
+            <select id="cf_fuelType">
+              <option value="">선택 안 함</option>
+              <option value="가솔린">가솔린</option>
+              <option value="디젤">디젤</option>
+              <option value="LPG">LPG</option>
+              <option value="하이브리드">하이브리드</option>
+              <option value="전기">전기</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>변속기</label>
+            <select id="cf_transmission">
+              <option value="">선택 안 함</option>
+              <option value="자동">자동</option>
+              <option value="수동">수동</option>
+              <option value="듀얼클러치">듀얼클러치</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>승차 인원</label>
+            <input type="number" id="cf_seats" min="1" max="20" placeholder="예: 5">
+          </div>
+          <div class="field">
+            <label>주행거리 (km, 중고차)</label>
+            <input type="number" id="cf_mileage" min="0" placeholder="중고차일 때만">
+          </div>
+        </div>
+        <div class="field">
+          <label>차량 소개 본문</label>
+          <textarea id="cf_description" rows="4" placeholder="차량의 특징·장점·추천 용도 등을 자유롭게 작성하세요. 줄바꿈은 그대로 표시됩니다."></textarea>
+        </div>
+        <div class="field">
+          <label>주요 옵션·특징 (쉼표로 구분)</label>
+          <input type="text" id="cf_features" placeholder="예: 통풍시트, 후방카메라, 스마트크루즈, 안드로이드오토">
+          <span class="field-hint">상세 페이지에서 체크 마크가 붙은 그리드로 표시됩니다.</span>
+        </div>
+
+        <div class="field">
+          <label>상세 페이지 하단 안내 이미지</label>
+          <div class="detail-img-status" id="cfDetailImageStatus">
+            <strong>현재 표시 중:</strong> <span id="cfDetailImageStatusText">기본 안내 배너</span>
+          </div>
+          <div class="image-picker">
+            <select id="cf_detailImage">
+              <option value="">기본 안내 배너 사용 (모든 차량 공통 / detail-page.webp)</option>
+            </select>
+            <button type="button" class="btn btn-ghost btn-sm" id="cfDetailImageUploadBtn">컴퓨터에서 업로드</button>
+            <input type="file" id="cfDetailImageUploadInput" accept="image/*" hidden>
+          </div>
+          <div class="image-preview" id="cfDetailImagePreview"></div>
+          <span class="field-hint">이 차량 전용 이미지를 선택하면 기본 안내 배너 대신 사용됩니다. "기본 안내 배너 사용" 을 선택하면 모든 차량이 공유하는 기본 이미지가 그대로 표시됩니다.</span>
+        </div>
+
+        <div class="form-section-divider">
+          <div class="form-section-title">랭킹 통계 (금주 TOP 5 산출용 — 보통 자동 누적)</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>조회수</label>
+            <input type="number" id="cf_views" min="0" value="0">
+          </div>
+          <div class="field">
+            <label>문의수</label>
+            <input type="number" id="cf_inquiries" min="0" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>계약수</label>
+          <input type="number" id="cf_contracts" min="0" value="0">
+          <span class="field-hint">조회·문의·계약 수치는 메인의 "금주 TOP 5" 랭킹 산출에 사용됩니다.</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="carModalCancel">취소</button>
+        <button type="submit" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── 차량 상세 페이지 미리보기 모달 (iframe) ── -->
+<div class="modal-bg" id="detailPreviewModal">
+  <div class="modal-box modal-box-preview">
+    <div class="modal-head">
+      <h3 id="detailPreviewTitle">차량 상세 페이지 미리보기</h3>
+      <div class="modal-head-actions">
+        <select id="detailPreviewViewport" title="화면 크기 변경">
+          <option value="100%">데스크탑 (전체)</option>
+          <option value="768px">태블릿 (768)</option>
+          <option value="414px">모바일 (414)</option>
+          <option value="360px">모바일 (360)</option>
+        </select>
+        <a href="#" id="detailPreviewOpenLink" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">새 창</a>
+        <button class="modal-close-x" id="detailPreviewClose" type="button">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body modal-body-preview">
+      <div class="preview-frame-wrap" id="previewFrameWrap">
+        <iframe id="detailPreviewFrame" title="차량 상세 페이지 미리보기"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 비밀번호 변경 모달 ── -->
+<div class="modal-bg" id="pwModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-head">
+      <h3>비밀번호 변경</h3>
+      <button class="modal-close-x" id="pwModalClose" type="button">&times;</button>
+    </div>
+    <form id="pwForm" autocomplete="off">
+      <div class="modal-body">
+        <div class="field">
+          <label>현재 비밀번호</label>
+          <input type="password" id="pw_current" required autocomplete="current-password">
+        </div>
+        <div class="field">
+          <label>새 비밀번호 (8자 이상)</label>
+          <input type="password" id="pw_new" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="field">
+          <label>새 비밀번호 확인</label>
+          <input type="password" id="pw_confirm" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="login-error" id="pwError"></div>
+        <p class="field-hint" id="pwHint" hidden>※ 데모 모드: 새 비밀번호는 이 브라우저(localStorage)에만 저장됩니다.</p>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="pwCancel">취소</button>
+        <button type="submit" class="btn btn-primary">변경</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+# ══════════════════════════════════════════════════════════
+# 해태렌트카 — Cafe24 Autobahn (Apache) 운영 설정
+# ══════════════════════════════════════════════════════════
+
+# ── 기본 인코딩 ──
+AddDefaultCharset UTF-8
+
+# ── MIME (구형 Apache 대비) ──
+<IfModule mod_mime.c>
+  AddType image/webp           .webp
+  AddType image/avif           .avif
+  AddType font/woff            .woff
+  AddType font/woff2           .woff2
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ── 디렉토리 인덱싱 차단 ──
+Options -Indexes -MultiViews
+
+# ── 기본 문서 ──
+DirectoryIndex index.html index.htm index.php
+
+# ══════════════════════════════════════════════════════════
+# GZIP 압축 (mod_deflate) — 텍스트 리소스 전송 크기 70% 절감
+# ══════════════════════════════════════════════════════════
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/ld+json application/xml application/rss+xml
+  AddOutputFilterByType DEFLATE application/manifest+json application/vnd.ms-fontobject
+  AddOutputFilterByType DEFLATE image/svg+xml image/x-icon
+  AddOutputFilterByType DEFLATE font/ttf font/otf font/woff font/woff2
+  # 이미 압축된 형식은 제외 (이중 압축 방지)
+  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|woff2?)$ no-gzip dont-vary
+</IfModule>
+
+# ══════════════════════════════════════════════════════════
+# 브라우저 캐시 (mod_expires)
+# ══════════════════════════════════════════════════════════
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                          "access plus 1 month"
+
+  # 정적 자산 — 장기 캐시
+  ExpiresByType image/webp                "access plus 6 months"
+  ExpiresByType image/avif                "access plus 6 months"
+  ExpiresByType image/jpeg                "access plus 6 months"
+  ExpiresByType image/png                 "access plus 6 months"
+  ExpiresByType image/gif                 "access plus 6 months"
+  ExpiresByType image/svg+xml             "access plus 6 months"
+  ExpiresByType image/x-icon              "access plus 6 months"
+  ExpiresByType font/woff                 "access plus 1 year"
+  ExpiresByType font/woff2                "access plus 1 year"
+  ExpiresByType application/font-woff     "access plus 1 year"
+  ExpiresByType application/font-woff2    "access plus 1 year"
+
+  # CSS / JS — 1주 (배포 후 빠른 반영)
+  ExpiresByType text/css                  "access plus 1 week"
+  ExpiresByType application/javascript    "access plus 1 week"
+  ExpiresByType text/javascript           "access plus 1 week"
+
+  # JSON / XML / 매니페스트
+  ExpiresByType application/json          "access plus 1 day"
+  ExpiresByType application/manifest+json "access plus 1 week"
+  ExpiresByType text/xml                  "access plus 1 day"
+  ExpiresByType application/xml           "access plus 1 day"
+
+  # HTML — 캐시 안 함 (항상 최신)
+  ExpiresByType text/html                 "access plus 0 seconds"
+</IfModule>
+
+# ══════════════════════════════════════════════════════════
+# 보안 헤더
+# ══════════════════════════════════════════════════════════
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options       "nosniff"
+  Header set X-Frame-Options              "SAMEORIGIN"
+  Header set Referrer-Policy              "strict-origin-when-cross-origin"
+  Header set Permissions-Policy           "geolocation=(), microphone=(), camera=()"
+
+  # HSTS — SSL 적용 후 활성화 (먼저 https://...로 강제 redirect 가 동작하는지 확인 후 주석 해제)
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # HTML 응답은 캐시 금지 + 콘텐츠 보안 토큰
+  <FilesMatch "\.(html|htm|php)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+    Header unset ETag
+  </FilesMatch>
+
+  # 정적 자산은 immutable 힌트 (1주 이상 캐시되는 리소스)
+  <FilesMatch "\.(webp|avif|jpg|jpeg|png|gif|svg|ico|woff|woff2|css|js)$">
+    Header set Cache-Control "public, max-age=604800"
+    Header unset Pragma
+  </FilesMatch>
+</IfModule>
+FileETag None
+
+# ══════════════════════════════════════════════════════════
+# 민감 파일 보호
+# ══════════════════════════════════════════════════════════
+<FilesMatch "^\.(htaccess|htpasswd|env|git|DS_Store)">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(md|json|lock|log|sql|bak|swp|orig)$">
+  Require all denied
+</FilesMatch>
+
+# 백엔드 PHP 인클루드 폴더 직접 접근 차단
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # /api/_lib 같은 내부 폴더 차단
+  RewriteRule ^(.*\.inc\.php)$ - [F,L]
+
+  # HTTPS 강제 (SSL 인증서 적용 후 주석 해제 권장)
+  # RewriteCond %{HTTPS} off
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # www → non-www 통일 (선택)
+  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  # RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ══════════════════════════════════════════════════════════
+# 커스텀 에러 페이지 — 추후 추가 시 활성화
+# ══════════════════════════════════════════════════════════
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html
+
+# ══════════════════════════════════════════════════════════
+# 관리자 영역 보호 — 운영 시 PHP 세션 인증으로 교체 권장
+# ══════════════════════════════════════════════════════════
+# 임시 Basic Auth 적용 예시:
+# <Directory "/사용자절대경로/admin">
+#   AuthType Basic
+#   AuthName "관리자"
+#   AuthUserFile /사용자절대경로/.htpasswd
+#   Require valid-user
+# </Directory>
