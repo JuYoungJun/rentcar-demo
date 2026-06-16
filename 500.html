@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>일시적인 서버 오류 (500) — 해태렌트카</title>
+<meta name="description" content="일시적인 서버 오류로 페이지를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.">
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#E53935">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<link rel="stylesheet" href="css/common.css">
+<style>
+.error-page{min-height:calc(100vh - 200px);display:flex;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
+.error-inner{max-width:560px}
+.error-code{font-size:clamp(72px,12vw,140px);font-weight:900;color:var(--red);line-height:1;letter-spacing:-0.04em}
+.error-title{font-size:clamp(20px,3vw,28px);font-weight:800;color:var(--dark);margin:18px 0 12px}
+.error-desc{font-size:15px;color:var(--text-light);line-height:1.8;margin-bottom:32px}
+.error-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.error-btn{padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:none}
+.error-btn--primary{background:var(--red);color:#fff}
+.error-btn--secondary{background:#f3f4f6;color:var(--dark)}
+.error-btn:hover{transform:translateY(-2px)}
+.error-contact{margin-top:36px;padding:18px;background:#fff7f6;border-radius:10px;font-size:14px;color:var(--dark)}
+.error-contact strong{color:var(--red);font-weight:800}
+</style>
+</head>
+<body data-page="error">
+<div id="header-include"></div>
+<main class="error-page">
+  <div class="error-inner">
+    <div class="error-code">500</div>
+    <h1 class="error-title">일시적인 서버 오류가 발생했습니다</h1>
+    <p class="error-desc">
+      현재 서버에 문제가 있어 페이지를 불러올 수 없습니다.<br>
+      잠시 후 다시 시도해 주시면 감사하겠습니다.
+    </p>
+    <div class="error-actions">
+      <button class="error-btn error-btn--primary" onclick="location.reload()">다시 시도</button>
+      <a href="/" class="error-btn error-btn--secondary">홈으로 이동</a>
+    </div>
+    <div class="error-contact">
+      급한 문의는 전화로 연락 주세요.<br>
+      <strong>062-714-1688</strong> · <strong>010-6611-6633</strong>
+    </div>
+  </div>
+</main>
+<div id="footer-include"></div>
+<script src="js/common.js" defer></script>
+</body>
+</html>

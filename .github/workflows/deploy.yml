@@ -104,6 +104,11 @@ jobs:
             **/api/logs/**
             **/images/uploads/*
             !**/images/uploads/.htaccess
+            **/images/banner_1.png
+            **/images/banner_2.png
+            **/images/banner_3.png
+            **/images/banner_4.png
+            **/images/banner_5.png
             **/README.md
             **/api/README.md
             **/.DS_Store

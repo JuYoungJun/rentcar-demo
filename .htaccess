@@ -121,10 +121,14 @@ FileETag None
 </IfModule>
 
 # ══════════════════════════════════════════════════════════
-# 커스텀 에러 페이지 — 추후 추가 시 활성화
+# 커스텀 에러 페이지
 # ══════════════════════════════════════════════════════════
-# ErrorDocument 404 /404.html
-# ErrorDocument 500 /500.html
+ErrorDocument 400 /404.html
+ErrorDocument 403 /404.html
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+ErrorDocument 502 /500.html
+ErrorDocument 503 /500.html
 
 # ══════════════════════════════════════════════════════════
 # 관리자 영역 보호 — 운영 시 PHP 세션 인증으로 교체 권장

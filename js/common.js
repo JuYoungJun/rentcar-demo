@@ -33,7 +33,7 @@
   /* ── Toast ── */
   window.showToast = function(msg) {
     const t = document.getElementById('toast');
-    if (!t) { console.log('[toast]', msg); return; }
+    if (!t) return;  // toast 컨테이너 없으면 무시 (운영 로그 노출 방지)
     t.textContent = msg;
     t.classList.add('show');
     clearTimeout(t._timer);
@@ -1402,6 +1402,18 @@
     } catch (e) {}
   };
 
+  /* ── Service Worker 등록 (PWA 캐시·오프라인 fallback)
+     ─ HTTPS 운영 도메인에서만 활성 (file://·localhost http 에서는 자동 skip) ── */
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+    // 관리자 페이지에서는 SW 사용 안 함 (no-cache 정책)
+    if (location.pathname.startsWith('/admin/')) return;
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+    });
+  }
+
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', async () => {
     await loadIncludes();
@@ -1411,6 +1423,7 @@
     initFadeUp();
     // 운영 모드: 정적 렌더 직후 백엔드 데이터로 hydration
     hydrateFromBackend();
+    registerServiceWorker();
   });
 
 })();
