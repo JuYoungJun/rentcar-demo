@@ -32,3 +32,13 @@ KakaoTalk_*
 node_modules/
 dist/
 build/
+
+# AI 도구 설정·산출물 (푸시 금지)
+ai/
+.ai/
+.claude/
+.cursor/
+.aider*
+.github/copilot/
+CLAUDE.md
+AGENTS.md

@@ -117,6 +117,9 @@
 .map-info-item span {
   color: var(--text-light);
 }
+.map-info-item .map-info-sub {
+  margin-left: 8px;
+}
 
 /* 카카오 지도퍼가기 위젯 내부 주소·전화 영역 숨김 */
 .root_daum_roughmap_landing .address,

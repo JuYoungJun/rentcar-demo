@@ -68,7 +68,7 @@
     <table class="legal-table">
       <tr><th>본사 / 지점</th><td id="bizBranchName">해태렌트카 광주지점</td></tr>
       <tr><th>주소</th><td id="bizAddress">광주광역시 광산구 (실제 주소 기재)</td></tr>
-      <tr><th>대표 전화</th><td id="bizPhone">0000-0000</td></tr>
+      <tr><th>대표 전화</th><td id="bizPhone">062-714-1688</td></tr>
       <tr><th>이메일</th><td id="bizContactEmail">contact@haetae-rentcar.example</td></tr>
       <tr><th>운영시간</th><td id="bizHours">평일 09:00 - 18:00 / 주말 10:00 - 16:00</td></tr>
     </table>
@@ -78,7 +78,7 @@
     <h2>3. 개인정보 보호책임자</h2>
     <table class="legal-table">
       <tr><th>성명</th><td id="bizPrivacyOfficerName">해태렌트카 개인정보 보호책임자</td></tr>
-      <tr><th>연락처</th><td id="bizPrivacyPhone">0000-0000</td></tr>
+      <tr><th>연락처</th><td id="bizPrivacyPhone">010-6611-6633</td></tr>
       <tr><th>이메일</th><td id="bizPrivacyEmail">privacy@haetae-rentcar.example</td></tr>
     </table>
     <p>개인정보 처리에 관한 자세한 사항은 <a href="privacy.html" style="color:#E53935;text-decoration:underline">개인정보처리방침</a>을 참고하시기 바랍니다.</p>
@@ -145,10 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof loadSettings === 'function') {
     const s = loadSettings();
     set('bizPhone', s.contactPhone);
-    if (!document.getElementById('bizPrivacyPhone').textContent ||
-        document.getElementById('bizPrivacyPhone').textContent === '0000-0000') {
-      set('bizPrivacyPhone', s.contactPhone);
-    }
     set('bizBranchName', s.branchName);
     set('bizHours', s.branchHours);
   }

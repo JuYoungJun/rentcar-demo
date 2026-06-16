@@ -18,8 +18,8 @@
     foundingDate:    '2018-01-01',
     ceoName:         '홍길동',
     bizRegNumber:    '000-00-00000',
-    phone:           '+82-0-0000-0000',
-    phoneDisplay:    '0000-0000',
+    phone:           '+82-62-714-1688',
+    phoneDisplay:    '062-714-1688',
     email:           'contact@haetae-rentcar.example',
     addressRegion:   '광주광역시',
     addressLocality: '광산구',
@@ -302,7 +302,7 @@
       image: abs('/images/' + (car.image || 'logo.png')),
       description: (car.description && car.description.trim())
         ? car.description
-        : ('해태렌트카 ' + fromLabel + ' — ' + car.name + ' (' + (car.year || '') + '년식) ' + periodText + ' 이용 가능, 무심사·무보증 옵션 포함.'),
+        : ('해태렌트카 ' + fromLabel + ' — ' + car.name + ' ' + periodText + ' 이용 가능, 무심사·무보증 옵션 포함.'),
       brand: { '@type': 'Brand', name: guessBrand(car.name) },
       model: car.name,
       vehicleModelDate: String(car.year || ''),

@@ -109,35 +109,35 @@
      index.html 첫 페이지 라인과 BEST 라인에 우선 노출되도록 함.
      ── */
   const DEFAULT_CARS = [
-    // ── 월렌트 (1개월 단기) — 신형 2025-2026년식 ──
-    { id:1,  name:'모닝 신형',       tags:['경차','신형','무심사'],          year:2026, price:550000,  badge:'1개월', category:['monthly'],   inquiries:88, views:720, contracts:42, image:'morning.webp' },
-    { id:2,  name:'레이 신형',       tags:['경차','신형','무보증'],          year:2026, price:550000,  badge:'1개월', category:['monthly'],   inquiries:82, views:680, contracts:38, image:'ray.webp' },
-    { id:3,  name:'캐스퍼 신형',     tags:['경차','신형','무심사','무보증'], year:2026, price:600000,  badge:'1개월', category:['monthly'],   inquiries:75, views:640, contracts:34, image:'casper.webp' },
-    { id:5,  name:'아반떼 신형',     tags:['26년식','신형','무보증'],        year:2026, price:650000,  badge:'1개월', category:['monthly'],   inquiries:68, views:590, contracts:28, image:'avante-2.webp' },
-    { id:6,  name:'K5 신형',         tags:['26년식','신형','무심사'],        year:2026, price:700000,  badge:'1개월', category:['monthly'],   inquiries:55, views:480, contracts:24, image:'k5.webp' },
-    { id:8,  name:'소나타 신형',     tags:['26년식','신형','무심사'],        year:2026, price:700000,  badge:'1개월', category:['monthly'],   inquiries:52, views:450, contracts:23, image:'sonata.webp' },
-    { id:10, name:'더 뉴 셀토스',    tags:['26년식','SUV','신형'],           year:2026, price:750000,  badge:'1개월', category:['monthly'],   inquiries:46, views:400, contracts:19, image:'seltos.webp' },
+    // ── 월렌트 (1개월 단기) ──
+    { id:1,  name:'모닝',            tags:['경차','무심사'],            year:2026, price:550000,  badge:'1개월', category:['monthly'],   inquiries:88, views:720, contracts:42, image:'morning.webp' },
+    { id:2,  name:'레이',            tags:['경차','무보증'],            year:2026, price:550000,  badge:'1개월', category:['monthly'],   inquiries:82, views:680, contracts:38, image:'ray.webp' },
+    { id:3,  name:'캐스퍼',          tags:['경차','무심사','무보증'],   year:2026, price:600000,  badge:'1개월', category:['monthly'],   inquiries:75, views:640, contracts:34, image:'casper.webp' },
+    { id:5,  name:'아반떼',          tags:['무보증'],                   year:2026, price:650000,  badge:'1개월', category:['monthly'],   inquiries:68, views:590, contracts:28, image:'avante-2.webp' },
+    { id:6,  name:'K5',              tags:['무심사'],                   year:2026, price:700000,  badge:'1개월', category:['monthly'],   inquiries:55, views:480, contracts:24, image:'k5.webp' },
+    { id:8,  name:'소나타',          tags:['무심사'],                   year:2026, price:700000,  badge:'1개월', category:['monthly'],   inquiries:52, views:450, contracts:23, image:'sonata.webp' },
+    { id:10, name:'더 뉴 셀토스',    tags:['SUV'],                      year:2026, price:750000,  badge:'1개월', category:['monthly'],   inquiries:46, views:400, contracts:19, image:'seltos.webp' },
 
     // ── 12개월 기간약정 — 가격 낮은순 정렬 ──
     { id:20, name:'모닝',            tags:['경차','12개월약정','무심사'],     year:2025, price:400000,  badge:'12개월', category:['longterm'],  inquiries:90, views:730, contracts:44, image:'morning.webp' },
     { id:21, name:'레이',            tags:['경차','12개월약정','무보증'],     year:2025, price:400000,  badge:'12개월', category:['longterm'],  inquiries:85, views:690, contracts:40, image:'ray.webp' },
     { id:22, name:'캐스퍼',          tags:['경차','12개월약정','무심사'],     year:2025, price:450000,  badge:'12개월', category:['longterm'],  inquiries:78, views:650, contracts:36, image:'casper.webp' },
-    { id:4,  name:'아반떼',          tags:['25년식','12개월약정','무심사'],   year:2025, price:500000,  badge:'12개월', category:['longterm'],  inquiries:72, views:620, contracts:32, image:'avante.webp' },
-    { id:23, name:'K5 DL3',          tags:['25년식','12개월약정','무보증'],   year:2025, price:550000,  badge:'12개월', category:['longterm'],  inquiries:58, views:500, contracts:26, image:'k5.webp' },
-    { id:7,  name:'소나타 디 엣지',  tags:['24년식','12개월약정','무심사'],   year:2024, price:600000,  badge:'12개월', category:['longterm'],  inquiries:50, views:430, contracts:22, image:'sonata-edge.webp' },
-    { id:9,  name:'더 뉴 셀토스',    tags:['25년식','SUV','12개월약정'],      year:2025, price:600000,  badge:'12개월', category:['longterm'],  inquiries:48, views:410, contracts:20, image:'seltos.webp' },
-    { id:25, name:'K8',              tags:['24년식','12개월약정','프리미엄'], year:2024, price:850000,  badge:'12개월', category:['longterm'],  inquiries:36, views:330, contracts:15, image:'grandeur.webp' },
-    { id:24, name:'그랜져 GN7',      tags:['25년식','신형','12개월약정'],     year:2025, price:950000,  badge:'12개월', category:['longterm'],  inquiries:40, views:360, contracts:17, image:'grandeur-gn7.webp' },
+    { id:4,  name:'아반떼',          tags:['12개월약정','무심사'],            year:2025, price:500000,  badge:'12개월', category:['longterm'],  inquiries:72, views:620, contracts:32, image:'avante.webp' },
+    { id:23, name:'K5 DL3',          tags:['12개월약정','무보증'],            year:2025, price:550000,  badge:'12개월', category:['longterm'],  inquiries:58, views:500, contracts:26, image:'k5.webp' },
+    { id:7,  name:'소나타 디 엣지',  tags:['12개월약정','무심사'],            year:2024, price:600000,  badge:'12개월', category:['longterm'],  inquiries:50, views:430, contracts:22, image:'sonata-edge.webp' },
+    { id:9,  name:'더 뉴 셀토스',    tags:['SUV','12개월약정'],               year:2025, price:600000,  badge:'12개월', category:['longterm'],  inquiries:48, views:410, contracts:20, image:'seltos.webp' },
+    { id:25, name:'K8',              tags:['12개월약정','프리미엄'],          year:2024, price:850000,  badge:'12개월', category:['longterm'],  inquiries:36, views:330, contracts:15, image:'grandeur.webp' },
+    { id:24, name:'그랜져 GN7',      tags:['12개월약정'],                     year:2025, price:950000,  badge:'12개월', category:['longterm'],  inquiries:40, views:360, contracts:17, image:'grandeur-gn7.webp' },
 
-    // ── 중고차 장기렌트 — 20-23년식 ──
-    { id:11, name:'카니발 4세대',    tags:['23년식','미니밴','무보증'],      year:2023, price:950000,  badge:'',       category:['used'],      inquiries:42, views:380, contracts:18, image:'carnival.webp' },
-    { id:13, name:'쏘렌토 MQ4',      tags:['21년식','SUV','무심사','무보증'],year:2021, price:750000,  badge:'',       category:['used'],      inquiries:36, views:330, contracts:15, image:'sorento.webp' },
-    { id:14, name:'더 뉴 쏘렌토',    tags:['23년식','SUV','무심사'],         year:2023, price:900000,  badge:'',       category:['used'],      inquiries:38, views:340, contracts:16, image:'sorento.webp' },
-    { id:15, name:'싼타페 MX5',      tags:['23년식','SUV','무보증'],         year:2023, price:950000,  badge:'',       category:['used'],      inquiries:35, views:320, contracts:14, image:'santafe.webp' },
-    { id:16, name:'더 뉴 그랜져',    tags:['20년식','무심사','무보증'],      year:2020, price:700000,  badge:'',       category:['used'],      inquiries:30, views:280, contracts:12, image:'grandeur.webp' },
-    { id:17, name:'더 뉴 그랜져',    tags:['21년식','무심사'],               year:2021, price:750000,  badge:'',       category:['used'],      inquiries:32, views:290, contracts:13, image:'grandeur-2.webp' },
-    { id:18, name:'그랜져 GN7',      tags:['23년식','신형','무심사'],        year:2023, price:1000000, badge:'',       category:['used'],      inquiries:34, views:300, contracts:14, image:'grandeur-gn7.webp' },
-    { id:19, name:'G80 RG3',         tags:['21년식','프리미엄','무심사'],    year:2021, price:1200000, badge:'',       category:['used'],      inquiries:45, views:390, contracts:18, image:'g80.webp' },
+    // ── 중고차 장기렌트 ──
+    { id:11, name:'카니발 4세대',    tags:['미니밴','무보증'],          year:2023, price:950000,  badge:'',       category:['used'],      inquiries:42, views:380, contracts:18, image:'carnival.webp' },
+    { id:13, name:'쏘렌토 MQ4',      tags:['SUV','무심사','무보증'],    year:2021, price:750000,  badge:'',       category:['used'],      inquiries:36, views:330, contracts:15, image:'sorento.webp' },
+    { id:14, name:'더 뉴 쏘렌토',    tags:['SUV','무심사'],             year:2023, price:900000,  badge:'',       category:['used'],      inquiries:38, views:340, contracts:16, image:'sorento.webp' },
+    { id:15, name:'싼타페 MX5',      tags:['SUV','무보증'],             year:2023, price:950000,  badge:'',       category:['used'],      inquiries:35, views:320, contracts:14, image:'santafe.webp' },
+    { id:16, name:'더 뉴 그랜져',    tags:['무심사','무보증'],          year:2020, price:700000,  badge:'',       category:['used'],      inquiries:30, views:280, contracts:12, image:'grandeur.webp' },
+    { id:17, name:'더 뉴 그랜져',    tags:['무심사'],                   year:2021, price:750000,  badge:'',       category:['used'],      inquiries:32, views:290, contracts:13, image:'grandeur-2.webp' },
+    { id:18, name:'그랜져 GN7',      tags:['무심사'],                   year:2023, price:1000000, badge:'',       category:['used'],      inquiries:34, views:300, contracts:14, image:'grandeur-gn7.webp' },
+    { id:19, name:'G80 RG3',         tags:['프리미엄','무심사'],        year:2021, price:1200000, badge:'',       category:['used'],      inquiries:45, views:390, contracts:18, image:'g80.webp' },
   ];
 
   const STORAGE_KEY = 'rentcar_admin_cars';
@@ -286,7 +286,7 @@
   /* ── Settings (관리자가 변경하는 사이트 공통 정보) ── */
   const DEFAULT_SETTINGS = {
     topBannerText: '월렌트 전문 해태렌트카',
-    contactPhone: '0000-0000',
+    contactPhone: '062-714-1688',
     contactHours: '평일 오전 9:00 - 오후 6:00\n주말 오전 10:00 - 오후 4:00',
     branchName: '해태렌트카 광주지점',
     branchHours: '평일 09:00 - 18:00 / 주말 10:00 - 16:00',
@@ -317,9 +317,9 @@
 
   /* ── About content (회사소개 페이지 본문) ── */
   const DEFAULT_ABOUT = {
-    heading: '설명을 넣어주세요',
-    subheading: '합리적인 요금과 다양한 차량 라인업을 통해\n고객의 이동을 편리하게 지원하는 렌트카 전문 기업입니다.',
-    description: '경차부터 고급 세단, SUV까지 폭넓은 선택지를 제공하여 다양한 니즈를 충족합니다. 단기·장기 렌트는 물론, 기업 고객을 위한 맞춤형 차량 운영 서비스도 지원합니다. 정기적인 점검과 체계적인 관리로 항상 최상의 차량 상태를 유지합니다. 간편한 예약 시스템과 신속한 배차로 이용 편의성을 극대화했습니다. 고객 중심의 서비스와 투명한 운영으로 신뢰를 쌓아가고 있습니다. 이동의 가치를 높이는 모빌리티 파트너로서 일상과 비즈니스를 함께합니다.',
+    heading: '경차 월렌트 전문 해태렌트카',
+    subheading: '합리적인 가격과 편리한 이용을 제공하는\n경차 월렌트 전문 업체입니다.',
+    description: '사회초년생, 직장인, 장기 출장 및 차량이 필요한 고객분들을 위해 부담 없는 비용으로 안정적인 월렌트 서비스를 제공하고 있습니다. 철저한 차량 관리와 신속한 배차, 친절한 상담을 바탕으로 고객 만족을 최우선으로 생각하며, 믿고 이용할 수 있는 든든한 이동 파트너가 되겠습니다.\n언제나 합리적인 가격과 최고의 서비스로 고객 여러분과 함께하겠습니다.',
     stat1Label: '누적 고객 수', stat1Value: 15000,
     stat2Label: '보유 차량', stat2Value: 500,
     stat3Label: '고객 만족도 (%)', stat3Value: 98,
@@ -359,7 +359,7 @@
     contactEmail:      'contact@haetae-rentcar.example',
     privacyOfficerName:'해태렌트카 개인정보 보호책임자',
     privacyEmail:      'privacy@haetae-rentcar.example',
-    privacyPhone:      '',  // 비워두면 contactPhone 사용
+    privacyPhone:      '010-6611-6633',
   };
   const BUSINESS_KEY = 'rentcar_business';
   window.DEFAULT_BUSINESS = DEFAULT_BUSINESS;

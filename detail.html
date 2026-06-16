@@ -55,7 +55,6 @@
 .detail-info{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:0 20px 20px}
 .detail-badge{display:inline-block;background:var(--red);color:var(--white);font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:6px}
 .detail-car-name{font-size:20px;font-weight:900;color:var(--dark);margin-bottom:2px}
-.detail-year{font-size:12px;color:var(--text-light)}
 .detail-info-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
 .detail-price{font-size:20px;font-weight:900;color:var(--dark)}
 .detail-price--inquiry{font-size:18px;color:var(--red);display:inline-flex;align-items:center;gap:8px}
@@ -111,7 +110,6 @@
     <div class="detail-info-left">
       <div class="detail-badge" id="detailBadge">1개월</div>
       <div class="detail-car-name" id="detailName">K5 DL3</div>
-      <div class="detail-year" id="detailYear">2023년식</div>
     </div>
     <div class="detail-info-right">
       <div class="detail-price" id="detailPrice">650,000 원</div>
@@ -137,7 +135,7 @@
   </div>
 
   <div class="detail-banners">
-    <img src="images/detail-page.webp" alt="해태렌트카 상세 안내" class="clickable" id="bannerCta" decoding="async" width="1200" height="9685" fetchpriority="high">
+    <img src="images/detail-page.webp" alt="해태렌트카 상세 안내" class="clickable" id="bannerCta" decoding="async" width="1200" height="9678" fetchpriority="high">
   </div>
   <!-- 차량별 상세 통이미지 (관리자에서 설정 시 노출) -->
   <div class="detail-long-image" id="detailLongImage" hidden>
@@ -170,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       priceEl.textContent = car.price.toLocaleString() + ' 원';
     }
-    document.getElementById('detailYear').textContent = (car.year || 2023) + '년식';
     document.title = car.name + ' - 해태렌트카';
     if (car.image) {
       const detailImg = document.querySelector('.detail-image .img-placeholder');
@@ -225,8 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fromPath   = fromPage === 'longterm' ? '/longterm.html' : fromPage === 'used' ? '/used.html' : '/monthly.html';
     const carUrl     = 'https://www.haetae-rentcar.com/detail.html?id=' + car.id + '&from=' + fromPage;
     const carImage   = car.image ? ('https://www.haetae-rentcar.com/images/' + car.image) : 'https://www.haetae-rentcar.com/images/banner_1.webp';
-    const newTitle   = car.name + ' ' + (car.year || '') + '년식 ' + fromLabel + ' (월 ' + (car.price ? car.price.toLocaleString() : '문의') + '원) — 해태렌트카';
-    const newDesc    = '해태렌트카 ' + fromLabel + ' — ' + car.name + ' ' + (car.year || '') + '년식, 월 임대료 ' + (car.price ? car.price.toLocaleString() + '원' : '상담') +
+    const newTitle   = car.name + ' ' + fromLabel + ' (월 ' + (car.price ? car.price.toLocaleString() : '문의') + '원) — 해태렌트카';
+    const newDesc    = '해태렌트카 ' + fromLabel + ' — ' + car.name + ', 월 임대료 ' + (car.price ? car.price.toLocaleString() + '원' : '상담') +
                        (car.fuelType ? ', ' + car.fuelType : '') + (car.transmission ? ', ' + car.transmission : '') +
                        (car.seats ? ', ' + car.seats + '인승' : '') + '. 무심사·무보증 옵션 포함, 광주 본점 + 전국 8개 지점 운영.';
 
@@ -283,7 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!(car && car.detailImage)) {
     const cta = document.getElementById('bannerCta');
     if (fromPage === 'longterm') {
-      if (cta) cta.src = 'images/detail_longterm.jpg';
+      if (cta) {
+        cta.src = 'images/detail_longterm.jpg';
+        cta.setAttribute('width', '1200');
+        cta.setAttribute('height', '9523');
+      }
     } else if (fromPage === 'used') {
       if (cta) {
         cta.src = 'images/detail_used.webp';
