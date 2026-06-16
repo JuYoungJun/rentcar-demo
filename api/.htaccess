@@ -1,0 +1,32 @@
+# ══════════════════════════════════════════════════════════
+# API 폴더 — Apache 보안 정책 (카페24)
+# ══════════════════════════════════════════════════════════
+
+# 디렉토리 인덱스 차단
+Options -Indexes
+
+# 민감 파일 차단 — _config.php / _helpers.php / _db.php 등 인클루드 전용 파일 직접 접근 금지
+<FilesMatch "^_">
+  Require all denied
+</FilesMatch>
+
+# 데이터 폴더 보호
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^data/ - [F,L]
+</IfModule>
+
+# 보안 헤더
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer"
+  Header set Cache-Control "no-store, no-cache, must-revalidate"
+
+  # CORS 는 PHP 측에서 제어
+</IfModule>
+
+# PHP 에러 메시지 외부 노출 차단 (운영)
+<IfModule mod_php.c>
+  php_flag display_errors off
+  php_flag log_errors on
+</IfModule>

@@ -15,9 +15,18 @@
 (function () {
   'use strict';
 
+  /* ── 운영/로컬 자동 감지
+     ─ file:// 프로토콜, localhost, 127.0.0.1, GitHub Pages → MOCK
+     ─ 그 외 도메인(실서버) → 실제 PHP 백엔드 호출 ─ */
+  const _h = (location.hostname || '').toLowerCase();
+  const _isMockHost =
+    location.protocol === 'file:' ||
+    _h === 'localhost' || _h === '127.0.0.1' || _h === '' ||
+    /\.github\.io$/.test(_h);
+
   const CONFIG = {
-    MOCK_BACKEND: true,                         // ← 운영 시 false 로 변경
-    API_BASE: '/api/admin',
+    MOCK_BACKEND: _isMockHost,                  // 운영 도메인이면 자동 false
+    API_BASE: '/api',                           // /api/login.php, /api/me.php 등
     SESSION_KEY: 'rentcar_admin_session',
     SESSION_TTL_MS: 60 * 60 * 1000,             // 절대 만료: 1시간
     IDLE_TIMEOUT_MS: 30 * 60 * 1000,            // 유휴 만료: 30분
@@ -76,10 +85,12 @@
     }
   }
   function writeSession(payload) {
+    // 서버 발급 CSRF 우선 — PHP 백엔드는 이 토큰을 sessions 테이블에 저장해두므로
+    // 클라이언트는 동일 토큰을 X-CSRF-Token 헤더로 다시 보내야 검증 통과
     const session = {
       token: payload.token,
       user: payload.user,
-      csrf: makeCsrfToken(),
+      csrf: payload.csrf || makeCsrfToken(),
       issuedAt: Date.now(),
       lastActivityAt: Date.now(),
       expiresAt: Date.now() + CONFIG.SESSION_TTL_MS,
@@ -162,7 +173,7 @@
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return { ok: false, error: data.message || '로그인 실패 (' + res.status + ')' };
-      return { ok: true, token: data.token, user: data.user };
+      return { ok: true, token: data.token, csrf: data.csrf, user: data.user };
     } catch (e) {
       return { ok: false, error: '서버에 연결할 수 없습니다.' };
     }

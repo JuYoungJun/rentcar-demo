@@ -350,16 +350,20 @@
      사업자 정보 (business.html / 법적 표시)
      ══════════════════════════════ */
   const DEFAULT_BUSINESS = {
-    companyName:       '해태렌트카',
-    ceoName:           '홍길동',
-    bizRegNumber:      '000-00-00000',
-    onlineSalesNumber: '제2026-광주광산-0000호',
-    industry:          '서비스업 / 자동차 임대업',
-    address:           '광주광역시 광산구 (실제 주소 기재)',
-    contactEmail:      'contact@haetae-rentcar.example',
-    privacyOfficerName:'해태렌트카 개인정보 보호책임자',
-    privacyEmail:      'privacy@haetae-rentcar.example',
-    privacyPhone:      '010-6611-6633',
+    companyName:        '주식회사 해태렌트카 광주지점',
+    ceoName:            '이창은',
+    bizRegNumber:       '476-85-02430',
+    corpRegNumber:      '205611-0017730',
+    openedAt:           '2022-12-13',
+    onlineSalesNumber:  '',  // 통신판매업 신고번호 (별도 신고 시 입력)
+    industry:           '서비스업 / 렌트카',
+    address:            '광주광역시 광산구 북문대로433번길 45 (신창동)',
+    headOfficeAddress:  '전라남도 영광군 법성면 굴비로1길 146, 101호',
+    contactEmail:       'contact@haetae-rentcar.com',
+    privacyOfficerName: '이창은',
+    privacyEmail:       'privacy@haetae-rentcar.com',
+    privacyPhone:       '010-6611-6633',
+    kakaoChatUrl:       'https://open.kakao.com/o/sPZhlPzi',
   };
   const BUSINESS_KEY = 'rentcar_business';
   window.DEFAULT_BUSINESS = DEFAULT_BUSINESS;
@@ -1317,6 +1321,76 @@
     _backend: { mode: 'localStorage' },  // 'api' 로 바꾸면 PHP 호출로 전환
   };
 
+  /* ══════════════════════════════════════════════════════════
+     RUNTIME BACKEND HYDRATION (운영 모드 자동 감지)
+     ──────────────────────────────────────────────────────────
+     운영 도메인에서는 /api/cars.php · /api/settings.php 호출로
+     실제 DB 데이터로 carDatabase / settings 를 덮어쓰고
+     렌더 함수를 재실행해서 최신 데이터로 즉시 반영한다.
+     ───
+     - 로컬(localhost·file://·*.github.io) 에서는 호출 자체를 생략 → 정적 fallback 유지
+     - 호출 실패 시 console.warn 만 남기고 정적 데이터 그대로 사용 → 화이트 페이지 방지
+     ══════════════════════════════════════════════════════════ */
+  function _isProdHost() {
+    const h = (location.hostname || '').toLowerCase();
+    if (location.protocol === 'file:' || h === 'localhost' || h === '127.0.0.1' || h === '') return false;
+    if (/\.github\.io$/.test(h)) return false;
+    return true;
+  }
+
+  async function hydrateFromBackend() {
+    if (!_isProdHost()) return;
+    const API = '/api';
+    // 1) 차량 목록
+    try {
+      const res = await fetch(API + '/cars.php', { credentials: 'same-origin' });
+      if (res.ok) {
+        const d = await res.json();
+        if (d && d.ok && Array.isArray(d.cars) && d.cars.length) {
+          window.carDatabase = d.cars;
+          window._backend = { mode: 'api' };
+        }
+      }
+    } catch (e) { /* fallback to defaults */ }
+
+    // 2) 사이트 설정 (site / about / business)
+    try {
+      const res = await fetch(API + '/settings.php', { credentials: 'same-origin' });
+      if (res.ok) {
+        const d = await res.json();
+        if (d && d.ok && d.settings) {
+          if (d.settings.site)     window._serverSiteSettings    = d.settings.site;
+          if (d.settings.about)    window._serverAboutContent    = d.settings.about;
+          if (d.settings.business) window._serverBusinessContent = d.settings.business;
+          if (d.settings.banners)  window._serverBanners         = d.settings.banners;
+          if (d.settings.hero_banners) window._serverHeroBanners = d.settings.hero_banners;
+          if (d.settings.faq)      window._serverFAQ             = d.settings.faq;
+        }
+      }
+    } catch (e) {}
+
+    // 렌더 재실행 — 로드 직후 정적으로 그려진 화면을 DB 데이터로 갱신
+    try { typeof applySiteSettings === 'function' && applySiteSettings(); } catch (e) {}
+    try { typeof applyAboutContent  === 'function' && applyAboutContent();  } catch (e) {}
+    try { typeof window.applyHeroBanner === 'function' && window.applyHeroBanner(); } catch (e) {}
+    try { typeof window.renderCarCards === 'function' && document.querySelectorAll('[data-cars]').forEach(el => window.renderCarCards(el)); } catch (e) {}
+    document.dispatchEvent(new CustomEvent('rentcar:hydrated', { detail: { mode: window._backend && window._backend.mode } }));
+  }
+
+  /* ── 차량 상세 조회수 트래킹 (서버측, fire-and-forget) ── */
+  window.trackServerCarView = function(carId) {
+    if (!_isProdHost() || !carId) return;
+    try {
+      fetch('/api/track-view.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carId: Number(carId) }),
+        keepalive: true,
+        credentials: 'same-origin',
+      }).catch(() => {});
+    } catch (e) {}
+  };
+
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', async () => {
     await loadIncludes();
@@ -1324,6 +1398,8 @@
     applyAboutContent();
     if (typeof window.applyHeroBanner === 'function') window.applyHeroBanner();
     initFadeUp();
+    // 운영 모드: 정적 렌더 직후 백엔드 데이터로 hydration
+    hydrateFromBackend();
   });
 
 })();

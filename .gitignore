@@ -1,8 +1,10 @@
 # 개발·운영 문서 (배포 대상 아님)
 docs/
 
-# PHP 백엔드 (카페24 도입 시 별도 관리)
-api/
+# PHP 백엔드 — 코드는 추적, 설정/로그/캐시는 제외
+api/config.php
+api/.cache/
+api/logs/
 
 # OS / IDE
 .DS_Store

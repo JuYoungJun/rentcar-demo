@@ -11,42 +11,36 @@
 
   const SITE = 'https://www.haetae-rentcar.com';
 
-  /* ── 임시 사업자/지점 정보 (실데이터 확정 시 교체) ── */
+  /* ── 사업자/지점 정보 (사업자등록증 기준 실데이터) ── */
   const PLACEHOLDER = {
-    companyName:     '해태렌트카',
-    legalName:       '해태렌트카',
-    foundingDate:    '2018-01-01',
-    ceoName:         '홍길동',
-    bizRegNumber:    '000-00-00000',
+    companyName:     '주식회사 해태렌트카 광주지점',
+    legalName:       '주식회사 해태렌트카 광주지점',
+    foundingDate:    '2022-12-13',
+    ceoName:         '이창은',
+    bizRegNumber:    '476-85-02430',
+    corpRegNumber:   '205611-0017730',
     phone:           '+82-62-714-1688',
     phoneDisplay:    '062-714-1688',
-    email:           'contact@haetae-rentcar.example',
+    mobilePhone:     '010-6611-6633',
+    email:           'contact@haetae-rentcar.com',
     addressRegion:   '광주광역시',
     addressLocality: '광산구',
-    streetAddress:   '실제 상세주소 (임시)',
-    postalCode:      '62000',
-    latitude:        35.1399,   // 광주 광산구 대략 좌표 (임시)
-    longitude:       126.7935,
+    streetAddress:   '북문대로433번길 45 (신창동)',
+    postalCode:      '62221',
+    headOffice:      '전라남도 영광군 법성면 굴비로1길 146, 101호',
+    latitude:        35.1860,   // 광주 광산구 신창동 대략 좌표 — 정확한 좌표는 카카오맵에서 매장 등록 후 갱신 권장
+    longitude:       126.8050,
     priceRange:      '₩₩',
-    minPrice:        300000,
-    maxPrice:        2000000,
+    minPrice:        400000,
+    maxPrice:        1500000,
     areaServed:      ['광주광역시','전라남도','전라북도','대한민국 전 지역'],
     branches: [
-      { name: '해태렌트카 광주지점(본점)', region: '광주광역시' },
-      { name: '서울지점',                  region: '서울특별시' },
-      { name: '부산지점',                  region: '부산광역시' },
-      { name: '대전지점',                  region: '대전광역시' },
-      { name: '대구지점',                  region: '대구광역시' },
-      { name: '인천지점',                  region: '인천광역시' },
-      { name: '경기지점',                  region: '경기도' },
-      { name: '제주지점',                  region: '제주특별자치도' }
+      { name: '해태렌트카 광주지점', region: '광주광역시 광산구' },
     ],
     socialLinks: [
-      'https://www.instagram.com/haetae-rentcar',
-      'https://www.youtube.com/@haetae-rentcar',
-      'https://pf.kakao.com/haetae-rentcar'
+      'https://open.kakao.com/o/sPZhlPzi'
     ],
-    keywordsBlob:    '해태렌트카, 월렌트, 장기렌트, 기간약정월렌트, 중고차 장기렌트, 무심사 렌트카, 무보증 렌트카, 저신용 렌트카, 광주 렌트카, 전국 렌트카'
+    keywordsBlob:    '해태렌트카, 경차 월렌트, 월렌트, 장기렌트, 12개월 기간약정, 중고차 장기렌트, 무심사 렌트카, 무보증 렌트카, 저신용 렌트카, 광주 렌트카, 광산구 렌트카, 신창동 렌트카'
   };
 
   /* localStorage에 관리자 설정/사업자 정보가 있으면 우선 사용 */

@@ -155,6 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 실제 조회 1회 기록 — 금주 TOP 5 산정에 반영됨
   if (car && typeof trackCarView === 'function') trackCarView(car.id);
+  // 운영 모드: 서버측 활동 로그(cars.views +1, activity INSERT)
+  if (car && typeof window.trackServerCarView === 'function') window.trackServerCarView(car.id);
 
   if (car) {
     document.getElementById('bcCarName').textContent = car.name;
