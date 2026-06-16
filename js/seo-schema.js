@@ -154,12 +154,12 @@
           {
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
-            opens: '09:00', closes: '18:00'
+            opens: '09:00', closes: '19:00'
           },
           {
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: ['Saturday','Sunday'],
-            opens: '10:00', closes: '16:00'
+            opens: '10:00', closes: '19:00'
           }
         ],
         areaServed: info.areaServed.map(a => ({ '@type': 'AdministrativeArea', name: a })),

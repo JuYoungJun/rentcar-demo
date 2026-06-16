@@ -65,28 +65,6 @@
   </p>
 </div>
 
-<!-- STATS -->
-<div class="about-stats fade-up">
-  <div class="about-stats-inner">
-    <div class="stat-item">
-      <div class="stat-number" data-count="15000" id="stat1Value">0</div>
-      <div class="stat-label" id="stat1Label">누적 고객 수</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-number" data-count="500" id="stat2Value">0</div>
-      <div class="stat-label" id="stat2Label">보유 차량</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-number" data-count="98" id="stat3Value">0</div>
-      <div class="stat-label" id="stat3Label">고객 만족도 (%)</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-number" data-count="8" id="stat4Value">0</div>
-      <div class="stat-label" id="stat4Label">전국 지점</div>
-    </div>
-  </div>
-</div>
-
 <!-- VALUES -->
 <div class="about-values fade-up">
   <div class="about-values-title">해태렌트카가 약속하는 가치</div>
@@ -204,7 +182,7 @@
       </div>
       <div class="map-info-item">
         <strong>운영시간</strong>
-        <span id="mapBranchHours">평일 09:00 - 18:00 / 주말 10:00 - 16:00</span>
+        <span id="mapBranchHours">평일 09:00 - 19:00 / 주말 10:00 - 19:00</span>
       </div>
     </div>
   </div>
@@ -224,10 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
           type: 'AboutPage',
           url: '/about.html',
           title: '회사소개 — 해태렌트카',
-          description: '누적 고객 15,000+, 보유 차량 500+, 고객 만족도 98%, 전국 8개 지점 운영의 모빌리티 파트너.',
+          description: '경차 월렌트 전문 해태렌트카 — 사회초년생·직장인·장기 출장 고객을 위한 합리적인 월렌트 서비스. 광주 본점 + 전국 지점 운영.',
           image: '/images/banner_1.webp',
           breadcrumb: S.breadcrumb([{ name:'홈', url:'/' }, { name:'회사소개', url:'/about.html' }]),
-          speakableSelectors: ['.about-heading', '.about-subheading', '.about-desc', '.stat-number', '.stat-label']
+          speakableSelectors: ['.about-heading', '.about-subheading', '.about-desc']
         }),
         S.howto('/about.html'),
         {
@@ -249,28 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 
-// 카운터 애니메이션
-  const counters = document.querySelectorAll('.stat-number[data-count]');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const target = parseInt(el.dataset.count);
-        const duration = 1500;
-        const start = Date.now();
-        const tick = () => {
-          const elapsed = Date.now() - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.floor(target * eased).toLocaleString() + (target < 100 ? '' : '+');
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        tick();
-        observer.unobserve(el);
-      }
-    });
-  }, { threshold: 0.5 });
-  counters.forEach(c => observer.observe(c));
 });
 </script>
 </body>
