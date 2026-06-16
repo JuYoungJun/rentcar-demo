@@ -297,6 +297,11 @@
   const SETTINGS_KEY = 'rentcar_settings';
   window.DEFAULT_SETTINGS = DEFAULT_SETTINGS;
   window.loadSettings = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    if (window._serverSiteSettings && typeof window._serverSiteSettings === 'object') {
+      return Object.assign({}, DEFAULT_SETTINGS, window._serverSiteSettings);
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const saved = localStorage.getItem(SETTINGS_KEY);
       if (saved) {
@@ -328,6 +333,9 @@
   const ABOUT_KEY = 'rentcar_about';
   window.DEFAULT_ABOUT = DEFAULT_ABOUT;
   window.loadAbout = function() {
+    if (window._serverAboutContent && typeof window._serverAboutContent === 'object') {
+      return Object.assign({}, DEFAULT_ABOUT, window._serverAboutContent);
+    }
     try {
       const saved = localStorage.getItem(ABOUT_KEY);
       if (saved) {
@@ -368,6 +376,9 @@
   const BUSINESS_KEY = 'rentcar_business';
   window.DEFAULT_BUSINESS = DEFAULT_BUSINESS;
   window.loadBusiness = function() {
+    if (window._serverBusinessContent && typeof window._serverBusinessContent === 'object') {
+      return Object.assign({}, DEFAULT_BUSINESS, window._serverBusinessContent);
+    }
     try {
       const s = localStorage.getItem(BUSINESS_KEY);
       if (s) {
@@ -397,7 +408,7 @@
     { q: '견적 신청만 해도 비용이 발생하나요?',
       a: '견적 상담과 차량 추천 단계까지는 어떠한 비용도 발생하지 않습니다. 계약 전까지 자유롭게 비교·검토하실 수 있습니다.' },
     { q: '차량은 어디서 인수할 수 있나요?',
-      a: '전국 8개 지점에서 인수 가능하며, 일부 지역은 원하시는 장소로 직접 탁송해드리는 서비스도 제공합니다. 자세한 내용은 상담 시 안내해드립니다.' },
+      a: '광주 광산구 신창동 영업장에서 직접 인수하실 수 있으며, 지역에 따라 협의 후 탁송 서비스도 가능합니다. 자세한 내용은 상담 시 안내해드립니다.' },
     { q: '계약 도중 차량을 변경할 수 있나요?',
       a: '계약 조건과 잔여 기간에 따라 차량 교체가 가능합니다. 전담 상담사를 통해 가장 합리적인 방식으로 안내해드립니다.' },
   ];

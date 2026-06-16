@@ -1,0 +1,14 @@
+# Gitleaks 설정 — 의도된 placeholder 는 화이트리스트 처리
+[allowlist]
+description = "프로젝트 placeholder / 외부 예제값 허용"
+paths = [
+  '''api/_config.php''',           # DB 자리표 (your_db_*)
+  '''api/README.md''',              # 가이드 내 예시 변수명
+  '''README.md''',
+  '''docs/.*''',
+]
+regexes = [
+  '''your_db_(name|user|password)''',
+  '''REPLACE_WITH_[A-Z_]+''',
+  '''sk_test_[A-Za-z0-9]+''',  # Stripe 테스트 키 예시 (사용 안 함)
+]

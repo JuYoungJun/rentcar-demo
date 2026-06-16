@@ -109,7 +109,7 @@
   <div class="detail-info">
     <div class="detail-info-left">
       <div class="detail-badge" id="detailBadge">1개월</div>
-      <div class="detail-car-name" id="detailName">K5 DL3</div>
+      <h1 class="detail-car-name" id="detailName">K5 DL3</h1>
     </div>
     <div class="detail-info-right">
       <div class="detail-price" id="detailPrice">650,000 원</div>
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newTitle   = car.name + ' ' + fromLabel + ' (월 ' + (car.price ? car.price.toLocaleString() : '문의') + '원) — 해태렌트카';
     const newDesc    = '해태렌트카 ' + fromLabel + ' — ' + car.name + ', 월 임대료 ' + (car.price ? car.price.toLocaleString() + '원' : '상담') +
                        (car.fuelType ? ', ' + car.fuelType : '') + (car.transmission ? ', ' + car.transmission : '') +
-                       (car.seats ? ', ' + car.seats + '인승' : '') + '. 무심사·무보증 옵션 포함, 광주 본점 + 전국 8개 지점 운영.';
+                       (car.seats ? ', ' + car.seats + '인승' : '') + '. 무심사·무보증 옵션 포함, 광주 광산구 신창동 영업장 운영.';
 
     document.title = newTitle;
     const setMeta = (selector, attr, value) => {

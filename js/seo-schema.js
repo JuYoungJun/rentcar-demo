@@ -429,7 +429,7 @@
             buildWebPage({
               url: '/',
               title: '해태렌트카 — 월렌트·장기렌트 전문 (무심사·무보증)',
-              description: '월렌트 전문 해태렌트카 — 경차·소형차·SUV·고급세단까지. 무심사·무보증 차량 다수 보유, 전국 8개 지점 운영.',
+              description: '경차 월렌트 전문 해태렌트카 — 경차·소형차·SUV·고급세단까지. 무심사·무보증 차량, 광주 광산구 신창동 영업장 운영.',
               breadcrumb: buildBreadcrumb([{ name: '홈', url: '/' }]),
               speakableSelectors: ['h1', '.best-label', '.best-car-name', '.section-heading']
             }),

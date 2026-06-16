@@ -1,0 +1,126 @@
+name: Lint & Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 동일 PR/브랜치 내 중복 실행 자동 취소
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php-syntax:
+    name: PHP 8.2 Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: none
+
+      - name: Lint all PHP files
+        run: |
+          set -e
+          fail=0
+          while IFS= read -r f; do
+            if ! php -l "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::PHP syntax error"
+              php -l "$f" || true
+              fail=1
+            fi
+          done < <(find api -type f -name '*.php')
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "All PHP files passed syntax check."
+
+  static-validation:
+    name: Static File Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xmllint & jq
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils jq
+
+      - name: Validate sitemap.xml
+        run: xmllint --noout sitemap.xml
+
+      - name: Validate site.webmanifest (JSON)
+        run: jq empty site.webmanifest
+
+      - name: Check robots.txt (Sitemap directive present)
+        run: |
+          if ! grep -q "^Sitemap:" robots.txt; then
+            echo "::error file=robots.txt::Sitemap directive missing"
+            exit 1
+          fi
+
+      - name: HTML — required SEO meta on key pages
+        run: |
+          set -e
+          fail=0
+          for f in index.html monthly.html longterm.html used.html quote.html about.html business.html info.html detail.html; do
+            for tag in '<title>' 'name="description"' 'rel="canonical"' 'property="og:title"'; do
+              if ! grep -q "$tag" "$f"; then
+                echo "::error file=$f::missing $tag"
+                fail=1
+              fi
+            done
+          done
+          [ "$fail" -eq 0 ]
+
+      - name: Secret leak check (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-path: .gitleaks.toml
+        continue-on-error: true
+
+  schema-check:
+    name: DB Schema Sanity
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+          MARIADB_DATABASE: rentcar_test
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for MariaDB
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -uroot --silent 2>/dev/null; then
+              echo "MariaDB ready"; break
+            fi
+            sleep 1
+          done
+
+      - name: Import db/schema.sql
+        run: mysql -h127.0.0.1 -uroot rentcar_test < db/schema.sql
+
+      - name: Verify required tables exist
+        run: |
+          set -e
+          required="admins sessions cars settings inquiries activity uploaded_images"
+          existing=$(mysql -h127.0.0.1 -uroot rentcar_test -N -B -e 'SHOW TABLES')
+          for t in $required; do
+            if ! echo "$existing" | grep -qw "$t"; then
+              echo "::error::table missing: $t"; exit 1
+            fi
+          done
+          echo "All required tables present."

@@ -29,12 +29,20 @@ if ($method === 'GET') {
 
 require_csrf($sess);
 
+// 허용 status ENUM 화이트리스트 — DB ENUM 과 동기화
+const ALLOWED_STATUSES = ['new','contacted','quoted','contracted','cancelled'];
+
 if ($method === 'PUT') {
   $id = (int)($_GET['id'] ?? 0);
   if (!$id) json_out(['ok' => false, 'message' => 'id 필수'], 400);
   $b = json_in();
   $fields = []; $vals = [];
-  if (isset($b['status']))  { $fields[] = '`status` = ?';  $vals[] = $b['status']; }
+  if (isset($b['status'])) {
+    if (!in_array($b['status'], ALLOWED_STATUSES, true)) {
+      json_out(['ok' => false, 'message' => '허용되지 않은 상태값'], 422);
+    }
+    $fields[] = '`status` = ?';  $vals[] = $b['status'];
+  }
   if (isset($b['isRead']))  { $fields[] = '`is_read` = ?'; $vals[] = $b['isRead'] ? 1 : 0; }
   if (!$fields) json_out(['ok' => false, 'message' => '업데이트 필드 없음'], 400);
   $vals[] = $id;
@@ -44,6 +52,8 @@ if ($method === 'PUT') {
 
 if ($method === 'DELETE') {
   if (!empty($_GET['all'])) {
+    // 전체 삭제는 super admin 만 허용 (실수·악의적 호출 방지)
+    require_super($sess);
     db()->exec('DELETE FROM inquiries');
     json_out(['ok' => true, 'deleted' => 'all']);
   }

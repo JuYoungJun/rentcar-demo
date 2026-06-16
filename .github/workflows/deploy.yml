@@ -1,0 +1,144 @@
+name: Deploy to Cafe24
+
+# ══════════════════════════════════════════════════════════
+# 카페24 호스팅 자동 배포 (FTP/SFTP)
+# ──────────────────────────────────────────────────────────
+# 트리거: main 브랜치에 push 또는 수동 실행(workflow_dispatch)
+#
+# 사전 준비 — GitHub repo Settings → Secrets and variables → Actions
+#   1) FTP_HOST     : 카페24 FTP 호스트 (예: <ID>.cafe24.com 또는 ftp.<ID>.cafe24.com)
+#   2) FTP_USERNAME : 카페24 FTP 사용자 ID
+#   3) FTP_PASSWORD : 카페24 FTP 비밀번호
+#   4) (선택) FTP_PORT       : 기본 21 (FTP) 또는 22 (SFTP). 비즈니스 플랜은 SFTP 권장
+#   5) (선택) FTP_PROTOCOL   : "ftp" | "ftps" | "sftp" — 기본은 ftps (TLS 암호화 FTP)
+#   6) (선택) FTP_SERVER_DIR : 원격 루트 경로. 카페24 기본 "/" (홈디렉토리)
+#   7) (선택) HEALTH_CHECK_URL : 배포 후 헬스체크할 URL (예: https://실도메인.com/api/health.php)
+#
+# 보안:
+#   - api/_config.php (DB 패스워드 포함)는 절대 덮어쓰지 않음. 서버에 직접 1회 업로드 후 유지.
+#   - api/data/, images/uploads/ 처럼 운영 중 생성되는 폴더는 동기화 제외.
+#   - .git, .github, docs, db/schema.sql 등 배포 불필요 파일도 모두 제외.
+# ══════════════════════════════════════════════════════════
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry-run (실제 업로드 없이 변경 파일만 출력)'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: deploy-cafe24
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: SFTP/FTP Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL || 'https://www.haetae-rentcar.com' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Validate required secrets
+        run: |
+          missing=0
+          for s in FTP_HOST FTP_USERNAME FTP_PASSWORD; do
+            if [ -z "$(eval echo \$$s)" ]; then
+              echo "::error::Secret $s is not configured. Settings → Secrets → Actions"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ]
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+
+      - name: Deploy to Cafe24
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
+          dry-run: ${{ github.event.inputs.dry_run == 'true' }}
+          log-level: standard
+          # ── 배포 제외 패턴 ──
+          # 운영 환경에 절대 올리지 않을 파일/폴더. 한 줄당 하나의 glob.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github
+            **/.github/**
+            **/.claude
+            **/.claude/**
+            **/.vscode
+            **/.vscode/**
+            **/.idea
+            **/.idea/**
+            **/docs
+            **/docs/**
+            **/db
+            **/db/**
+            **/node_modules
+            **/node_modules/**
+            **/api/_config.php
+            **/api/data
+            **/api/data/**
+            **/api/logs
+            **/api/logs/**
+            **/images/uploads/*
+            !**/images/uploads/.htaccess
+            **/README.md
+            **/api/README.md
+            **/.DS_Store
+            **/Thumbs.db
+            **/*.log
+            **/*.bak
+            **/*.orig
+            **/*.tmp
+            **/.gitignore
+            **/.gitleaks.toml
+            **/.gitkeep
+
+      - name: Health check (post-deploy)
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          URL="${{ secrets.HEALTH_CHECK_URL }}"
+          if [ -z "$URL" ]; then
+            echo "::notice::HEALTH_CHECK_URL secret 이 설정되지 않아 헬스체크를 건너뜁니다."
+            exit 0
+          fi
+          echo "Pinging $URL ..."
+          # 최대 5회 재시도 (DNS·캐시 전파 대기)
+          for i in 1 2 3 4 5; do
+            resp=$(curl -sS -w "\n%{http_code}" "$URL" || echo -e "\n000")
+            code=$(echo "$resp" | tail -n1)
+            body=$(echo "$resp" | sed '$d')
+            if [ "$code" = "200" ]; then
+              echo "$body" | head -c 500
+              echo
+              if echo "$body" | grep -q '"ok":[[:space:]]*true'; then
+                echo "::notice::Health check OK"; exit 0
+              fi
+            fi
+            echo "Attempt $i: HTTP $code, retrying in 10s..."
+            sleep 10
+          done
+          echo "::error::Health check failed after 5 attempts"
+          exit 1
