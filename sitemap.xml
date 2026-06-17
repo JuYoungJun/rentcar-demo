@@ -1,120 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- ─── Main / Listing Pages ─── -->
-  <url>
-    <loc>https://www.haetae-rentcar.com/</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.haetae-rentcar.com/" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_1.webp</image:loc>
-      <image:title>해태렌트카 메인 배너 — 경차 월렌트 전문</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/monthly.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/monthly.html" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/hero_monthly.jpg</image:loc>
-      <image:title>월렌트 (1개월 단기) 차량 리스트</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/longterm.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/longterm.html" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/hero_longterm.jpg</image:loc>
-      <image:title>12개월 기간약정 월렌트 차량 리스트</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/used.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/used.html" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/hero_used.jpg</image:loc>
-      <image:title>중고차 장기렌트 차량 리스트</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/quote.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/quote.html" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/about.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/about.html" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/info.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/info.html" />
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/terms.html</loc>
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/privacy.html</loc>
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.haetae-rentcar.com/business.html</loc>
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- ─── Vehicle Detail Pages (monthly view) ─── -->
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=1&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/morning.webp</image:loc><image:title>모닝 월렌트 (1개월)</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=2&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/ray.webp</image:loc><image:title>레이 월렌트 (1개월)</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=3&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/casper.webp</image:loc><image:title>캐스퍼 월렌트 (1개월)</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=5&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/avante-2.webp</image:loc><image:title>아반떼 월렌트 (1개월)</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=6&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/k5.webp</image:loc><image:title>K5 월렌트 (1개월)</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=8&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/sonata.webp</image:loc><image:title>소나타 월렌트 (1개월)</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=10&amp;from=monthly</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/seltos.webp</image:loc><image:title>더 뉴 셀토스 월렌트 (1개월)</image:title></image:image></url>
-
-  <!-- ─── Vehicle Detail Pages (longterm 12개월 기간약정) ─── -->
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=20&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/morning.webp</image:loc><image:title>모닝 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=21&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/ray.webp</image:loc><image:title>레이 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=22&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/casper.webp</image:loc><image:title>캐스퍼 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=4&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/avante.webp</image:loc><image:title>아반떼 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=23&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/k5.webp</image:loc><image:title>K5 DL3 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=7&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/sonata-edge.webp</image:loc><image:title>소나타 디 엣지 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=9&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/seltos.webp</image:loc><image:title>더 뉴 셀토스 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=25&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur.webp</image:loc><image:title>K8 12개월 기간약정</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=24&amp;from=longterm</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur-gn7.webp</image:loc><image:title>그랜져 GN7 12개월 기간약정</image:title></image:image></url>
-
-  <!-- ─── Vehicle Detail Pages (중고차 장기렌트) ─── -->
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=11&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/carnival.webp</image:loc><image:title>카니발 4세대 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=13&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/sorento.webp</image:loc><image:title>쏘렌토 MQ4 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=14&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/sorento.webp</image:loc><image:title>더 뉴 쏘렌토 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=15&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/santafe.webp</image:loc><image:title>싼타페 MX5 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=16&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur.webp</image:loc><image:title>더 뉴 그랜져 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=17&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur-2.webp</image:loc><image:title>더 뉴 그랜져 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=18&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur-gn7.webp</image:loc><image:title>그랜져 GN7 중고차 장기렌트</image:title></image:image></url>
-  <url><loc>https://www.haetae-rentcar.com/detail.html?id=19&amp;from=used</loc><lastmod>2026-06-16</lastmod><changefreq>weekly</changefreq><priority>0.7</priority><image:image><image:loc>https://www.haetae-rentcar.com/images/g80.webp</image:loc><image:title>G80 RG3 중고차 장기렌트</image:title></image:image></url>
-</urlset>
+<!--
+  Sitemap Index — 검색엔진은 여기에서 시작
+  · sitemap-pages.xml    : 정적 페이지 (홈/카테고리/법적 페이지)
+  · sitemap-vehicles.xml : 차량 상세 페이지
+  · sitemap-images.xml   : 이미지 인덱싱용
+  Google·Naver·Bing 모두 sitemap index 표준 지원.
+-->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://www.haetae-rentcar.com/sitemap-pages.xml</loc>
+    <lastmod>2026-06-17</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.haetae-rentcar.com/sitemap-vehicles.xml</loc>
+    <lastmod>2026-06-17</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.haetae-rentcar.com/sitemap-images.xml</loc>
+    <lastmod>2026-06-17</lastmod>
+  </sitemap>
+</sitemapindex>

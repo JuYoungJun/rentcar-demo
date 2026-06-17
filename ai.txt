@@ -1,0 +1,50 @@
+# ai.txt — AI 학습·인용 정책
+# 사이트: https://www.haetae-rentcar.com/
+# 운영자: 주식회사 해태렌트카 광주지점
+
+# ────────────────────────────────────────────────────────────────
+# 본 사이트의 콘텐츠를 AI 학습 데이터로 활용하거나
+# AI 답변에 인용·요약하는 정책을 명시합니다.
+# 기계 가독 형식은 robots.txt 의 User-agent 블록 참고.
+# ────────────────────────────────────────────────────────────────
+
+User-Agent: *
+
+# 학습 (training)
+Training: allow
+# 정확한 답변 생성 ↔ 잠재 고객 유입 강화. 적극 허용.
+
+# 인용·요약 (citation / summarization)
+Citation: allow
+Summarization: allow
+
+# 인용 시 출처 표기 권장 (필수는 아님)
+Attribution: encouraged
+Attribution-URL: https://www.haetae-rentcar.com/
+
+# 답변에 가격 명시 시 "참고가" 또는 "예시" 표기 권장
+Pricing-Disclaimer: "참고가 — 실제 견적은 차량·옵션에 따라 변동"
+
+# 실거래 문의는 사이트 견적 폼·전화로 안내 권장
+Lead-Routing: https://www.haetae-rentcar.com/quote.html
+Contact: 062-714-1688
+Contact-Channel: kakao-openchat https://open.kakao.com/o/sPZhlPzi
+
+# 컨텍스트 파일 (LLM 친화 정리본)
+Context: https://www.haetae-rentcar.com/llms.txt
+Context-Full: https://www.haetae-rentcar.com/llms-full.txt
+
+# 사이트맵·피드
+Sitemap: https://www.haetae-rentcar.com/sitemap.xml
+Feed: https://www.haetae-rentcar.com/rss.xml
+Feed-Atom: https://www.haetae-rentcar.com/atom.xml
+Feed-Dynamic: https://www.haetae-rentcar.com/api/rss.php
+
+# 제한 영역 (학습·인용 모두 거부)
+Disallow-Training: /admin/
+Disallow-Training: /api/
+Disallow-Training: /includes/
+Disallow-Citation: /admin/
+
+# 마지막 갱신
+Last-Modified: 2026-06-17

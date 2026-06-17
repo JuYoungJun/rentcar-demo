@@ -1,0 +1,22 @@
+# humanstxt.org/
+# 사람을 위한 사이트 메타 정보 — 검색엔진이 아닌 진짜 사람을 위한 한 줄.
+
+/* TEAM */
+법인명: 주식회사 해태렌트카 광주지점
+대표이사: 이창은
+연락: 062-714-1688 / 010-6611-6633
+카카오톡: https://open.kakao.com/o/sPZhlPzi
+소재지: 광주광역시 광산구 북문대로433번길 45 (신창동)
+
+/* THANKS */
+호스팅: 주식회사 카페24 (https://www.cafe24.com)
+폰트: Google Fonts — Noto Sans KR
+지도: 카카오맵 (https://map.kakao.com)
+
+/* SITE */
+표준: HTML5, CSS3, ES2020+
+백엔드: PHP 8.x + MariaDB 10.x (PDO)
+배포: GitHub Actions → FTPS → 카페24
+보안: BCRYPT, Bearer + CSRF, Brute-force 잠금, WCAG AA
+접근성: Lighthouse Accessibility 100점
+색인: sitemap·RSS·llms.txt·ai.txt 풀세트

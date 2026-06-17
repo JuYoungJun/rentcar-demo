@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>해태렌트카 — 경차 월렌트 전문 (광주광역시 광산구)</title>
+    <link>https://www.haetae-rentcar.com/</link>
+    <atom:link href="https://www.haetae-rentcar.com/rss.xml" rel="self" type="application/rss+xml" />
+    <description>주식회사 해태렌트카 광주지점 — 월렌트(1개월)·12개월 기간약정·중고차 장기렌트. 무심사·무보증 옵션 보유. 사회초년생·직장인 환영. 062-714-1688</description>
+    <language>ko-KR</language>
+    <copyright>© 2026 주식회사 해태렌트카 광주지점. All rights reserved.</copyright>
+    <managingEditor>privacy@haetae-rentcar.com (이창은)</managingEditor>
+    <webMaster>contact@haetae-rentcar.com (해태렌트카 광주지점)</webMaster>
+    <lastBuildDate>Tue, 17 Jun 2026 09:00:00 +0900</lastBuildDate>
+    <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+    <category>자동차 임대업</category>
+    <category>월렌트</category>
+    <category>장기렌트</category>
+    <category>광주 렌트카</category>
+    <ttl>60</ttl>
+    <image>
+      <url>https://www.haetae-rentcar.com/images/logo.png</url>
+      <title>해태렌트카</title>
+      <link>https://www.haetae-rentcar.com/</link>
+      <width>120</width>
+      <height>48</height>
+    </image>
+    <generator>Haetae Rentcar Static RSS</generator>
+    <docs>https://www.rssboard.org/rss-specification</docs>
+
+    <!-- ════════ 서비스 카테고리 피드 ════════ -->
+    <item>
+      <title>월렌트 (1개월 단기) — 모닝·레이·캐스퍼 월 55만원~</title>
+      <link>https://www.haetae-rentcar.com/monthly.html</link>
+      <guid isPermaLink="true">https://www.haetae-rentcar.com/monthly.html</guid>
+      <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+      <category>월렌트</category>
+      <dc:creator>해태렌트카 광주지점</dc:creator>
+      <description><![CDATA[
+        1개월 단위 자유 이용. 경차(모닝·레이·캐스퍼), 준중형(아반떼), 중형(K5·소나타), SUV(셀토스).
+        월 55만원~120만원대. 무심사·무보증 옵션 다수 보유.
+        광주광역시 광산구 신창동 영업장에서 차량 인수 또는 지역별 탁송 협의.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>12개월 기간약정 월렌트 — 약정 할인 + 무심사·무보증</title>
+      <link>https://www.haetae-rentcar.com/longterm.html</link>
+      <guid isPermaLink="true">https://www.haetae-rentcar.com/longterm.html</guid>
+      <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+      <category>장기렌트</category>
+      <dc:creator>해태렌트카 광주지점</dc:creator>
+      <description><![CDATA[
+        12개월 약정 시 월 임대료 고정 할인. 모닝/레이/캐스퍼 40만원~, K5/소나타/셀토스 50~60만원대,
+        K8/그랜져 GN7 80~95만원대. 신용등급 부담 없이 무심사·무보증으로 이용 가능.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>중고차 장기렌트 — 검증된 중고차 월 70만원~</title>
+      <link>https://www.haetae-rentcar.com/used.html</link>
+      <guid isPermaLink="true">https://www.haetae-rentcar.com/used.html</guid>
+      <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+      <category>중고차</category>
+      <dc:creator>해태렌트카 광주지점</dc:creator>
+      <description><![CDATA[
+        카니발 4세대, 쏘렌토, 싼타페, 그랜져, G80 RG3 등 정기 점검을 마친 중고차 운영.
+        신차 대비 낮은 월 임대료. 무심사·무보증 옵션 다수.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>회사소개 — 주식회사 해태렌트카 광주지점</title>
+      <link>https://www.haetae-rentcar.com/about.html</link>
+      <guid isPermaLink="true">https://www.haetae-rentcar.com/about.html</guid>
+      <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+      <category>회사소개</category>
+      <dc:creator>해태렌트카 광주지점</dc:creator>
+      <description><![CDATA[
+        법인등록번호 205611-0017730, 사업자등록번호 476-85-02430, 대표 이창은.
+        2022년 12월 개업. 영업장: 광주광역시 광산구 북문대로433번길 45(신창동).
+        평일 09:00-19:00 / 주말 10:00-19:00 운영.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>견적 문의 — 24시간 접수·영업시간 내 1시간 회신</title>
+      <link>https://www.haetae-rentcar.com/quote.html</link>
+      <guid isPermaLink="true">https://www.haetae-rentcar.com/quote.html</guid>
+      <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+      <category>견적</category>
+      <dc:creator>해태렌트카 광주지점</dc:creator>
+      <description><![CDATA[
+        카테고리·차량명·지역·기간·운전경력 입력 후 24시간 접수.
+        영업시간 기준 1시간 이내 전담 상담사 회신.
+        전화 062-714-1688 / 모바일 010-6611-6633 / 카카오톡 오픈채팅 https://open.kakao.com/o/sPZhlPzi
+      ]]></description>
+    </item>
+
+    <item>
+      <title>이용안내 — 상담부터 차량 인수까지 4단계</title>
+      <link>https://www.haetae-rentcar.com/info.html</link>
+      <guid isPermaLink="true">https://www.haetae-rentcar.com/info.html</guid>
+      <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
+      <category>이용안내</category>
+      <dc:creator>해태렌트카 광주지점</dc:creator>
+      <description><![CDATA[
+        1) 상담 신청 → 2) 차량 선택 → 3) 계약 체결 → 4) 차량 인수.
+        필요 서류: 신분증, 운전면허증, 본인 명의 결제수단.
+        자동차 종합보험 기본 포함.
+      ]]></description>
+    </item>
+  </channel>
+</rss>

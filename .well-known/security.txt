@@ -1,0 +1,13 @@
+# 해태렌트카 — 보안 취약점 신고
+# RFC 9116 (security.txt) 표준 준수
+# https://securitytxt.org/
+
+Contact: mailto:contact@haetae-rentcar.com
+Contact: tel:+82-62-714-1688
+Expires: 2027-06-17T00:00:00+09:00
+Preferred-Languages: ko, en
+Canonical: https://www.haetae-rentcar.com/.well-known/security.txt
+Policy: https://www.haetae-rentcar.com/privacy.html
+
+# 본 사이트에서 보안 취약점을 발견하시면 위 연락처로 알려주세요.
+# 책임 있는 공개(Responsible Disclosure)에 협조해 주신 분께 감사 인사를 드립니다.

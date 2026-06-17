@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko-KR">
+  <title>해태렌트카 — 경차 월렌트 전문 (광주광역시 광산구)</title>
+  <subtitle>주식회사 해태렌트카 광주지점 — 월렌트·12개월 기간약정·중고차 장기렌트</subtitle>
+  <link href="https://www.haetae-rentcar.com/" />
+  <link rel="self" href="https://www.haetae-rentcar.com/atom.xml" />
+  <id>https://www.haetae-rentcar.com/</id>
+  <updated>2026-06-17T09:00:00+09:00</updated>
+  <rights>© 2026 주식회사 해태렌트카 광주지점</rights>
+  <author>
+    <name>주식회사 해태렌트카 광주지점</name>
+    <email>contact@haetae-rentcar.com</email>
+    <uri>https://www.haetae-rentcar.com/</uri>
+  </author>
+  <icon>https://www.haetae-rentcar.com/favicon.ico</icon>
+  <logo>https://www.haetae-rentcar.com/images/logo.png</logo>
+  <category term="자동차 임대업" />
+  <category term="월렌트" />
+  <category term="장기렌트" />
+  <category term="광주 렌트카" />
+  <generator uri="https://www.haetae-rentcar.com/">Haetae Rentcar Static Atom</generator>
+
+  <entry>
+    <title>월렌트 (1개월 단기) — 경차 월 55만원~</title>
+    <link href="https://www.haetae-rentcar.com/monthly.html" />
+    <id>https://www.haetae-rentcar.com/monthly.html</id>
+    <updated>2026-06-17T09:00:00+09:00</updated>
+    <published>2026-06-17T09:00:00+09:00</published>
+    <category term="월렌트" />
+    <summary type="text">1개월 단위 자유 이용. 경차·준중형·중형·SUV. 월 55만원~120만원대. 무심사·무보증 옵션.</summary>
+  </entry>
+
+  <entry>
+    <title>12개월 기간약정 월렌트 — 약정 할인</title>
+    <link href="https://www.haetae-rentcar.com/longterm.html" />
+    <id>https://www.haetae-rentcar.com/longterm.html</id>
+    <updated>2026-06-17T09:00:00+09:00</updated>
+    <published>2026-06-17T09:00:00+09:00</published>
+    <category term="장기렌트" />
+    <summary type="text">12개월 약정 시 월 임대료 고정 할인. 신용등급 부담 없이 무심사·무보증으로 이용.</summary>
+  </entry>
+
+  <entry>
+    <title>중고차 장기렌트 — 검증된 중고차 월 70만원~</title>
+    <link href="https://www.haetae-rentcar.com/used.html" />
+    <id>https://www.haetae-rentcar.com/used.html</id>
+    <updated>2026-06-17T09:00:00+09:00</updated>
+    <published>2026-06-17T09:00:00+09:00</published>
+    <category term="중고차" />
+    <summary type="text">정기 점검을 마친 중고차. 신차 대비 낮은 월 임대료. 무심사·무보증 옵션.</summary>
+  </entry>
+
+  <entry>
+    <title>회사소개 — 주식회사 해태렌트카 광주지점</title>
+    <link href="https://www.haetae-rentcar.com/about.html" />
+    <id>https://www.haetae-rentcar.com/about.html</id>
+    <updated>2026-06-17T09:00:00+09:00</updated>
+    <published>2022-12-13T00:00:00+09:00</published>
+    <category term="회사소개" />
+    <summary type="text">사업자등록번호 476-85-02430. 대표 이창은. 광주광역시 광산구 북문대로433번길 45.</summary>
+  </entry>
+
+  <entry>
+    <title>견적 문의 — 24시간 접수·1시간 회신</title>
+    <link href="https://www.haetae-rentcar.com/quote.html" />
+    <id>https://www.haetae-rentcar.com/quote.html</id>
+    <updated>2026-06-17T09:00:00+09:00</updated>
+    <published>2026-06-17T09:00:00+09:00</published>
+    <category term="견적" />
+    <summary type="text">062-714-1688 / 010-6611-6633 / 카카오톡 오픈채팅.</summary>
+  </entry>
+</feed>
