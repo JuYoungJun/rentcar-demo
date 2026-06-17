@@ -10,11 +10,16 @@ Options -Indexes
   Require all denied
 </FilesMatch>
 
-# 데이터 폴더 보호
+# 데이터 폴더 보호 + Authorization 헤더 PHP 전달
+# Apache 가 기본적으로 Authorization 헤더를 PHP $_SERVER 에 안 넘김.
+# Bearer 토큰 인증을 위해 HTTP_AUTHORIZATION 환경변수로 명시 전달.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^data/ - [F,L]
+  RewriteCond %{HTTP:Authorization} ^(.+)$
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
 </IfModule>
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
 # 보안 헤더
 <IfModule mod_headers.c>

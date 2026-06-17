@@ -1,8 +1,9 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --red: #E53935;
-  --red-hover: #C62828;
+  --red: #C62828;        /* a11y: WCAG AA — 5.5:1 contrast on white text (was #E53935 = 4.23:1) */
+  --red-hover: #A52020;  /* hover: 한 단계 더 어둡게 */
+  --red-bright: #E53935; /* legacy bright red — 큰 글씨/장식용으로만 사용 권장 */
   --dark: #222;
   --text: #333;
   --text-light: #6b6b6b;  /* a11y: WCAG AA — 4.5:1 contrast on white (was #888 = 3.5:1) */
@@ -373,7 +374,7 @@ input, select, textarea { font-family: inherit; }
 .btn-search {
   flex: 0 0 auto;
   min-width: 130px;
-  background: #c62828;  /* a11y: 5.5:1 contrast on white text (was #e53935 = 4.22:1) */
+  background: var(--red);
   color: var(--white);
   border: none;
   padding: 14px 24px;
@@ -383,7 +384,7 @@ input, select, textarea { font-family: inherit; }
   white-space: nowrap;
   transition: background 0.2s;
 }
-.btn-search:hover { background: #a52020; }
+.btn-search:hover { background: var(--red-hover); }
 
 .dropdown-panel {
   display: none;

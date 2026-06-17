@@ -1,10 +1,23 @@
 # 개발·운영 문서 (배포 대상 아님)
 docs/
 
-# PHP 백엔드 — 코드는 추적, 설정/로그/캐시는 제외
+# PHP 백엔드 — 코드는 추적, 설정/로그/캐시/런타임 산출물은 제외
 api/config.php
 api/.cache/
 api/logs/
+# 런타임 생성: rate-limit, brute-force lock, view dedup, inquiry 로그
+api/data/lock_*
+api/data/rl_*
+api/data/view_*
+api/data/*.log
+
+# 관리자 업로드 이미지 (서버에만 누적, 깃에 안 올림 — .htaccess/.gitkeep 만 유지)
+images/uploads/*
+!images/uploads/.htaccess
+!images/uploads/.gitkeep
+
+# 로컬 풀스택 테스트 (Docker compose + 백업 파일)
+.local-test/
 
 # OS / IDE
 .DS_Store
