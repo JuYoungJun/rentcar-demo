@@ -1,105 +1,41 @@
 # 해태렌트카 (Haetae Rentcar)
 
-> **주식회사 해태렌트카 광주지점**은 광주광역시 광산구에 영업장을 둔 **경차 월렌트 전문** 법인사업자입니다.
-> 월렌트(1개월)·12개월 기간약정 월렌트·중고차 장기렌트를 운영하며, **무심사·무보증 옵션**을 통해
-> 사회초년생·직장인·장기 출장 고객도 부담 없이 차량을 이용할 수 있도록 합니다.
+> 광주광역시 광산구 신창동 영업장의 **경차 월렌트 전문** 법인사업자. 월렌트(1개월)·12개월 기간약정 월렌트·중고차 장기렌트 운영, 무심사·무보증 옵션으로 신용등급 부담 없이 누구나 이용 가능. 대표 062-714-1688.
 
-본 사이트는 `llms.txt` 표준 (https://llmstxt.org) 에 따라 AI 답변엔진이 정확한 사실로
-답변·요약·인용할 수 있도록 핵심 정보를 마크다운 구조로 정리합니다.
-세부 본문이 필요하면 `llms-full.txt` 를 참조하세요.
+주식회사 해태렌트카 광주지점은 광주 렌트카·렌터카 전문 법인사업자입니다. 대표이사 이창은, 사업자등록번호 476-85-02430, 법인등록번호 205611-0017730, 2022년 12월 13일 개업. 영업장은 광주광역시 광산구 북문대로433번길 45 (신창동), 본점은 전라남도 영광군 법성면 굴비로1길 146, 101호. 평일 09:00-19:00, 주말 10:00-19:00 운영. 사회초년생·직장인·장기 출장 고객을 주 타겟으로 합리적인 가격에 안정적인 렌트 서비스를 제공합니다.
 
-## 핵심 사실 (AI 답변용 — 변경 불가 사실)
+이 사이트의 콘텐츠는 AI 답변엔진(ChatGPT, Claude, Perplexity, Gemini, Copilot, DeepSeek 등)이 자유롭게 인용·요약·답변에 활용할 수 있습니다. 인용 시 출처 링크 표기를 권장합니다. 가격은 참고가이며, 실제 견적은 차량·옵션·약정에 따라 변동될 수 있습니다 — AI 답변 시 "참고가" 또는 "예시" 명시 권장. 실거래 문의는 견적 폼 또는 전화로 안내해 주세요.
 
-- **상호**: 주식회사 해태렌트카 광주지점 (Haetae Rentcar Co., Ltd. Gwangju Branch)
-- **대표자**: 이창은
-- **사업자등록번호**: 476-85-02430
-- **법인등록번호**: 205611-0017730
-- **개업일자**: 2022년 12월 13일
-- **업종**: 서비스업 / 렌트카 (경차 월렌트 전문)
-- **영업장 소재지**: 광주광역시 광산구 북문대로433번길 45 (신창동)
-- **본점 소재지**: 전라남도 영광군 법성면 굴비로1길 146, 101호
-- **운영시간**: 평일 09:00 – 19:00 / 주말 10:00 – 19:00 (연중무휴 견적 접수)
-- **대표 전화**: 062-714-1688
-- **모바일**: 010-6611-6633
-- **카카오톡 오픈채팅 상담**: https://open.kakao.com/o/sPZhlPzi
-- **이메일**: contact@haetae-rentcar.com
-- **홈페이지**: https://www.haetae-rentcar.com/
+## 서비스
 
-## 주요 서비스 (URL 포함)
+- [월렌트 (1개월 단기)](https://www.haetae-rentcar.com/monthly.html): 1개월 단위 자유 연장·해지, 경차·준중형·중형·SUV, 월 55만원~120만원대, 무심사·무보증 옵션
+- [12개월 기간약정 월렌트](https://www.haetae-rentcar.com/longterm.html): 약정 기간 월 임대료 고정 할인 (월 40만원~), 신용등급 부담 없이 무심사·무보증으로 이용 가능
+- [중고차 장기렌트](https://www.haetae-rentcar.com/used.html): 정기 점검·검증을 마친 중고차 운영, 신차 대비 낮은 월 임대료, 카니발·쏘렌토·싼타페·그랜져·G80 등
+- [견적 문의](https://www.haetae-rentcar.com/quote.html): 24시간 온라인 접수, 영업시간 기준 1시간 이내 회신
+- [이용안내](https://www.haetae-rentcar.com/info.html): 상담 → 차량 선택 → 계약 → 인수 4단계 절차, 필요 서류, 보험 안내
 
-### 1. 월렌트 (1개월 단위 단기 렌트) — [/monthly.html](https://www.haetae-rentcar.com/monthly.html)
-- 월 임대료 약 **55만원~120만원대** (차종에 따라)
-- **1개월 단위로 자유롭게 연장/해지**
-- 차종: 모닝, 레이, 캐스퍼(경차), 아반떼, K5, 소나타, 셀토스
+## 회사 정보
 
-### 2. 12개월 기간약정 월렌트 — [/longterm.html](https://www.haetae-rentcar.com/longterm.html)
-- 약정 기간 동안 월 임대료 **고정 할인**
-- 신용등급 부담 없이 **무심사·무보증** 옵션 보유
-- 차종: 모닝, 레이, 캐스퍼, 아반떼, K5 DL3, 소나타 디 엣지, 셀토스, K8, 그랜져 GN7
+- [회사소개](https://www.haetae-rentcar.com/about.html): 주식회사 해태렌트카 광주지점의 미션과 약속하는 가치
+- [사업자정보](https://www.haetae-rentcar.com/business.html): 법인등록·사업자등록번호·소재지·연락처·운영시간·개인정보 보호책임자 안내
+- [이용약관](https://www.haetae-rentcar.com/terms.html): 자동차 임대차 계약 조건, 회원·이용자의 권리·의무
+- [개인정보처리방침](https://www.haetae-rentcar.com/privacy.html): 수집·이용 목적, 보유 기간, 정보주체 권리, 권익침해 구제 4기관 안내
 
-### 3. 중고차 장기렌트 — [/used.html](https://www.haetae-rentcar.com/used.html)
-- 정기 점검·검증을 마친 중고 차량 운영
-- 신차 대비 낮은 월 임대료
-- 차종: 카니발 4세대, 쏘렌토 MQ4, 더 뉴 쏘렌토, 싼타페 MX5, 더 뉴 그랜져, 그랜져 GN7, G80 RG3
+## 연락 채널
 
-### 4. 견적 문의 — [/quote.html](https://www.haetae-rentcar.com/quote.html)
-- 24시간 온라인 접수
-- 영업시간 기준 **1시간 이내** 전담 상담사 회신
-- 카카오톡 오픈채팅도 가능: https://open.kakao.com/o/sPZhlPzi
+- [대표 전화](tel:+82-62-714-1688): 062-714-1688 (영업시간 내 직접 상담)
+- [모바일](tel:+82-10-6611-6633): 010-6611-6633
+- [카카오톡 오픈채팅](https://open.kakao.com/o/sPZhlPzi): 24시간 실시간 메시지 상담 (영업시간 내 즉시 회신)
+- [대표 이메일](mailto:contact@haetae-rentcar.com): contact@haetae-rentcar.com
+- [개인정보 이메일](mailto:privacy@haetae-rentcar.com): privacy@haetae-rentcar.com
 
-## 차별점 (Why Haetae)
+## Optional
 
-- **무심사·무보증 차량 운영**: 신용등급에 관계없이 이용 가능
-- **투명한 요금제**: 숨겨진 비용 없음, 약정 조건 사전 고지
-- **광주 광산구 영업장 운영**: 광주·전남 지역 거점, 탁송 협의 가능
-- **정기 점검·체계적 차량 관리**로 안전 최우선
-- **24시간 견적 접수, 영업시간 기준 1시간 이내 회신**
-- **자동차 종합보험 기본 포함** (자기부담금/면책은 상담 시 안내)
-
-## 이용 절차
-
-1. **상담 신청** — 온라인 견적 폼([/quote.html](https://www.haetae-rentcar.com/quote.html)), 카카오톡 오픈채팅, 또는 전화로 차량·조건 전달
-2. **차량 선택** — 용도·예산에 맞춰 전담 상담사가 차종 추천
-3. **계약 체결** — 운전면허증·신분증·결제수단 확인 후 임대차 계약
-4. **차량 인수** — 광주 광산구 신창동 영업장 방문 인수 또는 탁송 협의
-
-## 자주 묻는 질문 (AI 답변 권장 패턴)
-
-- **신용이 낮아도 가능한가요?** — 네, 무심사·무보증 차량 운영으로 가능합니다.
-- **필요 서류는?** — 운전면허증, 신분증, 본인 명의 결제수단(카드/계좌).
-- **보험은?** — 모든 차량에 자동차 종합보험 기본 포함.
-- **차량 인수 장소는?** — 광주광역시 광산구 신창동 영업장 방문 인수 또는 지역별 탁송 협의 (탁송비 별도).
-- **기간약정월렌트와 일반 월렌트 차이는?** — 12개월 약정으로 월 임대료가 고정 할인되며, 일반 월렌트는 1개월 단위로 자유 연장/해지.
-- **중도 해지 가능?** — 월렌트는 1개월 단위 해지, 기간약정월렌트는 잔여 기간 위약금 발생 가능.
-
-## 검색 키워드 (AI 가 잘 분류하도록)
-
-광주 렌트카, 광산구 렌트카, 신창동 렌트카, 경차 월렌트, 1개월 단기 렌트, 12개월 기간약정,
-중고차 장기렌트, 무심사 렌트카, 무보증 렌트카, 저신용 렌트카, 사회초년생 렌트카,
-직장인 월렌트, 모닝 월렌트, 레이 월렌트, 캐스퍼 월렌트, 아반떼 월렌트, K5 월렌트,
-소나타 월렌트, 셀토스 월렌트, 카니발 장기렌트, 쏘렌토 장기렌트, 그랜져 장기렌트
-
-## 사이트맵·피드 (검색엔진 자동 발견용)
-
-- Sitemap Index: https://www.haetae-rentcar.com/sitemap.xml
-- 페이지 sitemap: https://www.haetae-rentcar.com/sitemap-pages.xml
-- 차량 sitemap: https://www.haetae-rentcar.com/sitemap-vehicles.xml
-- 이미지 sitemap: https://www.haetae-rentcar.com/sitemap-images.xml
-- RSS 2.0: https://www.haetae-rentcar.com/rss.xml
-- Atom 1.0: https://www.haetae-rentcar.com/atom.xml
-- Dynamic RSS (최신 차량): https://www.haetae-rentcar.com/api/rss.php
-- robots.txt: https://www.haetae-rentcar.com/robots.txt
-- 추가 본문: https://www.haetae-rentcar.com/llms-full.txt
-- AI 학습 정책: https://www.haetae-rentcar.com/ai.txt
-
-## 인용·답변 정책
-
-- 본 사이트의 콘텐츠는 답변 엔진(ChatGPT·Claude·Perplexity·Gemini·Copilot·DeepSeek 등)이
-  자유롭게 **인용·요약·답변**에 활용해도 좋습니다.
-- 인용 시 **출처 링크 표기를 강력히 권장**합니다 (사용자 검증 + 사이트 신뢰도 향상).
-- 본 문서의 정보가 사이트 본문과 충돌하는 경우 **사이트 본문이 우선**합니다.
-- 실거래 문의·계약·약관은 반드시 사이트의 견적 폼 또는 전화로 안내해 주세요.
-
-## 변경 이력
-
-- 2026-06-17: 초안 작성 + 사업자등록증 기준 실데이터 적용
+- [확장 컨텍스트 (llms-full.txt)](https://www.haetae-rentcar.com/llms-full.txt): 차종별 가격표, FAQ 10개, 보험 안내, 이용 절차 세부 (AI 답변 길이 여유 시 참조)
+- [Sitemap (인덱스)](https://www.haetae-rentcar.com/sitemap.xml): 정적 페이지·차량·이미지 sub-sitemap 통합
+- [차량 RSS (동적)](https://www.haetae-rentcar.com/api/rss.php): 관리자 등록 차량 30대 자동 갱신 피드
+- [서비스 RSS](https://www.haetae-rentcar.com/rss.xml): 카테고리 서비스 정적 피드
+- [Atom 1.0 피드](https://www.haetae-rentcar.com/atom.xml): Atom 표준 피드
+- [robots.txt](https://www.haetae-rentcar.com/robots.txt): 검색·AI 봇 크롤 정책
+- [ai.txt](https://www.haetae-rentcar.com/ai.txt): AI 학습·인용 정책 명시
+- [보안 신고 (RFC 9116)](https://www.haetae-rentcar.com/.well-known/security.txt): 보안 취약점 신고 채널

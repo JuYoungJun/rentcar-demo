@@ -14,6 +14,36 @@ AddDefaultCharset UTF-8
   AddType application/manifest+json .webmanifest
 </IfModule>
 
+# ── RSS·Atom feed 명시적 Content-Type (파일명 기반 매칭)
+<IfModule mod_headers.c>
+  <Files "rss.xml">
+    Header set Content-Type "application/rss+xml; charset=UTF-8"
+  </Files>
+  <Files "atom.xml">
+    Header set Content-Type "application/atom+xml; charset=UTF-8"
+  </Files>
+  <Files "sitemap.xml">
+    Header set Content-Type "application/xml; charset=UTF-8"
+  </Files>
+  <FilesMatch "^sitemap-(pages|vehicles|images)\.xml$">
+    Header set Content-Type "application/xml; charset=UTF-8"
+  </FilesMatch>
+</IfModule>
+
+# ── llms.txt / ai.txt / humans.txt / security.txt — UTF-8 명시
+#    일부 LLM 도구가 인코딩 잘못 인식하면 한글 깨짐 발생 → 명시적 charset 헤더
+<IfModule mod_headers.c>
+  <FilesMatch "^(llms|llms-full|ai|humans)\.txt$">
+    Header set Content-Type "text/plain; charset=UTF-8"
+    Header set Cache-Control "public, max-age=3600"
+    Header set Access-Control-Allow-Origin "*"
+    Header set X-Robots-Tag "all"
+  </FilesMatch>
+  <FilesMatch "^security\.txt$">
+    Header set Content-Type "text/plain; charset=UTF-8"
+  </FilesMatch>
+</IfModule>
+
 # ── 디렉토리 인덱싱 차단 ──
 Options -Indexes -MultiViews
 
