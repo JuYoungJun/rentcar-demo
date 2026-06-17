@@ -109,6 +109,10 @@ jobs:
             **/images/banner_3.png
             **/images/banner_4.png
             **/images/banner_5.png
+            **/images/hero_monthly.jpg
+            **/images/hero_longterm.jpg
+            **/images/hero_used.jpg
+            **/images/detail_longterm.jpg
             **/README.md
             **/api/README.md
             **/.DS_Store

@@ -992,13 +992,19 @@
     const hidePrice = pageCategory === 'used';
     const fragment = document.createDocumentFragment();
     const temp = document.createElement('div');
-    temp.innerHTML = cars.map(car => {
+    temp.innerHTML = cars.map((car, idx) => {
       const priceLabel = hidePrice ? '별도문의' : `${car.price.toLocaleString()} 원`;
       const dataPrice  = hidePrice ? '별도문의' : car.price.toLocaleString();
+      // 첫 3개 카드는 즉시 로드(LCP 후보), 나머지는 lazy.
+      // background-image 는 native lazy 미지원이므로 data-bg 속성 + IntersectionObserver 사용.
+      const bg = car.image ? carImageUrl(car.image) : '';
+      const eager = idx < 3;
+      const bgAttr = eager && bg ? ` style="background-image:url('${bg}')"` : '';
+      const lazyAttr = !eager && bg ? ` data-bg="${bg}"` : '';
       return `
       <div class="card" data-car="${car.name}" data-id="${car.id}" data-price="${dataPrice}">
         <div class="card-thumb">
-          <div class="card-thumb-inner"${car.image ? ` style="background-image:url('${carImageUrl(car.image)}')"` : ''}></div>
+          <div class="card-thumb-inner"${bgAttr}${lazyAttr}></div>
           ${(badgeOverride || car.badge) ? `<div class="card-badge">${badgeOverride || car.badge}</div>` : ''}
         </div>
         <div class="card-name">${car.name}</div>
@@ -1017,6 +1023,26 @@
         window.location.href = `detail.html?id=${id}&from=${cat}`;
       };
     });
+    // data-bg 가진 카드 썸네일을 IntersectionObserver 로 지연 로드 (모바일 스크롤 절감)
+    const lazyEls = container.querySelectorAll('.card-thumb-inner[data-bg]');
+    if (lazyEls.length && 'IntersectionObserver' in window) {
+      const lazyObs = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (!en.isIntersecting) return;
+          const el = en.target;
+          const url = el.dataset.bg;
+          if (url) {
+            el.style.backgroundImage = `url('${url}')`;
+            el.removeAttribute('data-bg');
+          }
+          lazyObs.unobserve(el);
+        });
+      }, { rootMargin: '200px 0px' });
+      lazyEls.forEach(el => lazyObs.observe(el));
+    } else {
+      // IntersectionObserver 미지원 환경: 즉시 적용 (fallback)
+      lazyEls.forEach(el => { el.style.backgroundImage = `url('${el.dataset.bg}')`; el.removeAttribute('data-bg'); });
+    }
   };
 
   /* ── Slider dots for mobile ── */

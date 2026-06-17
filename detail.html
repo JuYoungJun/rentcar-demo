@@ -135,7 +135,7 @@
   </div>
 
   <div class="detail-banners">
-    <img src="images/detail-page.webp" alt="해태렌트카 상세 안내" class="clickable" id="bannerCta" decoding="async" width="1200" height="9678" fetchpriority="high">
+    <img src="images/detail-page.webp" alt="해태렌트카 상세 안내" class="clickable" id="bannerCta" decoding="async" loading="lazy" width="1200" height="9678" fetchpriority="low">
   </div>
   <!-- 차량별 상세 통이미지 (관리자에서 설정 시 노출) -->
   <div class="detail-long-image" id="detailLongImage" hidden>
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cta = document.getElementById('bannerCta');
     if (fromPage === 'longterm') {
       if (cta) {
-        cta.src = 'images/detail_longterm.jpg';
+        cta.src = 'images/detail_longterm.webp';
         cta.setAttribute('width', '1200');
         cta.setAttribute('height', '9523');
       }
