@@ -58,6 +58,90 @@
 <link rel="preload" as="image" href="images/banner_1.webp" fetchpriority="high" media="(min-width: 769px)">
 <link rel="preload" as="image" href="images/banner_mobile_1.webp" fetchpriority="high" media="(max-width: 768px)">
 <script src="js/seo-schema.js" defer></script>
+
+<!-- ════════════════════════════════════════════════════════════
+     정적 JSON-LD (JS 미실행 크롤러·답변엔진 대비 안전망).
+     동적 풀세트는 seo-schema.js 가 페이지 로드 후 추가 주입.
+     ════════════════════════════════════════════════════════════ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["LocalBusiness","AutoRental"],
+      "@id": "https://www.haetae-rentcar.com/#localbusiness",
+      "name": "주식회사 해태렌트카 광주지점",
+      "alternateName": ["광주 렌트카 해태렌트카","해태렌트카 광주지점","Haetae Rentcar"],
+      "description": "광주 렌트카·렌터카 전문 — 경차 월렌트·12개월 기간약정·중고차 장기렌트. 무심사·무보증 옵션. 광주광역시 광산구 신창동 영업장.",
+      "url": "https://www.haetae-rentcar.com/",
+      "logo": "https://www.haetae-rentcar.com/images/logo.png",
+      "image": "https://www.haetae-rentcar.com/images/banner_1.webp",
+      "telephone": "+82-62-714-1688",
+      "email": "contact@haetae-rentcar.com",
+      "priceRange": "₩₩",
+      "currenciesAccepted": "KRW",
+      "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+      "founder": { "@type": "Person", "name": "이창은" },
+      "foundingDate": "2022-12-13",
+      "taxID": "476-85-02430",
+      "vatID": "476-85-02430",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "북문대로433번길 45 (신창동)",
+        "addressLocality": "광산구",
+        "addressRegion": "광주광역시",
+        "postalCode": "62221",
+        "addressCountry": "KR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 35.1860,
+        "longitude": 126.8050
+      },
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "19:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "10:00", "closes": "19:00" }
+      ],
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "광주광역시" },
+        { "@type": "AdministrativeArea", "name": "전라남도" },
+        { "@type": "AdministrativeArea", "name": "전라북도" }
+      ],
+      "hasMap": "https://map.kakao.com/?q=%EA%B4%91%EC%A3%BC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EA%B4%91%EC%82%B0%EA%B5%AC%20%EB%B6%81%EB%AC%B8%EB%8C%8043%EB%B2%88%EA%B8%B8%2045",
+      "sameAs": ["https://open.kakao.com/o/sPZhlPzi"],
+      "keywords": "광주 렌트카, 광주 렌터카, 광주광역시 렌트카, 광산구 렌트카, 신창동 렌트카, 경차 월렌트, 12개월 기간약정, 중고차 장기렌트, 무심사 렌트카, 무보증 렌트카"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.haetae-rentcar.com/#website",
+      "url": "https://www.haetae-rentcar.com/",
+      "name": "해태렌트카 (광주 렌트카·렌터카)",
+      "inLanguage": "ko-KR",
+      "publisher": { "@id": "https://www.haetae-rentcar.com/#localbusiness" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://www.haetae-rentcar.com/quote.html?q={search_term_string}" },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.haetae-rentcar.com/#organization",
+      "name": "주식회사 해태렌트카 광주지점",
+      "url": "https://www.haetae-rentcar.com/",
+      "logo": { "@type": "ImageObject", "url": "https://www.haetae-rentcar.com/images/logo.png", "width": 120, "height": 48 },
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "telephone": "+82-62-714-1688",
+        "contactType": "customer service",
+        "areaServed": "KR",
+        "availableLanguage": ["Korean"]
+      }],
+      "sameAs": ["https://open.kakao.com/o/sPZhlPzi"]
+    }
+  ]
+}
+</script>
 </head>
 <body data-page="home">
 
