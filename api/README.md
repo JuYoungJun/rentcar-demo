@@ -6,7 +6,8 @@ PHP 8.x + MySQL/MariaDB 10.x 기반의 관리자/공개 API.
 
 ## 1. 카페24 호스팅에서 준비
 
-1. **DB 발급**: 카페24 관리자 → MySQL DB 생성 (DB명·사용자명은 보통 본인 카페24 ID 와 동일)
+1. **DB 발급**: 카페24 관리자 콘솔 → **"MySQL DB"** 메뉴에서 DB 생성 (DB명·사용자명은 보통 본인 카페24 ID 와 동일)
+    - ⚠ 카페24 콘솔에서 메뉴명은 "MySQL DB" 지만 **실제로 돌아가는 엔진은 MariaDB 10.x** (업계 관행 — AWS RDS for MySQL, Synology DSM 도 동일하게 표기). PHP PDO 드라이버 `mysql:` 가 둘 다 호환하므로 본 프로젝트의 `schema.sql` 이 그대로 작동합니다. 로컬 풀스택 테스트도 정확히 같은 MariaDB 10.6 으로 검증했습니다.
 2. **무료 SSL 신청**: 카페24 SSL 메뉴에서 "Let's Encrypt 무료 SSL" 신청 → 발급 완료까지 약 10분
 3. **PHP 버전 확인**: PHP 설정 메뉴에서 PHP 8.x 선택 (가능하면 8.2 또는 8.4)
 
