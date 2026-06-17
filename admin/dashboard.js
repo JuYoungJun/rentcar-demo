@@ -1116,7 +1116,7 @@
   /* ══════════════════════════════
      BUSINESS INFO (사업자 정보)
      ══════════════════════════════ */
-  const BIZ_FIELDS = ['companyName','ceoName','bizRegNumber','onlineSalesNumber','industry','address','contactEmail','privacyOfficerName','privacyEmail','privacyPhone'];
+  const BIZ_FIELDS = ['companyName','ceoName','bizRegNumber','corpRegNumber','openedAt','onlineSalesNumber','industry','address','headOfficeAddress','contactEmail','privacyOfficerName','privacyEmail','privacyPhone','kakaoChatUrl'];
   function renderBusinessForm() {
     if (typeof window.loadBusiness !== 'function') return;
     const b = window.loadBusiness();

@@ -62,6 +62,13 @@ define('UPLOAD_ALLOWED_EXT',  ['webp', 'jpg', 'jpeg', 'png']);
 // ── 환경 ──────────────────────────────────────────────
 define('IS_PRODUCTION', !in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1', ''], true));
 
+// ── 시간대·인코딩 (PHP 기본값에 의존하지 않도록 명시) ──────
+// 카페24 서버 기본 timezone 이 UTC 일 가능성에 대비.
+// time()/date()/strtotime() 가 모두 KST 기준으로 동작 → 세션 만료·문의 시각이 한국 시간 그대로 표시.
+date_default_timezone_set('Asia/Seoul');
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+
 // ── 에러 처리 ─────────────────────────────────────────
 if (IS_PRODUCTION) {
   error_reporting(0);

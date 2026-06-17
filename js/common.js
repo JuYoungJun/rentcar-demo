@@ -1402,6 +1402,44 @@
     } catch (e) {}
   };
 
+  /* ══════════════════════════════════════════════════════════
+     ANALYTICS 자리 — 운영 도메인에서만 자동 로드
+     ──────────────────────────────────────────────────────────
+     · GA4: 카페24 배포 후 https://analytics.google.com 에서 측정 ID(G-XXXXXXXXXX) 받아서 GA4_ID 에 입력
+     · Naver Analytics: https://analytics.naver.com 에서 사이트 등록 후 wcs_account 키 입력
+     · 두 값 모두 빈 문자열이면 자동 skip — 운영 전 미설정 상태에서 오류·노이즈 없음
+     ══════════════════════════════════════════════════════════ */
+  const GA4_ID         = '';  // 예: 'G-XXXXXXXXXX'
+  const NAVER_WCS_ID   = '';  // 예: 's_abcd1234'
+
+  function loadAnalytics() {
+    if (!_isProdHost()) return;
+    // Google Analytics 4
+    if (GA4_ID) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA4_ID);
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA4_ID, { anonymize_ip: true });
+    }
+    // Naver Analytics (Webmaster Tool 트래커)
+    if (NAVER_WCS_ID) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = '//wcs.naver.net/wcslog.js';
+      s.onload = function() {
+        if (!window.wcs_add) window.wcs_add = {};
+        window.wcs_add._nasa = NAVER_WCS_ID;
+        if (window.wcs && window.wcs.inflow) window.wcs.inflow();
+        if (window.wcs_do) window.wcs_do();
+      };
+      document.head.appendChild(s);
+    }
+  }
+
   /* ── Service Worker 등록 (PWA 캐시·오프라인 fallback)
      ─ HTTPS 운영 도메인에서만 활성 (file://·localhost http 에서는 자동 skip) ── */
   function registerServiceWorker() {
@@ -1424,6 +1462,7 @@
     // 운영 모드: 정적 렌더 직후 백엔드 데이터로 hydration
     hydrateFromBackend();
     registerServiceWorker();
+    loadAnalytics();
   });
 
 })();
