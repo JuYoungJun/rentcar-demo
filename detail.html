@@ -182,10 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (car.transmission) specItems.push(['변속', car.transmission]);
     if (car.seats)        specItems.push(['승차', car.seats + '인승']);
     if (car.mileage)      specItems.push(['주행', car.mileage.toLocaleString() + ' km']);
+    // XSS 방어: 관리자 입력값(car.*) escape — window.escHtml 폴백 inline
+    const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
     if (specItems.length) {
       document.getElementById('detailSpec').hidden = false;
       document.getElementById('detailSpecGrid').innerHTML = specItems.map(([k,v]) =>
-        `<div class="detail-spec-item"><span class="spec-key">${k}</span><span class="spec-val">${v}</span></div>`
+        `<div class="detail-spec-item"><span class="spec-key">${esc(k)}</span><span class="spec-val">${esc(v)}</span></div>`
       ).join('');
     }
     // ── 설명 ──
@@ -197,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Array.isArray(car.features) && car.features.length) {
       document.getElementById('detailFeaturesWrap').hidden = false;
       document.getElementById('detailFeatures').innerHTML = car.features
-        .map(f => `<li>${String(f).replace(/[<>]/g,'')}</li>`).join('');
+        .map(f => `<li>${esc(f)}</li>`).join('');
     }
     // ── 상세 페이지 통이미지 (선택적) ──
     if (car.detailImage) {

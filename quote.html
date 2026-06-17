@@ -352,13 +352,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 폼 드롭다운 옵션 동적 렌더 (관리자 변경 즉시 반영) ──
   if (typeof loadFormOptions === 'function') {
     const opts = loadFormOptions();
+    // 관리자 입력값(opts.*)이 select option 의 value/label 컨텍스트로 들어가므로 escape
+    const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
     const fill = (id, items, placeholder, valueAlias) => {
       const sel = document.getElementById(id);
       if (!sel) return;
       const current = sel.value;
       // 카테고리: 표시 라벨과 value 분리 (기존 호환)
-      const html = [`<option value="" disabled ${current ? '' : 'selected'}>${placeholder}</option>`]
-        .concat((items || []).map(v => `<option value="${v}">${v}${valueAlias && valueAlias[v] ? ' ('+valueAlias[v]+')' : ''}</option>`));
+      const html = [`<option value="" disabled ${current ? '' : 'selected'}>${esc(placeholder)}</option>`]
+        .concat((items || []).map(v => `<option value="${esc(v)}">${esc(v)}${valueAlias && valueAlias[v] ? ' ('+esc(valueAlias[v])+')' : ''}</option>`));
       sel.innerHTML = html.join('');
       if (current) sel.value = current;
     };

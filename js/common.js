@@ -986,30 +986,44 @@
 
   /* ── Render car cards ──
      pageCategory === 'used' (중고차 장기렌트): 가격 대신 "별도문의" 노출 */
+  // XSS 방지용 HTML escape (관리자 입력 stored XSS 방어)
+  // 외부 입력은 아니지만, 관리자 계정 탈취 시나리오 대비 + URL/attribute 컨텍스트 안전화
+  window.escHtml = function(v) {
+    if (v == null) return '';
+    return String(v).replace(/[&<>"']/g, c => (
+      {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+    ));
+  };
+
   window.renderCarCards = function(containerId, cars, badgeOverride, pageCategory) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const hidePrice = pageCategory === 'used';
+    const esc = window.escHtml;
     const fragment = document.createDocumentFragment();
     const temp = document.createElement('div');
     temp.innerHTML = cars.map((car, idx) => {
-      const priceLabel = hidePrice ? '별도문의' : `${car.price.toLocaleString()} 원`;
-      const dataPrice  = hidePrice ? '별도문의' : car.price.toLocaleString();
+      const priceLabel = hidePrice ? '별도문의' : `${Number(car.price||0).toLocaleString()} 원`;
+      const dataPrice  = hidePrice ? '별도문의' : Number(car.price||0).toLocaleString();
       // 첫 3개 카드는 즉시 로드(LCP 후보), 나머지는 lazy.
       // background-image 는 native lazy 미지원이므로 data-bg 속성 + IntersectionObserver 사용.
       const bg = car.image ? carImageUrl(car.image) : '';
+      // URL 컨텍스트 (CSS url() 안) — 작은따옴표·이스케이프 + 외부 URL 차단
+      const safeBg = bg ? esc(bg).replace(/'/g, "%27") : '';
       const eager = idx < 3;
-      const bgAttr = eager && bg ? ` style="background-image:url('${bg}')"` : '';
-      const lazyAttr = !eager && bg ? ` data-bg="${bg}"` : '';
+      const bgAttr = eager && safeBg ? ` style="background-image:url('${safeBg}')"` : '';
+      const lazyAttr = !eager && safeBg ? ` data-bg="${safeBg}"` : '';
+      const carId = Number(car.id) || 0;
+      const tags = Array.isArray(car.tags) ? car.tags : [];
       return `
-      <div class="card" data-car="${car.name}" data-id="${car.id}" data-price="${dataPrice}">
+      <div class="card" data-car="${esc(car.name)}" data-id="${carId}" data-price="${esc(dataPrice)}">
         <div class="card-thumb">
           <div class="card-thumb-inner"${bgAttr}${lazyAttr}></div>
-          ${(badgeOverride || car.badge) ? `<div class="card-badge">${badgeOverride || car.badge}</div>` : ''}
+          ${(badgeOverride || car.badge) ? `<div class="card-badge">${esc(badgeOverride || car.badge)}</div>` : ''}
         </div>
-        <div class="card-name">${car.name}</div>
-        <div class="card-tags">${car.tags.map(t => '#'+t).join(' ')}</div>
-        <div class="card-price${hidePrice ? ' card-price--inquiry' : ''}">${priceLabel}</div>
+        <div class="card-name">${esc(car.name)}</div>
+        <div class="card-tags">${tags.map(t => '#'+esc(t)).join(' ')}</div>
+        <div class="card-price${hidePrice ? ' card-price--inquiry' : ''}">${esc(priceLabel)}</div>
       </div>
     `;
     }).join('');

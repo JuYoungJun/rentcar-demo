@@ -228,14 +228,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bestImg) bestImg.style.backgroundImage = `url('${carImageUrl(top5[0].image)}')`;
   }
   const list = document.getElementById('top5List');
+  const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
   top5.forEach((car, i) => {
     const li = document.createElement('li');
+    const vw = Number(car.weeklyViews || 0).toLocaleString();
+    const iq = Number(car.weeklyInquiries || 0).toLocaleString();
     li.innerHTML = `
       <span class="top5-num ${i < 3 ? 'red' : 'gray'}">${i+1}</span>
-      <span class="top5-name">${car.name}</span>
-      <span class="top5-meta">조회 ${car.weeklyViews.toLocaleString()} · 문의 ${car.weeklyInquiries.toLocaleString()}</span>
+      <span class="top5-name">${esc(car.name)}</span>
+      <span class="top5-meta">조회 ${vw} · 문의 ${iq}</span>
     `;
-    li.onclick = () => { window.location.href = `detail.html?id=${car.id}&from=monthly`; };
+    const safeId = Number(car.id) || 0;
+    li.onclick = () => { window.location.href = `detail.html?id=${safeId}&from=monthly`; };
     list.appendChild(li);
   });
 
