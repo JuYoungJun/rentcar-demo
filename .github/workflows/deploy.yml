@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry-run'
+        required: false
+        default: 'false'
 
 concurrency:
   group: deploy-cafe24
@@ -14,7 +19,7 @@ permissions:
 
 jobs:
   deploy:
-    name: SFTP Test Deploy
+    name: SSH Tar Deploy
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -38,25 +43,117 @@ jobs:
           ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null
           ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: SFTP upload index only
+      - name: Test SSH with PTY
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
         run: |
           set -e
 
-          sftp \
-            -vvv \
+          ssh -tt \
             -i ~/.ssh/id_ed25519 \
             -o IdentitiesOnly=yes \
-            -o BatchMode=yes \
-            -P 22 \
-            "$SSH_USERNAME@$SSH_HOST" <<EOF
-          pwd
-          ls
-          cd www
-          pwd
-          ls
-          put index.html
-          bye
-          EOF
+            -o PreferredAuthentications=publickey \
+            -p 22 \
+            "$SSH_USERNAME@$SSH_HOST" \
+            'echo ssh-pty-ok; exit 0'
+
+      - name: Create deploy archive
+        run: |
+          set -e
+
+          tar -czf /tmp/haetae-deploy.tar.gz \
+            --exclude='./.git' \
+            --exclude='./.github' \
+            --exclude='./.claude' \
+            --exclude='./.vscode' \
+            --exclude='./.idea' \
+            --exclude='./docs' \
+            --exclude='./db' \
+            --exclude='./node_modules' \
+            --exclude='./api/data' \
+            --exclude='./api/logs' \
+            --exclude='./images/uploads/*' \
+            --exclude='./README.md' \
+            --exclude='./api/README.md' \
+            --exclude='./.DS_Store' \
+            --exclude='./Thumbs.db' \
+            --exclude='./*.log' \
+            --exclude='./*.bak' \
+            --exclude='./*.orig' \
+            --exclude='./*.tmp' \
+            --exclude='./.gitignore' \
+            --exclude='./.gitleaks.toml' \
+            --exclude='./.gitkeep' \
+            --exclude='./.well-known' \
+            .
+
+          ls -lh /tmp/haetae-deploy.tar.gz
+          base64 /tmp/haetae-deploy.tar.gz > /tmp/haetae-deploy.tar.gz.b64
+          ls -lh /tmp/haetae-deploy.tar.gz.b64
+
+      - name: Upload archive to Cafe24
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        run: |
+          set -e
+
+          ssh -tt \
+            -i ~/.ssh/id_ed25519 \
+            -o IdentitiesOnly=yes \
+            -o PreferredAuthentications=publickey \
+            -p 22 \
+            "$SSH_USERNAME@$SSH_HOST" \
+            'cat > ~/haetae-deploy.tar.gz.b64' < /tmp/haetae-deploy.tar.gz.b64
+
+      - name: Extract archive on Cafe24
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        run: |
+          set -e
+
+          ssh -tt \
+            -i ~/.ssh/id_ed25519 \
+            -o IdentitiesOnly=yes \
+            -o PreferredAuthentications=publickey \
+            -p 22 \
+            "$SSH_USERNAME@$SSH_HOST" \
+            'mkdir -p ~/www && base64 -d ~/haetae-deploy.tar.gz.b64 > ~/haetae-deploy.tar.gz && tar -xzf ~/haetae-deploy.tar.gz -C ~/www && rm -f ~/haetae-deploy.tar.gz ~/haetae-deploy.tar.gz.b64 && echo deploy-done; exit 0'
+
+      - name: Health check post deploy
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
+        run: |
+          URL="${{ secrets.HEALTH_CHECK_URL }}"
+
+          if [ -z "$URL" ]; then
+            echo "::notice::HEALTH_CHECK_URL secret 이 설정되지 않아 헬스체크를 건너뜁니다."
+            exit 0
+          fi
+
+          echo "Pinging $URL ..."
+
+          for i in 1 2 3 4 5; do
+            resp=$(curl -sS -w "\n%{http_code}" "$URL" || echo -e "\n000")
+            code=$(echo "$resp" | tail -n1)
+            body=$(echo "$resp" | sed '$d')
+
+            if [ "$code" = "200" ]; then
+              echo "$body" | head -c 500
+              echo
+
+              if echo "$body" | grep -q '"ok":[[:space:]]*true'; then
+                echo "::notice::Health check OK"
+                exit 0
+              fi
+            fi
+
+            echo "Attempt $i: HTTP $code, retrying in 10s..."
+            sleep 10
+          done
+
+          echo "::error::Health check failed after 5 attempts"
+          exit 1
