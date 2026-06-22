@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   deploy:
-    name: FTP Deploy
+    name: SSH rsync Deploy
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -29,54 +29,75 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
+      - name: Setup SSH key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p 22 "$SSH_USERNAME@$SSH_HOST" 'pwd && ls && ls ~/www'
+
+      - name: Prepare remote directories
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p 22 "$SSH_USERNAME@$SSH_HOST" \
+            'mkdir -p ~/www/admin ~/www/api ~/www/css ~/www/images/uploads ~/www/includes ~/www/js'
+
       - name: Deploy to Cafe24
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          protocol: ftp
-          local-dir: ./
-          server-dir: /www/
-          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true' }}
-          log-level: verbose
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github
-            **/.github/**
-            **/.claude
-            **/.claude/**
-            **/.vscode
-            **/.vscode/**
-            **/.idea
-            **/.idea/**
-            **/docs
-            **/docs/**
-            **/db
-            **/db/**
-            **/node_modules
-            **/node_modules/**
-            **/api/data
-            **/api/data/**
-            **/api/logs
-            **/api/logs/**
-            **/images/uploads/*
-            !**/images/uploads/.htaccess
-            **/README.md
-            **/api/README.md
-            **/.DS_Store
-            **/Thumbs.db
-            **/*.log
-            **/*.bak
-            **/*.orig
-            **/*.tmp
-            **/.gitignore
-            **/.gitleaks.toml
-            **/.gitkeep
-            **/.well-known
-            **/.well-known/**
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true' }}
+        run: |
+          set -e
+
+          RSYNC_ARGS="-avz --checksum"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            RSYNC_ARGS="$RSYNC_ARGS --dry-run"
+            echo "Dry-run mode enabled"
+          fi
+
+          rsync $RSYNC_ARGS \
+            -e "ssh -i ~/.ssh/id_ed25519 -p 22" \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.claude/' \
+            --exclude='.vscode/' \
+            --exclude='.idea/' \
+            --exclude='docs/' \
+            --exclude='db/' \
+            --exclude='node_modules/' \
+            --exclude='api/data/' \
+            --exclude='api/logs/' \
+            --exclude='images/uploads/*' \
+            --exclude='README.md' \
+            --exclude='api/README.md' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            --exclude='*.log' \
+            --exclude='*.bak' \
+            --exclude='*.orig' \
+            --exclude='*.tmp' \
+            --exclude='.gitignore' \
+            --exclude='.gitleaks.toml' \
+            --exclude='.gitkeep' \
+            --exclude='.well-known/' \
+            ./ "$SSH_USERNAME@$SSH_HOST:~/www/"
 
       - name: Health check post deploy
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
