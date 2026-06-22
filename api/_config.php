@@ -32,8 +32,10 @@ define('LOCKOUT_WINDOW',       900);    // 실패 카운트 집계 윈도우 (15
 // same-origin 호출은 Origin 헤더가 없으므로 차단되지 않음.
 // 다른 도메인에서 호출이 필요할 때만 추가.
 define('ALLOWED_ORIGINS', [
-  'https://www.haetae-rentcar.com',
-  'https://haetae-rentcar.com',
+  // 'https://www.haetae-rentcar.com',
+  // 'https://haetae-rentcar.com',
+  'http://www.haetae1.com',
+  'http://haetae1.com',
   // 로컬 개발 시 주석 해제:
   // 'http://localhost:8000',
   // 'http://127.0.0.1:8000',
@@ -42,8 +44,10 @@ define('ALLOWED_ORIGINS', [
 // ── 문의 폼 origin 검증 (CSRF 대용; same-origin 일 때 정상값) ──
 // 비어있으면 검증 생략. 운영 도메인 추가 시 ALLOWED_ORIGINS 와 함께 관리.
 define('PUBLIC_FORM_ALLOWED_HOSTS', [
-  'www.haetae-rentcar.com',
-  'haetae-rentcar.com',
+  // 'www.haetae-rentcar.com',
+  // 'haetae-rentcar.com',
+  'http://www.haetae1.com',
+  'http://haetae1.com',
   'localhost',
   '127.0.0.1',
 ]);
