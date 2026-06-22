@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   deploy:
-    name: SSH Deploy
+    name: FTP Deploy
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -29,82 +29,57 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install sshpass and rsync
-        run: sudo apt-get update && sudo apt-get install -y sshpass rsync
-
-      - name: Validate required secrets
-        env:
-          SSH_HOST: ${{ secrets.FTP_HOST }}
-          SSH_USERNAME: ${{ secrets.FTP_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          missing=0
-          for s in SSH_HOST SSH_USERNAME SSH_PASSWORD; do
-            if [ -z "$(eval echo \$$s)" ]; then
-              echo "::error::Secret $s is not configured"
-              missing=1
-            fi
-          done
-          [ "$missing" -eq 0 ]
-
-      - name: Prepare remote directories
-        env:
-          SSH_HOST: ${{ secrets.FTP_HOST }}
-          SSH_USERNAME: ${{ secrets.FTP_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          sshpass -p "$SSH_PASSWORD" ssh \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            -p 22 \
-            "$SSH_USERNAME@$SSH_HOST" \
-            'mkdir -p ~/www/admin ~/www/api ~/www/css ~/www/images/uploads ~/www/includes ~/www/js'
-
       - name: Deploy to Cafe24
-        env:
-          SSH_HOST: ${{ secrets.FTP_HOST }}
-          SSH_USERNAME: ${{ secrets.FTP_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          DRY_RUN: ${{ inputs.dry_run || 'false' }}
-        run: |
-          set -e
-
-          RSYNC_ARGS="-avz --checksum"
-
-          if [ "$DRY_RUN" = "true" ]; then
-            RSYNC_ARGS="$RSYNC_ARGS --dry-run"
-            echo "Dry-run mode enabled"
-          fi
-
-          sshpass -p "$SSH_PASSWORD" rsync $RSYNC_ARGS \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22" \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='.claude/' \
-            --exclude='.vscode/' \
-            --exclude='.idea/' \
-            --exclude='docs/' \
-            --exclude='db/' \
-            --exclude='node_modules/' \
-            --exclude='api/data/' \
-            --exclude='api/logs/' \
-            --exclude='images/uploads/*' \
-            --exclude='README.md' \
-            --exclude='api/README.md' \
-            --exclude='.DS_Store' \
-            --exclude='Thumbs.db' \
-            --exclude='*.log' \
-            --exclude='*.bak' \
-            --exclude='*.orig' \
-            --exclude='*.tmp' \
-            --exclude='.gitignore' \
-            --exclude='.gitleaks.toml' \
-            --exclude='.gitkeep' \
-            --exclude='.well-known/' \
-            ./ "$SSH_USERNAME@$SSH_HOST:~/www/"
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          local-dir: ./
+          server-dir: /www/
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true' }}
+          log-level: verbose
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github
+            **/.github/**
+            **/.claude
+            **/.claude/**
+            **/.vscode
+            **/.vscode/**
+            **/.idea
+            **/.idea/**
+            **/docs
+            **/docs/**
+            **/db
+            **/db/**
+            **/node_modules
+            **/node_modules/**
+            **/api/data
+            **/api/data/**
+            **/api/logs
+            **/api/logs/**
+            **/images/uploads/*
+            !**/images/uploads/.htaccess
+            **/README.md
+            **/api/README.md
+            **/.DS_Store
+            **/Thumbs.db
+            **/*.log
+            **/*.bak
+            **/*.orig
+            **/*.tmp
+            **/.gitignore
+            **/.gitleaks.toml
+            **/.gitkeep
+            **/.well-known
+            **/.well-known/**
 
       - name: Health check post deploy
-        if: ${{ inputs.dry_run != 'true' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
         run: |
           URL="${{ secrets.HEALTH_CHECK_URL }}"
 
