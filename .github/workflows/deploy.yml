@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Validate required secrets
         env:
@@ -44,83 +46,57 @@ jobs:
           done
           [ "$missing" -eq 0 ]
 
-      - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
-
       - name: Deploy to Cafe24
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_PORT: ${{ secrets.FTP_PORT || '21' }}
-          DRY_RUN: ${{ inputs.dry_run || 'false' }}
-        run: |
-          set -e
-
-          MIRROR_ARGS="--verbose=3 --parallel=1 --only-newer"
-
-          if [ "$DRY_RUN" = "true" ]; then
-            MIRROR_ARGS="$MIRROR_ARGS --dry-run"
-            echo "Dry-run mode enabled"
-          fi
-
-          echo "Deploying to current FTP directory"
-
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
-          debug 3
-          set ftp:ssl-allow no
-          set ftp:passive-mode on
-          set ftp:use-feat no
-          set ftp:prefer-epsv no
-          set net:timeout 30
-          set net:max-retries 2
-          set net:reconnect-interval-base 5
-
-          pwd
-          ls
-
-          mirror -R $MIRROR_ARGS \
-            --exclude-glob .git/ \
-            --exclude-glob .git/** \
-            --exclude-glob .github/ \
-            --exclude-glob .github/** \
-            --exclude-glob .claude/ \
-            --exclude-glob .claude/** \
-            --exclude-glob .vscode/ \
-            --exclude-glob .vscode/** \
-            --exclude-glob .idea/ \
-            --exclude-glob .idea/** \
-            --exclude-glob docs/ \
-            --exclude-glob docs/** \
-            --exclude-glob db/ \
-            --exclude-glob db/** \
-            --exclude-glob node_modules/ \
-            --exclude-glob node_modules/** \
-            --exclude-glob api/data/ \
-            --exclude-glob api/data/** \
-            --exclude-glob api/logs/ \
-            --exclude-glob api/logs/** \
-            --exclude-glob images/uploads/* \
-            --exclude-glob README.md \
-            --exclude-glob api/README.md \
-            --exclude-glob .DS_Store \
-            --exclude-glob Thumbs.db \
-            --exclude-glob '*.log' \
-            --exclude-glob '*.bak' \
-            --exclude-glob '*.orig' \
-            --exclude-glob '*.tmp' \
-            --exclude-glob .gitignore \
-            --exclude-glob .gitleaks.toml \
-            --exclude-glob .gitkeep \
-            --exclude-glob .well-known/ \
-            --exclude-glob .well-known/** \
-            ./ ./
-
-          bye
-          EOF
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          local-dir: ./
+          server-dir: ./
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true' }}
+          log-level: verbose
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github
+            **/.github/**
+            **/.claude
+            **/.claude/**
+            **/.vscode
+            **/.vscode/**
+            **/.idea
+            **/.idea/**
+            **/docs
+            **/docs/**
+            **/db
+            **/db/**
+            **/node_modules
+            **/node_modules/**
+            **/api/data
+            **/api/data/**
+            **/api/logs
+            **/api/logs/**
+            **/images/uploads/*
+            !**/images/uploads/.htaccess
+            **/README.md
+            **/api/README.md
+            **/.DS_Store
+            **/Thumbs.db
+            **/*.log
+            **/*.bak
+            **/*.orig
+            **/*.tmp
+            **/.gitignore
+            **/.gitleaks.toml
+            **/.gitkeep
+            **/.well-known
+            **/.well-known/**
 
       - name: Health check post deploy
-        if: ${{ inputs.dry_run != 'true' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
         run: |
           URL="${{ secrets.HEALTH_CHECK_URL }}"
 
