@@ -1,31 +1,5 @@
 name: Deploy to Cafe24
 
-# ══════════════════════════════════════════════════════════
-
-# 카페24 호스팅 자동 배포 FTP
-
-# ──────────────────────────────────────────────────────────
-
-# 트리거: main 브랜치 push 또는 수동 실행 workflow_dispatch
-
-#
-
-# GitHub Secrets 필요:
-
-# FTP_HOST       : 카페24 FTP 호스트
-
-# FTP_USERNAME   : 카페24 FTP 사용자 ID
-
-# FTP_PASSWORD   : 카페24 FTP 비밀번호
-
-# FTP_PORT       : 기본 21
-
-# FTP_SERVER_DIR : 예) /haitai888/www/
-
-# HEALTH_CHECK_URL : 예) http://haetae1.com/api/health.php
-
-# ══════════════════════════════════════════════════════════
-
 on:
 push:
 branches: [main]
@@ -83,7 +57,7 @@ steps:
       FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
       FTP_PORT: ${{ secrets.FTP_PORT || '21' }}
       FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR || '/haitai888/www/' }}
-      DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
     run: |
       set -e
 
@@ -155,7 +129,7 @@ steps:
       EOF
 
   - name: Health check post deploy
-    if: ${{ github.event.inputs.dry_run != 'true' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
     run: |
       URL="${{ secrets.HEALTH_CHECK_URL }}"
 
