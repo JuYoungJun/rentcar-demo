@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   deploy:
-    name: SSH rsync Deploy
+    name: SFTP Deploy
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -29,8 +29,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install rsync
-        run: sudo apt-get update && sudo apt-get install -y rsync
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
 
       - name: Setup SSH key
         env:
@@ -59,22 +59,7 @@ jobs:
 
           ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Test SSH authentication only
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        run: |
-          set -e
-
-          ssh -v \
-            -i ~/.ssh/id_ed25519 \
-            -o IdentitiesOnly=yes \
-            -o PreferredAuthentications=publickey \
-            -p 22 \
-            "$SSH_USERNAME@$SSH_HOST" \
-            'echo ssh-ok'
-
-      - name: Deploy to Cafe24
+      - name: Deploy to Cafe24 via SFTP
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
@@ -82,41 +67,59 @@ jobs:
         run: |
           set -e
 
-          REMOTE_DIR="/home/hosting_users/$SSH_USERNAME/www/"
-
-          RSYNC_ARGS="-avz --checksum"
+          MIRROR_ARGS="--verbose=3 --parallel=1 --only-newer"
 
           if [ "$DRY_RUN" = "true" ]; then
-            RSYNC_ARGS="$RSYNC_ARGS --dry-run"
+            MIRROR_ARGS="$MIRROR_ARGS --dry-run"
             echo "Dry-run mode enabled"
           fi
 
-          rsync $RSYNC_ARGS \
-            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -p 22" \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='.claude/' \
-            --exclude='.vscode/' \
-            --exclude='.idea/' \
-            --exclude='docs/' \
-            --exclude='db/' \
-            --exclude='node_modules/' \
-            --exclude='api/data/' \
-            --exclude='api/logs/' \
-            --exclude='images/uploads/*' \
-            --exclude='README.md' \
-            --exclude='api/README.md' \
-            --exclude='.DS_Store' \
-            --exclude='Thumbs.db' \
-            --exclude='*.log' \
-            --exclude='*.bak' \
-            --exclude='*.orig' \
-            --exclude='*.tmp' \
-            --exclude='.gitignore' \
-            --exclude='.gitleaks.toml' \
-            --exclude='.gitkeep' \
-            --exclude='.well-known/' \
-            ./ "$SSH_USERNAME@$SSH_HOST:$REMOTE_DIR"
+          lftp <<EOF
+          set sftp:connect-program "ssh -a -x -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -p 22"
+          open -u "$SSH_USERNAME","" sftp://$SSH_HOST
+          pwd
+          cd www
+          pwd
+
+          mirror -R $MIRROR_ARGS \
+            --exclude-glob .git/ \
+            --exclude-glob .git/** \
+            --exclude-glob .github/ \
+            --exclude-glob .github/** \
+            --exclude-glob .claude/ \
+            --exclude-glob .claude/** \
+            --exclude-glob .vscode/ \
+            --exclude-glob .vscode/** \
+            --exclude-glob .idea/ \
+            --exclude-glob .idea/** \
+            --exclude-glob docs/ \
+            --exclude-glob docs/** \
+            --exclude-glob db/ \
+            --exclude-glob db/** \
+            --exclude-glob node_modules/ \
+            --exclude-glob node_modules/** \
+            --exclude-glob api/data/ \
+            --exclude-glob api/data/** \
+            --exclude-glob api/logs/ \
+            --exclude-glob api/logs/** \
+            --exclude-glob images/uploads/* \
+            --exclude-glob README.md \
+            --exclude-glob api/README.md \
+            --exclude-glob .DS_Store \
+            --exclude-glob Thumbs.db \
+            --exclude-glob '*.log' \
+            --exclude-glob '*.bak' \
+            --exclude-glob '*.orig' \
+            --exclude-glob '*.tmp' \
+            --exclude-glob .gitignore \
+            --exclude-glob .gitleaks.toml \
+            --exclude-glob .gitkeep \
+            --exclude-glob .well-known/ \
+            --exclude-glob .well-known/** \
+            ./ ./
+
+          bye
+          EOF
 
       - name: Health check post deploy
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
