@@ -53,28 +53,31 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT || '21' }}
-          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR || '/haitai888/www/' }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
         run: |
           set -e
 
-          MIRROR_ARGS="--verbose --parallel=1 --only-newer"
+          MIRROR_ARGS="--verbose=3 --parallel=1 --only-newer"
 
           if [ "$DRY_RUN" = "true" ]; then
             MIRROR_ARGS="$MIRROR_ARGS --dry-run"
             echo "Dry-run mode enabled"
           fi
 
-          echo "Deploying to $FTP_SERVER_DIR"
+          echo "Deploying to current FTP directory"
 
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" -p "$FTP_PORT" "$FTP_HOST" <<EOF
+          debug 3
           set ftp:ssl-allow no
           set ftp:passive-mode on
+          set ftp:use-feat no
+          set ftp:prefer-epsv no
           set net:timeout 30
           set net:max-retries 2
           set net:reconnect-interval-base 5
 
-          cd $FTP_SERVER_DIR
+          pwd
+          ls
 
           mirror -R $MIRROR_ARGS \
             --exclude-glob .git/ \
