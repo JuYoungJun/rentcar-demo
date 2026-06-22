@@ -50,7 +50,6 @@ jobs:
           fi
 
           mkdir -p ~/.ssh
-
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
@@ -60,17 +59,12 @@ jobs:
 
           ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Test SSH connection
+      - name: Test SSH authentication only
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
         run: |
           set -e
-
-          if [ -z "$SSH_USERNAME" ]; then
-            echo "::error::SSH_USERNAME secret is empty"
-            exit 1
-          fi
 
           ssh -v \
             -i ~/.ssh/id_ed25519 \
@@ -78,22 +72,7 @@ jobs:
             -o PreferredAuthentications=publickey \
             -p 22 \
             "$SSH_USERNAME@$SSH_HOST" \
-            'pwd && ls && ls ~/www'
-
-      - name: Prepare remote directories
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        run: |
-          set -e
-
-          ssh \
-            -i ~/.ssh/id_ed25519 \
-            -o IdentitiesOnly=yes \
-            -o PreferredAuthentications=publickey \
-            -p 22 \
-            "$SSH_USERNAME@$SSH_HOST" \
-            'mkdir -p ~/www/admin ~/www/api ~/www/css ~/www/images/uploads ~/www/includes ~/www/js'
+            'echo ssh-ok'
 
       - name: Deploy to Cafe24
         env:
@@ -102,6 +81,8 @@ jobs:
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true' }}
         run: |
           set -e
+
+          REMOTE_DIR="/home/hosting_users/$SSH_USERNAME/www/"
 
           RSYNC_ARGS="-avz --checksum"
 
@@ -135,7 +116,7 @@ jobs:
             --exclude='.gitleaks.toml' \
             --exclude='.gitkeep' \
             --exclude='.well-known/' \
-            ./ "$SSH_USERNAME@$SSH_HOST:~/www/"
+            ./ "$SSH_USERNAME@$SSH_HOST:$REMOTE_DIR"
 
       - name: Health check post deploy
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
