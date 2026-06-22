@@ -97,7 +97,6 @@ jobs:
             **/db/**
             **/node_modules
             **/node_modules/**
-            **/api/_config.php
             **/api/data
             **/api/data/**
             **/api/logs
