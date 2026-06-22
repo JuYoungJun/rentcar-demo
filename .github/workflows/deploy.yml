@@ -55,9 +55,10 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./
-          server-dir: ./
+          server-dir: /haitai888/www/
           dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true' }}
           log-level: verbose
+          dangerous-clean-slate: true
           exclude: |
             **/.git*
             **/.git*/**
