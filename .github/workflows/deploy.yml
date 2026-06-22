@@ -65,12 +65,23 @@ jobs:
           done
           [ "$missing" -eq 0 ]
 
-          cat > api/_config.php <<'PHP'
-          <?php
-          define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-          define('DB_NAME', getenv('DB_NAME') ?: '');
-          define('DB_USER', getenv('DB_USER') ?: '');
-          define('DB_PASS', getenv('DB_PASS') ?: '');
+          python3 <<'PY'
+          import os
+          from pathlib import Path
+
+          def php_str(value: str) -> str:
+              return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+          db_host = os.environ["DB_HOST"]
+          db_name = os.environ["DB_NAME"]
+          db_user = os.environ["DB_USER"]
+          db_pass = os.environ["DB_PASS"]
+
+          content = f"""<?php
+          define('DB_HOST',   {php_str(db_host)});
+          define('DB_NAME',   {php_str(db_name)});
+          define('DB_USER',   {php_str(db_user)});
+          define('DB_PASS',   {php_str(db_pass)});
           define('DB_CHARSET', 'utf8mb4');
 
           define('SESSION_TTL_SECONDS',  3600);
@@ -106,19 +117,22 @@ jobs:
           mb_internal_encoding('UTF-8');
           mb_http_output('UTF-8');
 
-          if (IS_PRODUCTION) {
+          if (IS_PRODUCTION) {{
             error_reporting(0);
             ini_set('display_errors', '0');
-          } else {
+          }} else {{
             error_reporting(E_ALL);
             ini_set('display_errors', '1');
-          }
+          }}
 
           ini_set('session.cookie_httponly', '1');
           ini_set('session.cookie_secure',   IS_PRODUCTION ? '1' : '0');
           ini_set('session.cookie_samesite', 'Strict');
           ini_set('session.use_only_cookies', '1');
-          PHP
+          """
+
+          Path("api/_config.php").write_text(content, encoding="utf-8")
+          PY
 
       - name: Build upload file list
         run: |
