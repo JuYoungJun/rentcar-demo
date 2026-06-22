@@ -124,6 +124,8 @@ jobs:
             **/.gitignore
             **/.gitleaks.toml
             **/.gitkeep
+            **/.well-known
+            **/.well-known/**
 
       - name: Health check (post-deploy)
         if: ${{ github.event.inputs.dry_run != 'true' }}
