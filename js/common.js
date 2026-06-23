@@ -167,6 +167,11 @@
   const BANNER_KEY = 'rentcar_admin_banners';
   window.DEFAULT_BANNERS = DEFAULT_BANNERS;
   window.loadBanners = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    if (Array.isArray(window._serverBanners)) {
+      return window._serverBanners.slice();
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const saved = localStorage.getItem(BANNER_KEY);
       if (saved) {
@@ -214,6 +219,16 @@
     return out;
   }
   window.loadHeroBanners = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    const server = window._serverHeroBanners;
+    if (server && typeof server === 'object') {
+      const out = {};
+      Object.keys(DEFAULT_HERO_BANNERS).forEach(k => {
+        out[k] = safeMerge(DEFAULT_HERO_BANNERS[k], server[k]);
+      });
+      return out;
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const saved = localStorage.getItem(HERO_BANNERS_KEY);
       if (saved) {
@@ -415,6 +430,11 @@
   const FAQ_KEY = 'rentcar_faq';
   window.DEFAULT_FAQ = DEFAULT_FAQ;
   window.loadFaq = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    if (Array.isArray(window._serverFAQ)) {
+      return window._serverFAQ.filter(x => x && x.q && x.a);
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const s = localStorage.getItem(FAQ_KEY);
       if (s) {
@@ -449,6 +469,11 @@
   const INFO_KEY = 'rentcar_info';
   window.DEFAULT_INFO = DEFAULT_INFO;
   window.loadInfo = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    if (window._serverInfo && Array.isArray(window._serverInfo.sections)) {
+      return Object.assign({}, DEFAULT_INFO, window._serverInfo);
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const s = localStorage.getItem(INFO_KEY);
       if (s) {
@@ -479,6 +504,11 @@
   const FORM_OPT_KEY = 'rentcar_form_options';
   window.DEFAULT_FORM_OPTIONS = DEFAULT_FORM_OPTIONS;
   window.loadFormOptions = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    if (window._serverFormOptions && typeof window._serverFormOptions === 'object') {
+      return Object.assign({}, DEFAULT_FORM_OPTIONS, window._serverFormOptions);
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const s = localStorage.getItem(FORM_OPT_KEY);
       if (s) {
@@ -553,10 +583,20 @@
   const Privacy = makeLegalLoader('rentcar_privacy', DEFAULT_PRIVACY);
   window.DEFAULT_TERMS   = DEFAULT_TERMS;
   window.DEFAULT_PRIVACY = DEFAULT_PRIVACY;
-  window.loadTerms    = () => Terms.load();
+  window.loadTerms    = () => {
+    if (window._serverTerms && Array.isArray(window._serverTerms.sections)) {
+      return Object.assign({}, DEFAULT_TERMS, window._serverTerms);
+    }
+    return Terms.load();
+  };
   window.saveTerms    = (o) => Terms.save(o);
   window.resetTerms   = () => Terms.reset();
-  window.loadPrivacy  = () => Privacy.load();
+  window.loadPrivacy  = () => {
+    if (window._serverPrivacy && Array.isArray(window._serverPrivacy.sections)) {
+      return Object.assign({}, DEFAULT_PRIVACY, window._serverPrivacy);
+    }
+    return Privacy.load();
+  };
   window.savePrivacy  = (o) => Privacy.save(o);
   window.resetPrivacy = () => Privacy.reset();
 
@@ -567,6 +607,11 @@
      ══════════════════════════════ */
   const BANNER_META_KEY = 'rentcar_banner_meta';
   window.loadBannerMeta = function() {
+    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    if (window._serverBannerMeta && typeof window._serverBannerMeta === 'object') {
+      return window._serverBannerMeta;
+    }
+    // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const s = localStorage.getItem(BANNER_META_KEY);
       if (s) {
@@ -641,7 +686,7 @@
   window.saveInquiries = function(list) {
     return safeSetItem(INQUIRY_KEY, JSON.stringify(list || []));
   };
-  window.addInquiry = function(data) {
+  window.addInquiry = async function(data) {
     const list = window.loadInquiries();
     const id = list.reduce((m, i) => Math.max(m, i.id || 0), 0) + 1;
     const item = Object.assign({
@@ -649,15 +694,46 @@
       createdAt: new Date().toISOString(),
       isRead: false,
     }, data || {});
+
+    // 활동 로그에도 기록 — carId가 있으면 직접, 없으면 carName으로 매칭
+    const cid = item.carId || (item.carName ? window.findCarIdByName(item.carName) : null);
+    if (cid) item.carId = cid;
+
+    // 운영(카페24): DB 저장 성공 여부를 확인한다.
+    // 기존에는 서버 저장 실패를 무시해서 "접수 완료"처럼 보일 수 있었으므로,
+    // 운영 도메인에서는 /api/submit-inquiry.php 응답을 기준으로 성공/실패를 판단한다.
+    if (_isProdHost()) {
+      try {
+        const res = await fetch('/api/submit-inquiry.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.assign({ hp: '' }, item)),
+          credentials: 'same-origin',
+        });
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok || !d.ok) {
+          const msg = d.message || d.error || '문의 접수에 실패했습니다. 잠시 후 다시 시도해주세요.';
+          if (typeof window.showToast === 'function') window.showToast(msg);
+          throw new Error(msg);
+        }
+        return Object.assign(item, { id: d.id || item.id, mailSent: !!d.mailSent });
+      } catch (e) {
+        console.warn('서버 문의 저장 실패:', e);
+        if (typeof window.showToast === 'function') {
+          window.showToast(e && e.message ? e.message : '문의 접수에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        }
+        throw e;
+      }
+    }
+
+    // 정적(GitHub Pages 등): localStorage fallback 유지
     list.unshift(item);
     const ok = window.saveInquiries(list);
     if (ok === false) console.warn('문의 저장 실패 — 서버 백엔드 활성화 권장');
-    // 활동 로그에도 기록 — carId가 있으면 직접, 없으면 carName으로 매칭
-    const cid = item.carId || (item.carName ? window.findCarIdByName(item.carName) : null);
     if (cid) window.trackCarInquiry(cid);
 
     // 서버측 백엔드(PHP)로도 POST 시도 — 실패해도 무시 (정적 호스팅 fallback).
-    // 운영(카페24): api/submit-inquiry.php 가 메일 발송 + 서버 로그 누적
+    // 운영(카페24): 위의 운영 분기에서 응답 확인 후 처리
     // 정적(GitHub Pages 등): 404로 무시되고 localStorage 만 사용
     try {
       const payload = JSON.stringify(Object.assign({ hp: '' }, item));
@@ -721,6 +797,9 @@
   window.trackCarView = function(carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
+    // 운영 도메인에서는 localStorage 활동 로그를 만들지 않는다.
+    // detail.html 에서 trackServerCarView()를 별도로 호출하므로 여기서는 중복 호출을 막는다.
+    if (_isProdHost()) return;
     const act = window.loadActivity();
     act.views.push({ carId: id, ts: new Date().toISOString() });
     window.saveActivity(act);
@@ -729,6 +808,8 @@
   window.trackCarInquiry = function(carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
+    // 운영 도메인에서는 submit-inquiry.php 가 DB inquiries/activity 를 처리한다.
+    if (_isProdHost()) return;
     const act = window.loadActivity();
     act.inquiries.push({ carId: id, ts: new Date().toISOString() });
     window.saveActivity(act);
@@ -737,6 +818,8 @@
   window.trackCarContract = function(carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
+    // 운영 도메인에서는 더미 계약 로그를 만들지 않는다.
+    if (_isProdHost()) return;
     const act = window.loadActivity();
     act.contracts.push({ carId: id, ts: new Date().toISOString() });
     window.saveActivity(act);
@@ -776,6 +859,8 @@
   // 데모용: activity 로그가 비어있으면, DEFAULT_CARS 의 lifetime 통계를 기반으로
   // 최근 7일에 분산된 가짜 활동을 한 번 생성. 실사용자 활동이 쌓이면 자연스럽게 갱신됨.
   window.seedActivityIfEmpty = function() {
+    // 운영 도메인에서는 더미 조회수/문의수/계약수를 만들지 않는다.
+    if (_isProdHost()) return;
     if (localStorage.getItem(ACTIVITY_SEED_KEY)) return;
     const act = window.loadActivity();
     const hasReal = act.views.length || act.inquiries.length || act.contracts.length;
@@ -1397,7 +1482,7 @@
       const res = await fetch(API + '/cars.php', { credentials: 'same-origin' });
       if (res.ok) {
         const d = await res.json();
-        if (d && d.ok && Array.isArray(d.cars) && d.cars.length) {
+        if (d && d.ok && Array.isArray(d.cars)) {
           window.carDatabase = d.cars;
           window._backend = { mode: 'api' };
         }
@@ -1414,8 +1499,13 @@
           if (d.settings.about)    window._serverAboutContent    = d.settings.about;
           if (d.settings.business) window._serverBusinessContent = d.settings.business;
           if (d.settings.banners)  window._serverBanners         = d.settings.banners;
+          if (d.settings.banner_meta) window._serverBannerMeta   = d.settings.banner_meta;
           if (d.settings.hero_banners) window._serverHeroBanners = d.settings.hero_banners;
           if (d.settings.faq)      window._serverFAQ             = d.settings.faq;
+          if (d.settings.info)     window._serverInfo            = d.settings.info;
+          if (d.settings.form_options) window._serverFormOptions = d.settings.form_options;
+          if (d.settings.terms)    window._serverTerms           = d.settings.terms;
+          if (d.settings.privacy)  window._serverPrivacy         = d.settings.privacy;
         }
       }
     } catch (e) {}
