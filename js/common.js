@@ -1213,7 +1213,7 @@
      getTopN(cars)        — 차량의 lifetime 정적 통계 기반 (관리자 참고용)
      getWeeklyTopN(cars)  — activity 로그의 최근 7일 활동 기반 (공개 사이트 금주 TOP 5)
      점수 = 정규화된 inquiries·views·contracts 의 가중합 (0.4 / 0.25 / 0.35).
-     동점/무활동 처리: _norm 이 모두 1로 평탄화하여 다른 차원으로 정렬됨.
+     동점/무활동 처리: 전체 활동이 0이면 점수도 0으로 처리하고 TOP5 후보에서 제외.
      ────────────────────────────────────────── */
   window.Top5RankingEngine = class {
     constructor(w = {}) {
@@ -1221,21 +1221,37 @@
       this.n = w.topN || 5;
     }
     _norm(arr) {
+      if (!Array.isArray(arr) || !arr.length) return [];
       const mn = Math.min(...arr), mx = Math.max(...arr);
+      // 전체 활동이 0이면 모두 0점 처리 — 활동 없는 차량이 TOP5에 노출되는 문제 방지
+      if (mx === 0) return arr.map(() => 0);
+      // 모두 같은 값이지만 0은 아니면 동일 점수
       return mx === mn ? arr.map(() => 1) : arr.map(v => (v - mn) / (mx - mn));
     }
     _rank(cars, statsFn) {
-      const stats = cars.map(c => statsFn(c));
+      if (!Array.isArray(cars) || !cars.length) return [];
+      const stats = cars.map(c => statsFn(c) || {});
       const ni = this._norm(stats.map(s => s.inquiries || 0));
       const nv = this._norm(stats.map(s => s.views     || 0));
       const nc = this._norm(stats.map(s => s.contracts || 0));
       return cars
-        .map((car, i) => Object.assign({}, car, {
-          weeklyViews:     stats[i].views     || 0,
-          weeklyInquiries: stats[i].inquiries || 0,
-          weeklyContracts: stats[i].contracts || 0,
-          score: ni[i] * this.w.i + nv[i] * this.w.v + nc[i] * this.w.c,
-        }))
+        .map((car, i) => {
+          const weeklyViews     = stats[i].views     || 0;
+          const weeklyInquiries = stats[i].inquiries || 0;
+          const weeklyContracts = stats[i].contracts || 0;
+          return Object.assign({}, car, {
+            weeklyViews,
+            weeklyInquiries,
+            weeklyContracts,
+            score: (ni[i] || 0) * this.w.i + (nv[i] || 0) * this.w.v + (nc[i] || 0) * this.w.c,
+          });
+        })
+        // 최근 7일 조회·문의·계약이 모두 0인 차량은 TOP5 후보에서 제외
+        .filter(car =>
+          (car.weeklyViews || 0) > 0 ||
+          (car.weeklyInquiries || 0) > 0 ||
+          (car.weeklyContracts || 0) > 0
+        )
         .sort((a, b) => b.score - a.score)
         .slice(0, this.n);
     }
