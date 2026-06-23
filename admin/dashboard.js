@@ -120,6 +120,10 @@
       if (USE_BACKEND()) return apiSend('DELETE', '/inquiries.php?id=' + id);
       window.saveInquiries(window.loadInquiries().filter(x => x.id !== id));
     },
+    async clearInquiries() {
+      if (USE_BACKEND()) return apiSend('DELETE', '/inquiries.php?all=1');
+      window.saveInquiries([]);
+    },
     async fetchSettings() {
       if (USE_BACKEND()) return (await this.fetchSetting('site', window.DEFAULT_SETTINGS || {})) || {};
       return window.loadSettings();
@@ -143,6 +147,82 @@
     async resetAbout() {
       if (USE_BACKEND()) return;
       window.resetAbout();
+    },
+    async fetchBusiness() {
+      if (USE_BACKEND()) return (await this.fetchSetting('business', window.DEFAULT_BUSINESS || {})) || {};
+      return window.loadBusiness();
+    },
+    async saveBusiness(obj) {
+      if (USE_BACKEND()) return this.saveSetting('business', obj);
+      return window.saveBusiness(obj);
+    },
+    async resetBusiness() {
+      if (USE_BACKEND()) return;
+      window.resetBusiness();
+    },
+    async fetchFaq() {
+      if (USE_BACKEND()) return (await this.fetchSetting('faq', window.DEFAULT_FAQ || [])) || [];
+      return window.loadFaq();
+    },
+    async saveFaq(list) {
+      if (USE_BACKEND()) return this.saveSetting('faq', list || []);
+      return window.saveFaq(list);
+    },
+    async resetFaq() {
+      if (USE_BACKEND()) return;
+      window.resetFaq();
+    },
+    async fetchInfo() {
+      if (USE_BACKEND()) return (await this.fetchSetting('info', window.DEFAULT_INFO || { intro: '', sections: [] })) || {};
+      return window.loadInfo();
+    },
+    async saveInfo(obj) {
+      if (USE_BACKEND()) return this.saveSetting('info', obj);
+      return window.saveInfo(obj);
+    },
+    async resetInfo() {
+      if (USE_BACKEND()) return;
+      window.resetInfo();
+    },
+    async fetchFormOptions() {
+      if (USE_BACKEND()) return (await this.fetchSetting('form_options', window.DEFAULT_FORM_OPTIONS || {})) || {};
+      return window.loadFormOptions();
+    },
+    async saveFormOptions(obj) {
+      if (USE_BACKEND()) return this.saveSetting('form_options', obj);
+      return window.saveFormOptions(obj);
+    },
+    async resetFormOptions() {
+      if (USE_BACKEND()) return;
+      window.resetFormOptions();
+    },
+    async fetchLegalDoc(key, fallback) {
+      if (USE_BACKEND()) return (await this.fetchSetting(key, fallback || { title: '', intro: '', sections: [] })) || {};
+      return key === 'privacy' ? window.loadPrivacy() : window.loadTerms();
+    },
+    async saveLegalDoc(key, value) {
+      if (USE_BACKEND()) return this.saveSetting(key, value);
+      return key === 'privacy' ? window.savePrivacy(value) : window.saveTerms(value);
+    },
+    async resetLegalDoc(key) {
+      if (USE_BACKEND()) return;
+      return key === 'privacy' ? window.resetPrivacy() : window.resetTerms();
+    },
+    async fetchHeroBanners() {
+      if (USE_BACKEND()) return (await this.fetchSetting('hero_banners', window.DEFAULT_HERO_BANNERS || {})) || {};
+      return window.loadHeroBanners();
+    },
+    async saveHeroBanners(obj) {
+      if (USE_BACKEND()) return this.saveSetting('hero_banners', obj);
+      return window.saveHeroBanners(obj);
+    },
+    async resetHeroBanners() {
+      if (USE_BACKEND()) return;
+      window.resetHeroBanners();
+    },
+    async resetActivity() {
+      if (USE_BACKEND()) return apiSend('DELETE', '/activity.php?all=1');
+      if (typeof window.resetActivity === 'function') window.resetActivity();
     },
     async fetchUploadedImages() {
       // 운영 모드는 파일 시스템 + DB 메타로 관리되어 localStorage 와 모델이 다름 — 추후 확장
@@ -240,7 +320,7 @@
       renderBanners();
     }
     else if (name === 'heroes') {
-      renderHeroBanners();
+      await renderHeroBanners();
     }
     else if (name === 'inquiries') {
       inquiries = await DataLayer.fetchInquiries();
@@ -250,13 +330,13 @@
       cars = await DataLayer.fetchCars();
       renderOverview();
     }
-    else if (name === 'settings') renderSettingsForm();
-    else if (name === 'about') renderAboutForm();
-    else if (name === 'business') renderBusinessForm();
-    else if (name === 'faq') renderFaq();
-    else if (name === 'info') renderInfoForm();
-    else if (name === 'formopts') renderFormOpts();
-    else if (name === 'legal') renderLegalForm();
+    else if (name === 'settings') await renderSettingsForm();
+    else if (name === 'about') await renderAboutForm();
+    else if (name === 'business') await renderBusinessForm();
+    else if (name === 'faq') await renderFaq();
+    else if (name === 'info') await renderInfoForm();
+    else if (name === 'formopts') await renderFormOpts();
+    else if (name === 'legal') await renderLegalForm();
     else if (name === 'images') renderImages();
   }
 
@@ -445,7 +525,6 @@
     const features = ($('#cf_features').value || '')
       .split(',').map(s => s.trim()).filter(Boolean);
     const payload = {
-      id: id || nextId(cars),
       name,
       year: yr || undefined,
       price,
@@ -470,25 +549,36 @@
     if (id) {
       const idx = cars.findIndex(c => c.id === id);
       if (idx === -1) return toast('차량을 찾지 못했습니다.', 'error');
-      cars[idx] = payload;
-    } else {
-      cars.push(payload);
+      payload.id = id;
+    } else if (!USE_BACKEND()) {
+      payload.id = nextId(cars);
     }
 
-    await DataLayer.saveCars(cars);
-    closeCarModal();
-    renderCars();
-    toast(id ? '차량 정보가 수정되었습니다.' : '차량이 추가되었습니다.');
+    try {
+      await DataLayer.saveCar(payload);
+      cars = await DataLayer.fetchCars();
+      closeCarModal();
+      renderCars();
+      toast(id ? '차량 정보가 수정되었습니다.' : '차량이 추가되었습니다.');
+    } catch (err) {
+      console.error(err);
+      toast(id ? '차량 정보 수정에 실패했습니다.' : '차량 추가에 실패했습니다.', 'error');
+    }
   }
 
   async function deleteCar(id) {
     const car = cars.find(c => c.id === id);
     if (!car) return;
     if (!confirm(`"${car.name}" 차량을 삭제하시겠습니까?`)) return;
-    cars = cars.filter(c => c.id !== id);
-    await DataLayer.saveCars(cars);
-    renderCars();
-    toast('차량이 삭제되었습니다.');
+    try {
+      await DataLayer.deleteCar(id);
+      cars = await DataLayer.fetchCars();
+      renderCars();
+      toast('차량이 삭제되었습니다.');
+    } catch (err) {
+      console.error(err);
+      toast('차량 삭제에 실패했습니다.', 'error');
+    }
   }
 
   async function resetAllCars() {
@@ -698,8 +788,8 @@
     { key: 'used',     label: '중고차 장기렌트', page: 'used.html' },
   ];
   let heroState = null;
-  function renderHeroBanners() {
-    heroState = window.loadHeroBanners();
+  async function renderHeroBanners() {
+    heroState = await DataLayer.fetchHeroBanners();
     const grid = $('#heroBannerGrid');
     if (!grid) return;
     const opts = getImageOptions();
@@ -757,7 +847,7 @@
             if (prev) prev.style.backgroundImage = el.value ? `url('${imageUrl(el.value)}')` : '';
           }
           // 즉시 저장 — 사용자가 "저장" 버튼 안 눌러도 안전
-          window.saveHeroBanners(heroState);
+          DataLayer.saveHeroBanners(heroState);
         });
       });
       // 업로드 버튼들
@@ -780,7 +870,7 @@
           // state 갱신 + 즉시 저장
           heroState[key] = heroState[key] || {};
           heroState[key][variant] = 'uploaded:' + name;
-          window.saveHeroBanners(heroState);
+          DataLayer.saveHeroBanners(heroState);
           // 패널 전체 재렌더 (모든 select 가 새 옵션 포함하도록)
           renderHeroBanners();
           fileIn.value = '';
@@ -790,13 +880,13 @@
     });
   }
   async function saveHeroBanners() {
-    if (!heroState) heroState = window.loadHeroBanners();
-    window.saveHeroBanners(heroState);
+    if (!heroState) heroState = await DataLayer.fetchHeroBanners();
+    await DataLayer.saveHeroBanners(heroState);
     toast('히어로 배너가 저장되었습니다. 공개 페이지에서 새로고침하면 반영됩니다.');
   }
-  function resetHeroBanners() {
+  async function resetHeroBanners() {
     if (!confirm('서브페이지 히어로 배너를 기본값으로 복원하시겠습니까?')) return;
-    window.resetHeroBanners();
+    await DataLayer.resetHeroBanners();
     renderHeroBanners();
     toast('기본값으로 복원되었습니다.');
   }
@@ -809,7 +899,8 @@
     $('#statUsed').textContent = cars.filter(c => (c.category || []).includes('used')).length;
 
     // 신규 방문/초기화 직후 빈 상태 방지용 시드 (공개 사이트와 동일 로직)
-    if (typeof window.seedActivityIfEmpty === 'function') window.seedActivityIfEmpty();
+    // 운영 모드에서는 실제 DB/activity 값만 사용해야 하므로 더미 시드는 실행하지 않음.
+    if (!USE_BACKEND() && typeof window.seedActivityIfEmpty === 'function') window.seedActivityIfEmpty();
 
     const engine = new window.Top5RankingEngine();
     const top5 = engine.getWeeklyTopN(cars);
@@ -827,9 +918,15 @@
 
   async function resetActivityLog() {
     if (!confirm('금주 TOP 5 의 기반이 되는 조회·문의·계약 활동 로그를 모두 초기화하시겠습니까?\n새로 방문이 발생하면 다시 누적됩니다.')) return;
-    if (typeof window.resetActivity === 'function') window.resetActivity();
-    renderOverview();
-    toast('활동 로그가 초기화되었습니다.');
+    try {
+      await DataLayer.resetActivity();
+      cars = await DataLayer.fetchCars();
+      renderOverview();
+      toast('활동 로그가 초기화되었습니다.');
+    } catch (err) {
+      console.error(err);
+      toast('활동 로그 초기화에 실패했습니다.', 'error');
+    }
   }
 
   /* ══════════════════════════════
@@ -925,14 +1022,29 @@
     });
     tbody.querySelectorAll('select.status-sel').forEach(sel => {
       sel.addEventListener('click', e => e.stopPropagation());
-      sel.addEventListener('change', () => {
+      sel.addEventListener('change', async () => {
         const id = parseInt(sel.dataset.id, 10);
         const it = inquiries.find(x => x.id === id);
         if (!it) return;
-        it.status = sel.value;
-        if (sel.value !== 'new') it.isRead = true;  // 상태가 진행되면 자동 읽음 처리
-        DataLayer.saveInquiries(inquiries);
-        renderInquiries();
+
+        const prevStatus = it.status;
+        const prevRead = it.isRead;
+        const patch = { status: sel.value };
+        if (sel.value !== 'new') patch.isRead = true;  // 상태가 진행되면 자동 읽음 처리
+
+        try {
+          await DataLayer.updateInquiry(id, patch);
+          it.status = patch.status;
+          if (patch.isRead !== undefined) it.isRead = patch.isRead;
+          renderInquiries();
+          toast('문의 상태가 저장되었습니다.');
+        } catch (err) {
+          console.error(err);
+          it.status = prevStatus;
+          it.isRead = prevRead;
+          renderInquiries();
+          toast('문의 상태 저장에 실패했습니다.', 'error');
+        }
       });
     });
   }
@@ -967,13 +1079,18 @@
     toast(`${inquiries.length}건 CSV 내보내기 완료`);
   }
 
-  function openInquiryModal(id) {
+  async function openInquiryModal(id) {
     const it = inquiries.find(x => x.id === id);
     if (!it) return;
     if (!it.isRead) {
-      it.isRead = true;
-      DataLayer.saveInquiries(inquiries);
-      renderInquiries();
+      try {
+        await DataLayer.updateInquiry(id, { isRead: true });
+        it.isRead = true;
+        renderInquiries();
+      } catch (err) {
+        console.error(err);
+        toast('읽음 처리에 실패했습니다.', 'error');
+      }
     }
     const rows = [
       ['접수일', formatDateShort(it.createdAt)],
@@ -1008,26 +1125,48 @@
 
   async function deleteInquiry(id) {
     if (!confirm('이 문의를 삭제하시겠습니까?')) return;
-    inquiries = inquiries.filter(x => x.id !== id);
-    await DataLayer.saveInquiries(inquiries);
-    renderInquiries();
-    toast('문의가 삭제되었습니다.');
+
+    try {
+      await DataLayer.deleteInquiry(id);
+      inquiries = inquiries.filter(x => x.id !== id);
+      renderInquiries();
+      toast('문의가 삭제되었습니다.');
+    } catch (e) {
+      console.error(e);
+      toast('문의 삭제에 실패했습니다.', 'error');
+    }
   }
 
   async function markAllRead() {
-    inquiries.forEach(it => { it.isRead = true; });
-    await DataLayer.saveInquiries(inquiries);
-    renderInquiries();
-    toast('모두 읽음 처리했습니다.');
+    try {
+      await Promise.all(
+        inquiries
+          .filter(it => !it.isRead)
+          .map(it => DataLayer.updateInquiry(it.id, { isRead: true }))
+      );
+
+      inquiries.forEach(it => { it.isRead = true; });
+      renderInquiries();
+      toast('모두 읽음 처리했습니다.');
+    } catch (e) {
+      console.error(e);
+      toast('읽음 처리에 실패했습니다.', 'error');
+    }
   }
 
   async function clearAllInquiries() {
     if (!inquiries.length) return toast('삭제할 문의가 없습니다.', 'error');
     if (!confirm(`전체 ${inquiries.length}건의 문의를 모두 삭제하시겠습니까?`)) return;
-    inquiries = [];
-    await DataLayer.saveInquiries(inquiries);
-    renderInquiries();
-    toast('전체 문의가 삭제되었습니다.');
+
+    try {
+      await DataLayer.clearInquiries();
+      inquiries = [];
+      renderInquiries();
+      toast('전체 문의가 삭제되었습니다.');
+    } catch (err) {
+      console.error(err);
+      toast('전체 문의 삭제에 실패했습니다. 최고 관리자 권한을 확인해주세요.', 'error');
+    }
   }
 
   /* ══════════════════════════════
@@ -1039,8 +1178,8 @@
     'branchName', 'branchHours',
     'defaultDetailBanner',
   ];
-  function renderSettingsForm() {
-    const s = window.loadSettings();
+  async function renderSettingsForm() {
+    const s = await DataLayer.fetchSettings();
     SETTING_FIELDS.forEach(k => {
       const el = $('#set_' + k);
       if (el) el.value = s[k] != null ? s[k] : '';
@@ -1089,8 +1228,8 @@
      ══════════════════════════════ */
   const ABOUT_TEXT_FIELDS = ['heading', 'subheading', 'description'];
   const ABOUT_STAT_FIELDS = ['stat1Label','stat1Value','stat2Label','stat2Value','stat3Label','stat3Value','stat4Label','stat4Value'];
-  function renderAboutForm() {
-    const a = window.loadAbout();
+  async function renderAboutForm() {
+    const a = await DataLayer.fetchAbout();
     ABOUT_TEXT_FIELDS.forEach(k => { const el = $('#abt_' + k); if (el) el.value = a[k] || ''; });
     ABOUT_STAT_FIELDS.forEach(k => { const el = $('#abt_' + k); if (el) el.value = a[k] != null ? a[k] : ''; });
   }
@@ -1117,21 +1256,20 @@
      BUSINESS INFO (사업자 정보)
      ══════════════════════════════ */
   const BIZ_FIELDS = ['companyName','ceoName','bizRegNumber','corpRegNumber','openedAt','onlineSalesNumber','industry','address','headOfficeAddress','contactEmail','privacyOfficerName','privacyEmail','privacyPhone','kakaoChatUrl'];
-  function renderBusinessForm() {
-    if (typeof window.loadBusiness !== 'function') return;
-    const b = window.loadBusiness();
+  async function renderBusinessForm() {
+    const b = await DataLayer.fetchBusiness();
     BIZ_FIELDS.forEach(k => { const el = $('#biz_' + k); if (el) el.value = b[k] || ''; });
   }
-  function saveBusinessForm() {
+  async function saveBusinessForm() {
     const data = {};
     BIZ_FIELDS.forEach(k => { const el = $('#biz_' + k); if (el) data[k] = el.value.trim(); });
-    window.saveBusiness(data);
+    await DataLayer.saveBusiness(data);
     toast('사업자 정보가 저장되었습니다.');
   }
-  function resetBusinessForm() {
+  async function resetBusinessForm() {
     if (!confirm('사업자 정보를 기본값으로 복원하시겠습니까?')) return;
-    window.resetBusiness();
-    renderBusinessForm();
+    await DataLayer.resetBusiness();
+    await renderBusinessForm();
     toast('기본값으로 복원되었습니다.');
   }
 
@@ -1139,10 +1277,10 @@
      FAQ (자주 묻는 질문)
      ══════════════════════════════ */
   let faqList = [];
-  function renderFaq() {
+  async function renderFaq() {
     const wrap = $('#faqList');
     if (!wrap) return;
-    faqList = window.loadFaq();
+    faqList = await DataLayer.fetchFaq();
     if (!faqList.length) {
       wrap.innerHTML = '<div class="empty">등록된 질문이 없습니다. 우측 상단에서 추가하세요.</div>';
       return;
@@ -1185,7 +1323,7 @@
           if (!confirm(`Q${idx+1} 항목을 삭제하시겠습니까?`)) return;
           faqList.splice(idx, 1);
         }
-        window.saveFaq(faqList);
+        DataLayer.saveFaq(faqList);
         renderFaq();
       });
     });
@@ -1194,20 +1332,20 @@
         const idx = parseInt(el.closest('.faq-edit-item').dataset.idx, 10);
         const k = el.dataset.act;
         faqList[idx][k] = el.value;
-        window.saveFaq(faqList);
+        DataLayer.saveFaq(faqList);
       });
     });
     enhanceAllTextareas(wrap);
   }
-  function addFaqItem() {
-    faqList = window.loadFaq();
+  async function addFaqItem() {
+    faqList = await DataLayer.fetchFaq();
     faqList.push({ q: '새 질문', a: '답변을 입력해주세요.' });
-    window.saveFaq(faqList);
+    await DataLayer.saveFaq(faqList);
     renderFaq();
   }
-  function resetFaq() {
+  async function resetFaq() {
     if (!confirm('FAQ를 기본값으로 복원하시겠습니까?')) return;
-    window.resetFaq();
+    await DataLayer.resetFaq();
     renderFaq();
     toast('기본값으로 복원되었습니다.');
   }
@@ -1216,8 +1354,8 @@
      INFO PAGE (이용안내)
      ══════════════════════════════ */
   let infoState = null;
-  function renderInfoForm() {
-    infoState = window.loadInfo();
+  async function renderInfoForm() {
+    infoState = await DataLayer.fetchInfo();
     $('#info_intro').value = infoState.intro || '';
     const list = $('#infoSectionList');
     if (!list) return;
@@ -1272,20 +1410,20 @@
     // 새로 그려진 textarea 에 auto-grow + counter 적용
     enhanceAllTextareas(list);
   }
-  function addInfoSection() {
-    infoState = infoState || window.loadInfo();
+  async function addInfoSection() {
+    infoState = infoState || await DataLayer.fetchInfo();
     infoState.sections.push({ title: '새 섹션', body: '내용을 입력하세요.' });
     renderInfoForm();
   }
-  function saveInfoForm() {
+  async function saveInfoForm() {
     if (!infoState) return;
     infoState.intro = $('#info_intro').value;
-    window.saveInfo(infoState);
+    await DataLayer.saveInfo(infoState);
     toast('이용안내가 저장되었습니다.');
   }
-  function resetInfoForm() {
+  async function resetInfoForm() {
     if (!confirm('이용안내를 기본값으로 복원하시겠습니까?')) return;
-    window.resetInfo();
+    await DataLayer.resetInfo();
     renderInfoForm();
     toast('기본값으로 복원되었습니다.');
   }
@@ -1426,8 +1564,8 @@
      FORM OPTIONS (드롭다운 옵션) — 칩 에디터 사용
      ══════════════════════════════ */
   const FO_FIELDS = ['categories','regions','periods','experiences'];
-  function renderFormOpts() {
-    const o = window.loadFormOptions();
+  async function renderFormOpts() {
+    const o = await DataLayer.fetchFormOptions();
     FO_FIELDS.forEach(k => {
       const el = $('#fo_' + k);
       if (!el) return;
@@ -1439,23 +1577,23 @@
           const e2 = $('#fo_' + k2);
           if (e2) data[k2] = readChipEditor(e2);
         });
-        window.saveFormOptions(data);
+        DataLayer.saveFormOptions(data);
       });
     });
   }
-  function saveFormOpts() {
+  async function saveFormOpts() {
     const data = {};
     FO_FIELDS.forEach(k => {
       const el = $('#fo_' + k);
       if (!el) return;
       data[k] = readChipEditor(el);
     });
-    window.saveFormOptions(data);
+    await DataLayer.saveFormOptions(data);
     toast('폼 옵션이 저장되었습니다.');
   }
-  function resetFormOpts() {
+  async function resetFormOpts() {
     if (!confirm('폼 옵션을 기본값으로 복원하시겠습니까?')) return;
-    window.resetFormOptions();
+    await DataLayer.resetFormOptions();
     renderFormOpts();
     toast('기본값으로 복원되었습니다.');
   }
@@ -1466,13 +1604,15 @@
   let legalState = null;
   let legalCurrent = 'terms';
   function legalApi() {
-    return legalCurrent === 'privacy'
-      ? { load: window.loadPrivacy, save: window.savePrivacy, reset: window.resetPrivacy }
-      : { load: window.loadTerms,   save: window.saveTerms,   reset: window.resetTerms };
+    const key = legalCurrent === 'privacy' ? 'privacy' : 'terms';
+    const fallback = legalCurrent === 'privacy'
+      ? (window.DEFAULT_PRIVACY || { title: '개인정보처리방침', sections: [] })
+      : (window.DEFAULT_TERMS || { title: '이용약관', sections: [] });
+    return { key, fallback };
   }
-  function renderLegalForm() {
+  async function renderLegalForm() {
     const api = legalApi();
-    legalState = api.load();
+    legalState = await DataLayer.fetchLegalDoc(api.key, api.fallback);
     $('#legal_title').value     = legalState.title || '';
     $('#legal_effective').value = legalState.effective || '';
     $('#legal_intro').value     = legalState.intro || '';
@@ -1528,23 +1668,25 @@
     });
     enhanceAllTextareas(list);
   }
-  function addLegalSection() {
-    if (!legalState) legalState = legalApi().load();
+  async function addLegalSection() {
+    if (!legalState) { const api = legalApi(); legalState = await DataLayer.fetchLegalDoc(api.key, api.fallback); }
     legalState.sections.push({ title: '새 조항', body: '내용을 입력하세요.' });
     renderLegalForm();
   }
-  function saveLegalForm() {
+  async function saveLegalForm() {
     if (!legalState) return;
     legalState.title     = $('#legal_title').value;
     legalState.effective = $('#legal_effective').value;
     legalState.intro     = $('#legal_intro').value;
     legalState.note      = $('#legal_note').value;
-    legalApi().save(legalState);
+    const api = legalApi();
+    await DataLayer.saveLegalDoc(api.key, legalState);
     toast(legalCurrent === 'privacy' ? '개인정보처리방침이 저장되었습니다.' : '이용약관이 저장되었습니다.');
   }
-  function resetLegalDoc() {
+  async function resetLegalDoc() {
     if (!confirm('현재 문서를 기본값으로 복원하시겠습니까?')) return;
-    legalApi().reset();
+    const api = legalApi();
+    await DataLayer.resetLegalDoc(api.key);
     renderLegalForm();
     toast('기본값으로 복원되었습니다.');
   }
