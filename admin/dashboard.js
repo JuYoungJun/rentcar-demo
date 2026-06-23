@@ -220,6 +220,13 @@
       if (USE_BACKEND()) return;
       window.resetHeroBanners();
     },
+    async fetchWeeklyTop5() {
+      if (USE_BACKEND()) {
+        const d = await apiGet('/activity.php?summary=weekly');
+        return Array.isArray(d.top5) ? d.top5 : [];
+      }
+      return null; // localStorage 모드는 common.js Top5RankingEngine 사용
+    },
     async resetActivity() {
       if (USE_BACKEND()) return apiSend('DELETE', '/activity.php?all=1');
       if (typeof window.resetActivity === 'function') window.resetActivity();
@@ -898,22 +905,42 @@
     $('#statLongterm').textContent = cars.filter(c => (c.category || []).includes('longterm')).length;
     $('#statUsed').textContent = cars.filter(c => (c.category || []).includes('used')).length;
 
-    // 신규 방문/초기화 직후 빈 상태 방지용 시드 (공개 사이트와 동일 로직)
-    // 운영 모드에서는 실제 DB/activity 값만 사용해야 하므로 더미 시드는 실행하지 않음.
-    if (!USE_BACKEND() && typeof window.seedActivityIfEmpty === 'function') window.seedActivityIfEmpty();
+    const renderTop5Rows = (top5) => {
+      const list = Array.isArray(top5) ? top5 : [];
+
+      $('#top5Body').innerHTML = list.map((c, i) => `
+        <tr>
+          <td><strong>${i + 1}</strong></td>
+          <td>${escapeHtml(c.name)}</td>
+          <td>${(c.weeklyViews     || 0).toLocaleString()}</td>
+          <td>${(c.weeklyInquiries || 0).toLocaleString()}</td>
+          <td>${(c.weeklyContracts || 0).toLocaleString()}</td>
+          <td>${Number(c.score || 0).toFixed(3)}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="6" class="empty">최근 7일 활동 데이터가 없습니다.</td></tr>';
+    };
+
+    // 운영 모드: DB activity 테이블 기준 최근 7일 TOP5
+    if (USE_BACKEND()) {
+      $('#top5Body').innerHTML = '<tr><td colspan="6" class="empty">최근 7일 활동을 불러오는 중입니다...</td></tr>';
+
+      DataLayer.fetchWeeklyTop5()
+        .then(renderTop5Rows)
+        .catch(err => {
+          console.error(err);
+          $('#top5Body').innerHTML = '<tr><td colspan="6" class="empty">최근 7일 활동 데이터를 불러오지 못했습니다.</td></tr>';
+        });
+
+      return;
+    }
+
+    // 데모/GitHub Pages/localStorage 모드
+    // 신규 방문/초기화 직후 빈 상태 방지용 시드
+    if (typeof window.seedActivityIfEmpty === 'function') window.seedActivityIfEmpty();
 
     const engine = new window.Top5RankingEngine();
     const top5 = engine.getWeeklyTopN(cars);
-    $('#top5Body').innerHTML = top5.map((c, i) => `
-      <tr>
-        <td><strong>${i + 1}</strong></td>
-        <td>${escapeHtml(c.name)}</td>
-        <td>${(c.weeklyViews     || 0).toLocaleString()}</td>
-        <td>${(c.weeklyInquiries || 0).toLocaleString()}</td>
-        <td>${(c.weeklyContracts || 0).toLocaleString()}</td>
-        <td>${(c.score || 0).toFixed(3)}</td>
-      </tr>
-    `).join('') || '<tr><td colspan="6" class="empty">데이터가 없습니다.</td></tr>';
+    renderTop5Rows(top5);
   }
 
   async function resetActivityLog() {
