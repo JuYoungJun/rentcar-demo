@@ -117,9 +117,13 @@ try {
     db()->prepare("INSERT INTO activity (car_id, kind) VALUES (?, 'inquiry')")->execute([$carId]);
   }
 } catch (Throwable $e) {
-  // DB 실패해도 메일/로그는 시도 — 클라이언트에는 다음 단계 결과 반환
-  $inquiryId = 0;
+  // DB 저장 실패 시 관리자 페이지에 문의가 보이지 않으므로 성공 처리하지 않음
   @error_log('[inquiry-insert-failed] ' . $e->getMessage());
+  json_out([
+    'ok' => false,
+    'error' => 'DB_INSERT_FAILED',
+    'message' => '문의 저장에 실패했습니다. 잠시 후 다시 시도해주세요.',
+  ], 500);
 }
 
 // 6) 매니저 이메일 발송
