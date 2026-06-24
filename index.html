@@ -341,38 +341,47 @@
       // 활동 로그 초기 시드 (신규 방문자 한정)
       if (typeof seedActivityIfEmpty === 'function') seedActivityIfEmpty();
 
-      // 금주(최근 7일) TOP 5 — activity 로그 기반 실시간 랭킹
-      const engine = new Top5RankingEngine();
-      const top5 = engine.getWeeklyTopN(carDatabase);
+      // 금주(최근 7일) TOP 5 — 운영은 DB activity, 로컬은 localStorage 기준
       const list = document.getElementById('top5List');
       const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
 
-      // 최근 7일 활동이 없으면 top5가 빈 배열일 수 있음.
-      // 이때 top5[0] 접근으로 메인 페이지 렌더링이 중단되지 않도록 fallback 처리.
-      if (top5.length > 0) {
-        document.getElementById('bestCarName').textContent = top5[0].name;
+      const isBackendHost = () => {
+        const h = (location.hostname || '').toLowerCase();
+        if (!h || h === 'localhost' || h === '127.0.0.1') return false;
+        if (/\.github\.io$/.test(h)) return false;
+        return true;
+      };
 
-        if (top5[0].image) {
-          const bestImg = document.querySelector('.best-car-img .img-placeholder');
-          if (bestImg) bestImg.style.backgroundImage = `url('${carImageUrl(top5[0].image)}')`;
-        }
+      const renderTop5 = (top5) => {
+        const items = Array.isArray(top5) ? top5 : [];
 
-        if (list) list.innerHTML = '';
-        top5.forEach((car, i) => {
-          const li = document.createElement('li');
-          const vw = Number(car.weeklyViews || 0).toLocaleString();
-          const iq = Number(car.weeklyInquiries || 0).toLocaleString();
-          li.innerHTML = `
+        if (items.length > 0) {
+          document.getElementById('bestCarName').textContent = items[0].name;
+
+          if (items[0].image) {
+            const bestImg = document.querySelector('.best-car-img .img-placeholder');
+            if (bestImg) bestImg.style.backgroundImage = `url('${carImageUrl(items[0].image)}')`;
+          }
+
+          if (list) list.innerHTML = '';
+          items.forEach((car, i) => {
+            const li = document.createElement('li');
+            const vw = Number(car.weeklyViews || 0).toLocaleString();
+            const iq = Number(car.weeklyInquiries || 0).toLocaleString();
+            li.innerHTML = `
         <span class="top5-num ${i < 3 ? 'red' : 'gray'}">${i + 1}</span>
         <span class="top5-name">${esc(car.name)}</span>
         <span class="top5-meta">조회 ${vw} · 문의 ${iq}</span>
       `;
-          const safeId = Number(car.id) || 0;
-          li.onclick = () => { window.location.href = `detail.html?id=${safeId}&from=monthly`; };
-          if (list) list.appendChild(li);
-        });
-      } else {
-        const fallbackBest = carDatabase.find(c => (c.category || []).includes('monthly')) || carDatabase[0];
+            const safeId = Number(car.id) || 0;
+            li.onclick = () => { window.location.href = `detail.html?id=${safeId}&from=monthly`; };
+            if (list) list.appendChild(li);
+          });
+          return;
+        }
+
+        const cars = Array.isArray(carDatabase) ? carDatabase : [];
+        const fallbackBest = cars.find(c => (c.category || []).includes('monthly')) || cars[0];
 
         if (fallbackBest) {
           document.getElementById('bestCarName').textContent = fallbackBest.name;
@@ -386,9 +395,30 @@
         }
 
         if (list) {
-          list.innerHTML = '<li class="top5-empty">최근 7일 활동 데이터가 없습니다.</li>';
+          list.innerHTML = '<li class="top5-empty">이번 주 인기 차량 집계 중입니다.<br>조회·문의가 쌓이면 자동으로 표시됩니다.</li>';
         }
-      }
+      };
+
+      const loadTop5 = () => {
+        if (isBackendHost()) {
+          fetch('/api/activity.php?summary=weekly', {
+            method: 'GET',
+            credentials: 'same-origin',
+          })
+            .then(r => r.json())
+            .then(d => {
+              if (d && d.ok && Array.isArray(d.top5)) renderTop5(d.top5);
+              else renderTop5([]);
+            })
+            .catch(() => renderTop5([]));
+          return;
+        }
+
+        const engine = new Top5RankingEngine();
+        renderTop5(engine.getWeeklyTopN(carDatabase));
+      };
+
+      loadTop5();
 
       // Cards — 최초 렌더 + DB hydration 이후 재렌더
       const renderHomeCars = () => {
@@ -416,22 +446,7 @@
 
       document.addEventListener('rentcar:hydrated', () => {
         renderHomeCars();
-
-        if (isBackendHost()) {
-          fetch('/api/activity.php?summary=weekly', {
-            method: 'GET',
-            credentials: 'same-origin',
-          })
-            .then(r => r.json())
-            .then(d => {
-              if (d && d.ok && Array.isArray(d.top5)) {
-                renderTop5(d.top5);
-              } else {
-                renderTop5([]);
-              }
-            })
-            .catch(() => renderTop5([]));
-        }
+        loadTop5();
       });
 
       // Dropdowns
