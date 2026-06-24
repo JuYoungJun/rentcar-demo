@@ -805,6 +805,26 @@
     window.saveActivity(act);
   };
 
+   // 운영 모드: 차량 상세 조회를 서버 DB에 기록
+  // /api/track-view.php 가 cars.views +1 및 activity(kind='view') INSERT 처리
+  window.trackServerCarView = function(carId) {
+    const id = parseInt(carId, 10);
+    if (!id) return;
+
+    // 운영 도메인에서만 서버 조회 로그 기록
+    if (!_isProdHost()) return;
+
+    try {
+      fetch('/api/track-view.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carId: id }),
+        credentials: 'same-origin',
+        keepalive: true,
+      }).catch(() => {});
+    } catch (e) {}
+  };
+
   window.trackCarInquiry = function(carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
