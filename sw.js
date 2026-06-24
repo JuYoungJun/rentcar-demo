@@ -7,9 +7,9 @@
    · 오프라인 시 캐시 미스 → /404.html 로 fallback
    ══════════════════════════════════════════════════════════ */
 
-const SW_VERSION = 'v1.0.0';
+const SW_VERSION = 'v1.0.1';
 const PRECACHE = `haetae-precache-${SW_VERSION}`;
-const RUNTIME  = `haetae-runtime-${SW_VERSION}`;
+const RUNTIME = `haetae-runtime-${SW_VERSION}`;
 
 // 설치 시 미리 캐시할 핵심 자산 (오프라인 최소 동작 보장)
 const PRECACHE_URLS = [
@@ -73,7 +73,7 @@ self.addEventListener('fetch', (event) => {
           // 200 OK 인 경우만 runtime 캐시에 보관
           if (res && res.ok && res.type === 'basic') {
             const copy = res.clone();
-            caches.open(RUNTIME).then((c) => c.put(req, copy)).catch(() => {});
+            caches.open(RUNTIME).then((c) => c.put(req, copy)).catch(() => { });
           }
           return res;
         })
@@ -88,7 +88,7 @@ self.addEventListener('fetch', (event) => {
       const networked = fetch(req).then((res) => {
         if (res && res.ok && res.type === 'basic') {
           const copy = res.clone();
-          caches.open(RUNTIME).then((c) => c.put(req, copy)).catch(() => {});
+          caches.open(RUNTIME).then((c) => c.put(req, copy)).catch(() => { });
         }
         return res;
       }).catch(() => cached);

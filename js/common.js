@@ -1,7 +1,7 @@
 /* ══════════════════════════════
    COMMON JS — 해태렌트카 (optimized)
    ══════════════════════════════ */
-(function() {
+(function () {
   'use strict';
 
   /* ── Page fade-in: 페이지 로드 시 깜빡임 방지 ── */
@@ -31,7 +31,7 @@
   window.setActiveNav = setActiveNav;
 
   /* ── Toast ── */
-  window.showToast = function(msg) {
+  window.showToast = function (msg) {
     const t = document.getElementById('toast');
     if (!t) return;  // toast 컨테이너 없으면 무시 (운영 로그 노출 방지)
     t.textContent = msg;
@@ -110,34 +110,34 @@
      ── */
   const DEFAULT_CARS = [
     // ── 월렌트 (1개월 단기) ──
-    { id:1,  name:'모닝',            tags:['경차','무심사'],            year:2026, price:550000,  badge:'1개월', category:['monthly'],   inquiries:88, views:720, contracts:42, image:'morning.webp' },
-    { id:2,  name:'레이',            tags:['경차','무보증'],            year:2026, price:550000,  badge:'1개월', category:['monthly'],   inquiries:82, views:680, contracts:38, image:'ray.webp' },
-    { id:3,  name:'캐스퍼',          tags:['경차','무심사','무보증'],   year:2026, price:600000,  badge:'1개월', category:['monthly'],   inquiries:75, views:640, contracts:34, image:'casper.webp' },
-    { id:5,  name:'아반떼',          tags:['무보증'],                   year:2026, price:650000,  badge:'1개월', category:['monthly'],   inquiries:68, views:590, contracts:28, image:'avante-2.webp' },
-    { id:6,  name:'K5',              tags:['무심사'],                   year:2026, price:700000,  badge:'1개월', category:['monthly'],   inquiries:55, views:480, contracts:24, image:'k5.webp' },
-    { id:8,  name:'소나타',          tags:['무심사'],                   year:2026, price:700000,  badge:'1개월', category:['monthly'],   inquiries:52, views:450, contracts:23, image:'sonata.webp' },
-    { id:10, name:'더 뉴 셀토스',    tags:['SUV'],                      year:2026, price:750000,  badge:'1개월', category:['monthly'],   inquiries:46, views:400, contracts:19, image:'seltos.webp' },
+    { id: 1, name: '모닝', tags: ['경차', '무심사'], year: 2026, price: 550000, badge: '1개월', category: ['monthly'], inquiries: 88, views: 720, contracts: 42, image: 'morning.webp' },
+    { id: 2, name: '레이', tags: ['경차', '무보증'], year: 2026, price: 550000, badge: '1개월', category: ['monthly'], inquiries: 82, views: 680, contracts: 38, image: 'ray.webp' },
+    { id: 3, name: '캐스퍼', tags: ['경차', '무심사', '무보증'], year: 2026, price: 600000, badge: '1개월', category: ['monthly'], inquiries: 75, views: 640, contracts: 34, image: 'casper.webp' },
+    { id: 5, name: '아반떼', tags: ['무보증'], year: 2026, price: 650000, badge: '1개월', category: ['monthly'], inquiries: 68, views: 590, contracts: 28, image: 'avante-2.webp' },
+    { id: 6, name: 'K5', tags: ['무심사'], year: 2026, price: 700000, badge: '1개월', category: ['monthly'], inquiries: 55, views: 480, contracts: 24, image: 'k5.webp' },
+    { id: 8, name: '소나타', tags: ['무심사'], year: 2026, price: 700000, badge: '1개월', category: ['monthly'], inquiries: 52, views: 450, contracts: 23, image: 'sonata.webp' },
+    { id: 10, name: '더 뉴 셀토스', tags: ['SUV'], year: 2026, price: 750000, badge: '1개월', category: ['monthly'], inquiries: 46, views: 400, contracts: 19, image: 'seltos.webp' },
 
     // ── 12개월 기간약정 — 가격 낮은순 정렬 ──
-    { id:20, name:'모닝',            tags:['경차','12개월약정','무심사'],     year:2025, price:400000,  badge:'12개월', category:['longterm'],  inquiries:90, views:730, contracts:44, image:'morning.webp' },
-    { id:21, name:'레이',            tags:['경차','12개월약정','무보증'],     year:2025, price:400000,  badge:'12개월', category:['longterm'],  inquiries:85, views:690, contracts:40, image:'ray.webp' },
-    { id:22, name:'캐스퍼',          tags:['경차','12개월약정','무심사'],     year:2025, price:450000,  badge:'12개월', category:['longterm'],  inquiries:78, views:650, contracts:36, image:'casper.webp' },
-    { id:4,  name:'아반떼',          tags:['12개월약정','무심사'],            year:2025, price:500000,  badge:'12개월', category:['longterm'],  inquiries:72, views:620, contracts:32, image:'avante.webp' },
-    { id:23, name:'K5 DL3',          tags:['12개월약정','무보증'],            year:2025, price:550000,  badge:'12개월', category:['longterm'],  inquiries:58, views:500, contracts:26, image:'k5.webp' },
-    { id:7,  name:'소나타 디 엣지',  tags:['12개월약정','무심사'],            year:2024, price:600000,  badge:'12개월', category:['longterm'],  inquiries:50, views:430, contracts:22, image:'sonata-edge.webp' },
-    { id:9,  name:'더 뉴 셀토스',    tags:['SUV','12개월약정'],               year:2025, price:600000,  badge:'12개월', category:['longterm'],  inquiries:48, views:410, contracts:20, image:'seltos.webp' },
-    { id:25, name:'K8',              tags:['12개월약정','프리미엄'],          year:2024, price:850000,  badge:'12개월', category:['longterm'],  inquiries:36, views:330, contracts:15, image:'grandeur.webp' },
-    { id:24, name:'그랜져 GN7',      tags:['12개월약정'],                     year:2025, price:950000,  badge:'12개월', category:['longterm'],  inquiries:40, views:360, contracts:17, image:'grandeur-gn7.webp' },
+    { id: 20, name: '모닝', tags: ['경차', '12개월약정', '무심사'], year: 2025, price: 400000, badge: '12개월', category: ['longterm'], inquiries: 90, views: 730, contracts: 44, image: 'morning.webp' },
+    { id: 21, name: '레이', tags: ['경차', '12개월약정', '무보증'], year: 2025, price: 400000, badge: '12개월', category: ['longterm'], inquiries: 85, views: 690, contracts: 40, image: 'ray.webp' },
+    { id: 22, name: '캐스퍼', tags: ['경차', '12개월약정', '무심사'], year: 2025, price: 450000, badge: '12개월', category: ['longterm'], inquiries: 78, views: 650, contracts: 36, image: 'casper.webp' },
+    { id: 4, name: '아반떼', tags: ['12개월약정', '무심사'], year: 2025, price: 500000, badge: '12개월', category: ['longterm'], inquiries: 72, views: 620, contracts: 32, image: 'avante.webp' },
+    { id: 23, name: 'K5 DL3', tags: ['12개월약정', '무보증'], year: 2025, price: 550000, badge: '12개월', category: ['longterm'], inquiries: 58, views: 500, contracts: 26, image: 'k5.webp' },
+    { id: 7, name: '소나타 디 엣지', tags: ['12개월약정', '무심사'], year: 2024, price: 600000, badge: '12개월', category: ['longterm'], inquiries: 50, views: 430, contracts: 22, image: 'sonata-edge.webp' },
+    { id: 9, name: '더 뉴 셀토스', tags: ['SUV', '12개월약정'], year: 2025, price: 600000, badge: '12개월', category: ['longterm'], inquiries: 48, views: 410, contracts: 20, image: 'seltos.webp' },
+    { id: 25, name: 'K8', tags: ['12개월약정', '프리미엄'], year: 2024, price: 850000, badge: '12개월', category: ['longterm'], inquiries: 36, views: 330, contracts: 15, image: 'grandeur.webp' },
+    { id: 24, name: '그랜져 GN7', tags: ['12개월약정'], year: 2025, price: 950000, badge: '12개월', category: ['longterm'], inquiries: 40, views: 360, contracts: 17, image: 'grandeur-gn7.webp' },
 
     // ── 중고차 장기렌트 ──
-    { id:11, name:'카니발 4세대',    tags:['미니밴','무보증'],          year:2023, price:950000,  badge:'',       category:['used'],      inquiries:42, views:380, contracts:18, image:'carnival.webp' },
-    { id:13, name:'쏘렌토 MQ4',      tags:['SUV','무심사','무보증'],    year:2021, price:750000,  badge:'',       category:['used'],      inquiries:36, views:330, contracts:15, image:'sorento.webp' },
-    { id:14, name:'더 뉴 쏘렌토',    tags:['SUV','무심사'],             year:2023, price:900000,  badge:'',       category:['used'],      inquiries:38, views:340, contracts:16, image:'sorento.webp' },
-    { id:15, name:'싼타페 MX5',      tags:['SUV','무보증'],             year:2023, price:950000,  badge:'',       category:['used'],      inquiries:35, views:320, contracts:14, image:'santafe.webp' },
-    { id:16, name:'더 뉴 그랜져',    tags:['무심사','무보증'],          year:2020, price:700000,  badge:'',       category:['used'],      inquiries:30, views:280, contracts:12, image:'grandeur.webp' },
-    { id:17, name:'더 뉴 그랜져',    tags:['무심사'],                   year:2021, price:750000,  badge:'',       category:['used'],      inquiries:32, views:290, contracts:13, image:'grandeur-2.webp' },
-    { id:18, name:'그랜져 GN7',      tags:['무심사'],                   year:2023, price:1000000, badge:'',       category:['used'],      inquiries:34, views:300, contracts:14, image:'grandeur-gn7.webp' },
-    { id:19, name:'G80 RG3',         tags:['프리미엄','무심사'],        year:2021, price:1200000, badge:'',       category:['used'],      inquiries:45, views:390, contracts:18, image:'g80.webp' },
+    { id: 11, name: '카니발 4세대', tags: ['미니밴', '무보증'], year: 2023, price: 950000, badge: '', category: ['used'], inquiries: 42, views: 380, contracts: 18, image: 'carnival.webp' },
+    { id: 13, name: '쏘렌토 MQ4', tags: ['SUV', '무심사', '무보증'], year: 2021, price: 750000, badge: '', category: ['used'], inquiries: 36, views: 330, contracts: 15, image: 'sorento.webp' },
+    { id: 14, name: '더 뉴 쏘렌토', tags: ['SUV', '무심사'], year: 2023, price: 900000, badge: '', category: ['used'], inquiries: 38, views: 340, contracts: 16, image: 'sorento.webp' },
+    { id: 15, name: '싼타페 MX5', tags: ['SUV', '무보증'], year: 2023, price: 950000, badge: '', category: ['used'], inquiries: 35, views: 320, contracts: 14, image: 'santafe.webp' },
+    { id: 16, name: '더 뉴 그랜져', tags: ['무심사', '무보증'], year: 2020, price: 700000, badge: '', category: ['used'], inquiries: 30, views: 280, contracts: 12, image: 'grandeur.webp' },
+    { id: 17, name: '더 뉴 그랜져', tags: ['무심사'], year: 2021, price: 750000, badge: '', category: ['used'], inquiries: 32, views: 290, contracts: 13, image: 'grandeur-2.webp' },
+    { id: 18, name: '그랜져 GN7', tags: ['무심사'], year: 2023, price: 1000000, badge: '', category: ['used'], inquiries: 34, views: 300, contracts: 14, image: 'grandeur-gn7.webp' },
+    { id: 19, name: 'G80 RG3', tags: ['프리미엄', '무심사'], year: 2021, price: 1200000, badge: '', category: ['used'], inquiries: 45, views: 390, contracts: 18, image: 'g80.webp' },
   ];
 
   const STORAGE_KEY = 'rentcar_admin_cars';
@@ -148,25 +148,25 @@
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length) return parsed;
       }
-    } catch (e) {}
+    } catch (e) { }
     return DEFAULT_CARS;
   }
   window.DEFAULT_CARS = DEFAULT_CARS;
   window.carDatabase = loadCars();
-  window.saveCarDatabase = function(cars) {
+  window.saveCarDatabase = function (cars) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cars));
     window.carDatabase = cars;
   };
-  window.resetCarDatabase = function() {
+  window.resetCarDatabase = function () {
     localStorage.removeItem(STORAGE_KEY);
     window.carDatabase = DEFAULT_CARS;
   };
 
   /* ── Banners (admin-managed) ── */
-  const DEFAULT_BANNERS = ['banner_1.webp','banner_2.webp','banner_3.webp','banner_4.webp','banner_5.webp'];
+  const DEFAULT_BANNERS = ['banner_1.webp', 'banner_2.webp', 'banner_3.webp', 'banner_4.webp', 'banner_5.webp'];
   const BANNER_KEY = 'rentcar_admin_banners';
   window.DEFAULT_BANNERS = DEFAULT_BANNERS;
-  window.loadBanners = function() {
+  window.loadBanners = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     if (Array.isArray(window._serverBanners)) {
       return window._serverBanners.slice();
@@ -187,13 +187,13 @@
           });
         }
       }
-    } catch (e) {}
+    } catch (e) { }
     return DEFAULT_BANNERS;
   };
-  window.saveBanners = function(list) {
+  window.saveBanners = function (list) {
     localStorage.setItem(BANNER_KEY, JSON.stringify(list));
   };
-  window.resetBanners = function() {
+  window.resetBanners = function () {
     localStorage.removeItem(BANNER_KEY);
   };
 
@@ -202,9 +202,9 @@
      자리에 들어갈 desktop / mobile 이미지를 사이트 운영자가 교체 가능. */
   const HERO_BANNERS_KEY = 'rentcar_hero_banners';
   const DEFAULT_HERO_BANNERS = {
-    monthly:  { desktop: 'hero_monthly.jpg',  mobile: 'hero_monthly_mobile.webp',  alt: '월렌트' },
+    monthly: { desktop: 'hero_monthly.jpg', mobile: 'hero_monthly_mobile.webp', alt: '월렌트' },
     longterm: { desktop: 'hero_longterm.jpg', mobile: 'hero_longterm_mobile.webp', alt: '12개월 기간약정' },
-    used:     { desktop: 'hero_used.jpg',     mobile: 'hero_used_mobile.webp',     alt: '중고차 장기렌트' },
+    used: { desktop: 'hero_used.jpg', mobile: 'hero_used_mobile.webp', alt: '중고차 장기렌트' },
   };
   window.DEFAULT_HERO_BANNERS = DEFAULT_HERO_BANNERS;
   // undefined/null/'' 값은 무시하고 truthy 값만 덮어쓰는 안전 머지
@@ -218,7 +218,7 @@
     }
     return out;
   }
-  window.loadHeroBanners = function() {
+  window.loadHeroBanners = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     const server = window._serverHeroBanners;
     if (server && typeof server === 'object') {
@@ -242,10 +242,10 @@
           return out;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
     return JSON.parse(JSON.stringify(DEFAULT_HERO_BANNERS));
   };
-  window.saveHeroBanners = function(obj) {
+  window.saveHeroBanners = function (obj) {
     const current = window.loadHeroBanners();
     const merged = {};
     // 각 page 별로 안전 머지 — 일부 필드만 업데이트해도 나머지 유지
@@ -256,13 +256,13 @@
     localStorage.setItem(HERO_BANNERS_KEY, JSON.stringify(merged));
     return merged;
   };
-  window.resetHeroBanners = function() {
+  window.resetHeroBanners = function () {
     localStorage.removeItem(HERO_BANNERS_KEY);
   };
 
   /* 서브페이지(body[data-page="monthly|longterm|used"]) 에서 자동 호출되어
      현재 페이지의 hero <picture>/<img> 의 src/srcset 을 관리자 설정값으로 교체.  */
-  window.applyHeroBanner = function() {
+  window.applyHeroBanner = function () {
     try {
       if (typeof window.resolveImageUrl !== 'function') return;
       const body = document.body;
@@ -311,7 +311,7 @@
   };
   const SETTINGS_KEY = 'rentcar_settings';
   window.DEFAULT_SETTINGS = DEFAULT_SETTINGS;
-  window.loadSettings = function() {
+  window.loadSettings = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     if (window._serverSiteSettings && typeof window._serverSiteSettings === 'object') {
       return Object.assign({}, DEFAULT_SETTINGS, window._serverSiteSettings);
@@ -323,15 +323,15 @@
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') return Object.assign({}, DEFAULT_SETTINGS, parsed);
       }
-    } catch (e) {}
+    } catch (e) { }
     return Object.assign({}, DEFAULT_SETTINGS);
   };
-  window.saveSettings = function(obj) {
+  window.saveSettings = function (obj) {
     const merged = Object.assign({}, window.loadSettings(), obj || {});
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
     return merged;
   };
-  window.resetSettings = function() {
+  window.resetSettings = function () {
     localStorage.removeItem(SETTINGS_KEY);
   };
 
@@ -347,7 +347,7 @@
   };
   const ABOUT_KEY = 'rentcar_about';
   window.DEFAULT_ABOUT = DEFAULT_ABOUT;
-  window.loadAbout = function() {
+  window.loadAbout = function () {
     if (window._serverAboutContent && typeof window._serverAboutContent === 'object') {
       return Object.assign({}, DEFAULT_ABOUT, window._serverAboutContent);
     }
@@ -357,15 +357,15 @@
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') return Object.assign({}, DEFAULT_ABOUT, parsed);
       }
-    } catch (e) {}
+    } catch (e) { }
     return Object.assign({}, DEFAULT_ABOUT);
   };
-  window.saveAbout = function(obj) {
+  window.saveAbout = function (obj) {
     const merged = Object.assign({}, window.loadAbout(), obj || {});
     localStorage.setItem(ABOUT_KEY, JSON.stringify(merged));
     return merged;
   };
-  window.resetAbout = function() {
+  window.resetAbout = function () {
     localStorage.removeItem(ABOUT_KEY);
   };
 
@@ -373,24 +373,24 @@
      사업자 정보 (business.html / 법적 표시)
      ══════════════════════════════ */
   const DEFAULT_BUSINESS = {
-    companyName:        '주식회사 해태렌트카 광주지점',
-    ceoName:            '이창은',
-    bizRegNumber:       '476-85-02430',
-    corpRegNumber:      '205611-0017730',
-    openedAt:           '2022-12-13',
-    onlineSalesNumber:  '',  // 통신판매업 신고번호 (별도 신고 시 입력)
-    industry:           '서비스업 / 렌트카',
-    address:            '광주광역시 광산구 북문대로433번길 45 (신창동)',
-    headOfficeAddress:  '전라남도 영광군 법성면 굴비로1길 146, 101호',
-    contactEmail:       'contact@haetae-rentcar.com',
+    companyName: '주식회사 해태렌트카 광주지점',
+    ceoName: '이창은',
+    bizRegNumber: '476-85-02430',
+    corpRegNumber: '205611-0017730',
+    openedAt: '2022-12-13',
+    onlineSalesNumber: '',  // 통신판매업 신고번호 (별도 신고 시 입력)
+    industry: '서비스업 / 렌트카',
+    address: '광주광역시 광산구 북문대로433번길 45 (신창동)',
+    headOfficeAddress: '전라남도 영광군 법성면 굴비로1길 146, 101호',
+    contactEmail: 'contact@haetae-rentcar.com',
     privacyOfficerName: '이창은',
-    privacyEmail:       'privacy@haetae-rentcar.com',
-    privacyPhone:       '010-6611-6633',
-    kakaoChatUrl:       'https://open.kakao.com/o/sPZhlPzi',
+    privacyEmail: 'privacy@haetae-rentcar.com',
+    privacyPhone: '010-6611-6633',
+    kakaoChatUrl: 'https://open.kakao.com/o/sPZhlPzi',
   };
   const BUSINESS_KEY = 'rentcar_business';
   window.DEFAULT_BUSINESS = DEFAULT_BUSINESS;
-  window.loadBusiness = function() {
+  window.loadBusiness = function () {
     if (window._serverBusinessContent && typeof window._serverBusinessContent === 'object') {
       return Object.assign({}, DEFAULT_BUSINESS, window._serverBusinessContent);
     }
@@ -400,15 +400,15 @@
         const p = JSON.parse(s);
         if (p && typeof p === 'object') return Object.assign({}, DEFAULT_BUSINESS, p);
       }
-    } catch (e) {}
+    } catch (e) { }
     return Object.assign({}, DEFAULT_BUSINESS);
   };
-  window.saveBusiness = function(obj) {
+  window.saveBusiness = function (obj) {
     const merged = Object.assign({}, window.loadBusiness(), obj || {});
     localStorage.setItem(BUSINESS_KEY, JSON.stringify(merged));
     return merged;
   };
-  window.resetBusiness = function() {
+  window.resetBusiness = function () {
     localStorage.removeItem(BUSINESS_KEY);
   };
 
@@ -416,20 +416,30 @@
      FAQ (quote.html)
      ══════════════════════════════ */
   const DEFAULT_FAQ = [
-    { q: '견적 신청 후 답변까지 얼마나 걸리나요?',
-      a: '영업시간(평일 09:00~19:00) 내 신청 시 평균 1시간 이내에 전담 상담사가 연락드립니다. 영업시간 외 접수 건은 다음 영업일에 순차적으로 안내해드립니다.' },
-    { q: '신용 등급이 낮아도 렌트가 가능한가요?',
-      a: '기간약정월렌트(6개월~24개월) 상품을 통해 신용 심사 부담을 최소화한 조건으로 이용하실 수 있습니다. 무심사·무보증 차량도 다수 보유하고 있으니 부담 없이 문의해주세요.' },
-    { q: '견적 신청만 해도 비용이 발생하나요?',
-      a: '견적 상담과 차량 추천 단계까지는 어떠한 비용도 발생하지 않습니다. 계약 전까지 자유롭게 비교·검토하실 수 있습니다.' },
-    { q: '차량은 어디서 인수할 수 있나요?',
-      a: '광주 광산구 신창동 영업장에서 직접 인수하실 수 있으며, 지역에 따라 협의 후 탁송 서비스도 가능합니다. 자세한 내용은 상담 시 안내해드립니다.' },
-    { q: '계약 도중 차량을 변경할 수 있나요?',
-      a: '계약 조건과 잔여 기간에 따라 차량 교체가 가능합니다. 전담 상담사를 통해 가장 합리적인 방식으로 안내해드립니다.' },
+    {
+      q: '견적 신청 후 답변까지 얼마나 걸리나요?',
+      a: '영업시간(평일 09:00~19:00) 내 신청 시 평균 1시간 이내에 전담 상담사가 연락드립니다. 영업시간 외 접수 건은 다음 영업일에 순차적으로 안내해드립니다.'
+    },
+    {
+      q: '신용 등급이 낮아도 렌트가 가능한가요?',
+      a: '기간약정월렌트(6개월~24개월) 상품을 통해 신용 심사 부담을 최소화한 조건으로 이용하실 수 있습니다. 무심사·무보증 차량도 다수 보유하고 있으니 부담 없이 문의해주세요.'
+    },
+    {
+      q: '견적 신청만 해도 비용이 발생하나요?',
+      a: '견적 상담과 차량 추천 단계까지는 어떠한 비용도 발생하지 않습니다. 계약 전까지 자유롭게 비교·검토하실 수 있습니다.'
+    },
+    {
+      q: '차량은 어디서 인수할 수 있나요?',
+      a: '광주 광산구 신창동 영업장에서 직접 인수하실 수 있으며, 지역에 따라 협의 후 탁송 서비스도 가능합니다. 자세한 내용은 상담 시 안내해드립니다.'
+    },
+    {
+      q: '계약 도중 차량을 변경할 수 있나요?',
+      a: '계약 조건과 잔여 기간에 따라 차량 교체가 가능합니다. 전담 상담사를 통해 가장 합리적인 방식으로 안내해드립니다.'
+    },
   ];
   const FAQ_KEY = 'rentcar_faq';
   window.DEFAULT_FAQ = DEFAULT_FAQ;
-  window.loadFaq = function() {
+  window.loadFaq = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     if (Array.isArray(window._serverFAQ)) {
       return window._serverFAQ.filter(x => x && x.q && x.a);
@@ -441,13 +451,13 @@
         const p = JSON.parse(s);
         if (Array.isArray(p)) return p.filter(x => x && x.q && x.a);
       }
-    } catch (e) {}
+    } catch (e) { }
     return DEFAULT_FAQ.slice();
   };
-  window.saveFaq = function(list) {
+  window.saveFaq = function (list) {
     localStorage.setItem(FAQ_KEY, JSON.stringify(list || []));
   };
-  window.resetFaq = function() {
+  window.resetFaq = function () {
     localStorage.removeItem(FAQ_KEY);
   };
 
@@ -468,7 +478,7 @@
   };
   const INFO_KEY = 'rentcar_info';
   window.DEFAULT_INFO = DEFAULT_INFO;
-  window.loadInfo = function() {
+  window.loadInfo = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     if (window._serverInfo && Array.isArray(window._serverInfo.sections)) {
       return Object.assign({}, DEFAULT_INFO, window._serverInfo);
@@ -480,15 +490,15 @@
         const p = JSON.parse(s);
         if (p && Array.isArray(p.sections)) return Object.assign({}, DEFAULT_INFO, p);
       }
-    } catch (e) {}
+    } catch (e) { }
     return JSON.parse(JSON.stringify(DEFAULT_INFO));
   };
-  window.saveInfo = function(obj) {
+  window.saveInfo = function (obj) {
     const merged = Object.assign({}, window.loadInfo(), obj || {});
     localStorage.setItem(INFO_KEY, JSON.stringify(merged));
     return merged;
   };
-  window.resetInfo = function() {
+  window.resetInfo = function () {
     localStorage.removeItem(INFO_KEY);
   };
 
@@ -496,14 +506,14 @@
      폼 옵션 (지역/기간/운전경력/카테고리) — quote/index 폼 드롭다운
      ══════════════════════════════ */
   const DEFAULT_FORM_OPTIONS = {
-    categories: ['월렌트','12개월 기간약정','중고차 장기렌트','법인 렌트'],
-    regions:    ['서울','경기','인천','부산','대구','광주','대전','제주'],
-    periods:    ['1개월','3개월','6개월','12개월','24개월','36개월','48개월'],
-    experiences:['1년 미만','1~3년','3~5년','5년 이상'],
+    categories: ['월렌트', '12개월 기간약정', '중고차 장기렌트', '법인 렌트'],
+    regions: ['서울', '경기', '인천', '부산', '대구', '광주', '대전', '제주'],
+    periods: ['1개월', '3개월', '6개월', '12개월', '24개월', '36개월', '48개월'],
+    experiences: ['1년 미만', '1~3년', '3~5년', '5년 이상'],
   };
   const FORM_OPT_KEY = 'rentcar_form_options';
   window.DEFAULT_FORM_OPTIONS = DEFAULT_FORM_OPTIONS;
-  window.loadFormOptions = function() {
+  window.loadFormOptions = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     if (window._serverFormOptions && typeof window._serverFormOptions === 'object') {
       return Object.assign({}, DEFAULT_FORM_OPTIONS, window._serverFormOptions);
@@ -515,15 +525,15 @@
         const p = JSON.parse(s);
         if (p && typeof p === 'object') return Object.assign({}, DEFAULT_FORM_OPTIONS, p);
       }
-    } catch (e) {}
+    } catch (e) { }
     return JSON.parse(JSON.stringify(DEFAULT_FORM_OPTIONS));
   };
-  window.saveFormOptions = function(obj) {
+  window.saveFormOptions = function (obj) {
     const merged = Object.assign({}, window.loadFormOptions(), obj || {});
     localStorage.setItem(FORM_OPT_KEY, JSON.stringify(merged));
     return merged;
   };
-  window.resetFormOptions = function() {
+  window.resetFormOptions = function () {
     localStorage.removeItem(FORM_OPT_KEY);
   };
 
@@ -539,7 +549,7 @@
             const p = JSON.parse(s);
             if (p && Array.isArray(p.sections)) return Object.assign({}, defaultDoc, p);
           }
-        } catch (e) {}
+        } catch (e) { }
         return JSON.parse(JSON.stringify(defaultDoc));
       },
       save(obj) {
@@ -579,25 +589,25 @@
     ],
     note: '[안내] 실제 운영 시 사업자등록번호·대표자명·연락처·이메일 등은 실제 정보로 교체해야 합니다.',
   };
-  const Terms   = makeLegalLoader('rentcar_terms',   DEFAULT_TERMS);
+  const Terms = makeLegalLoader('rentcar_terms', DEFAULT_TERMS);
   const Privacy = makeLegalLoader('rentcar_privacy', DEFAULT_PRIVACY);
-  window.DEFAULT_TERMS   = DEFAULT_TERMS;
+  window.DEFAULT_TERMS = DEFAULT_TERMS;
   window.DEFAULT_PRIVACY = DEFAULT_PRIVACY;
-  window.loadTerms    = () => {
+  window.loadTerms = () => {
     if (window._serverTerms && Array.isArray(window._serverTerms.sections)) {
       return Object.assign({}, DEFAULT_TERMS, window._serverTerms);
     }
     return Terms.load();
   };
-  window.saveTerms    = (o) => Terms.save(o);
-  window.resetTerms   = () => Terms.reset();
-  window.loadPrivacy  = () => {
+  window.saveTerms = (o) => Terms.save(o);
+  window.resetTerms = () => Terms.reset();
+  window.loadPrivacy = () => {
     if (window._serverPrivacy && Array.isArray(window._serverPrivacy.sections)) {
       return Object.assign({}, DEFAULT_PRIVACY, window._serverPrivacy);
     }
     return Privacy.load();
   };
-  window.savePrivacy  = (o) => Privacy.save(o);
+  window.savePrivacy = (o) => Privacy.save(o);
   window.resetPrivacy = () => Privacy.reset();
 
   /* ══════════════════════════════
@@ -606,7 +616,7 @@
      loadBannersV2(): { image, mobileImage, url, alt } 객체 배열
      ══════════════════════════════ */
   const BANNER_META_KEY = 'rentcar_banner_meta';
-  window.loadBannerMeta = function() {
+  window.loadBannerMeta = function () {
     // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
     if (window._serverBannerMeta && typeof window._serverBannerMeta === 'object') {
       return window._serverBannerMeta;
@@ -618,13 +628,13 @@
         const p = JSON.parse(s);
         if (p && typeof p === 'object') return p;
       }
-    } catch (e) {}
+    } catch (e) { }
     return {};
   };
-  window.saveBannerMeta = function(map) {
+  window.saveBannerMeta = function (map) {
     localStorage.setItem(BANNER_META_KEY, JSON.stringify(map || {}));
   };
-  window.loadBannersV2 = function() {
+  window.loadBannersV2 = function () {
     const list = window.loadBanners();
     const meta = window.loadBannerMeta();
     return list.map(img => {
@@ -647,25 +657,25 @@
 
   /* ── 업로드된 이미지 (base64 데이터 URL 사전, 키=표시이름) ── */
   const UPLOAD_KEY = 'rentcar_uploaded_images';
-  window.loadUploadedImages = function() {
+  window.loadUploadedImages = function () {
     try {
       const saved = localStorage.getItem(UPLOAD_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') return parsed;
       }
-    } catch (e) {}
+    } catch (e) { }
     return {};
   };
-  window.saveUploadedImages = function(map) {
+  window.saveUploadedImages = function (map) {
     return safeSetItem(UPLOAD_KEY, JSON.stringify(map || {}));
   };
-  window.addUploadedImage = function(name, dataUrl) {
+  window.addUploadedImage = function (name, dataUrl) {
     const map = window.loadUploadedImages();
     map[name] = dataUrl;
     return window.saveUploadedImages(map);  // false 반환 시 호출자가 실패 처리 가능
   };
-  window.removeUploadedImage = function(name) {
+  window.removeUploadedImage = function (name) {
     const map = window.loadUploadedImages();
     delete map[name];
     window.saveUploadedImages(map);
@@ -673,20 +683,20 @@
 
   /* ── 문의 (폼 제출 캡처) ── */
   const INQUIRY_KEY = 'rentcar_inquiries';
-  window.loadInquiries = function() {
+  window.loadInquiries = function () {
     try {
       const saved = localStorage.getItem(INQUIRY_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) return parsed;
       }
-    } catch (e) {}
+    } catch (e) { }
     return [];
   };
-  window.saveInquiries = function(list) {
+  window.saveInquiries = function (list) {
     return safeSetItem(INQUIRY_KEY, JSON.stringify(list || []));
   };
-  window.addInquiry = async function(data) {
+  window.addInquiry = async function (data) {
     const list = window.loadInquiries();
     const id = list.reduce((m, i) => Math.max(m, i.id || 0), 0) + 1;
     const item = Object.assign({
@@ -742,8 +752,8 @@
         headers: { 'Content-Type': 'application/json' },
         body: payload,
         keepalive: true,
-      }).catch(() => {});
-    } catch (e) {}
+      }).catch(() => { });
+    } catch (e) { }
 
     return item;
   };
@@ -759,42 +769,42 @@
   const RETENTION_MS = 30 * 86400000;  // 30일
   const WEEK_MS = 7 * 86400000;
 
-  window.loadActivity = function() {
+  window.loadActivity = function () {
     try {
       const s = localStorage.getItem(ACTIVITY_KEY);
       if (s) {
         const p = JSON.parse(s);
         if (p && typeof p === 'object') {
           return {
-            views:     Array.isArray(p.views)     ? p.views     : [],
+            views: Array.isArray(p.views) ? p.views : [],
             inquiries: Array.isArray(p.inquiries) ? p.inquiries : [],
             contracts: Array.isArray(p.contracts) ? p.contracts : [],
           };
         }
       }
-    } catch (e) {}
+    } catch (e) { }
     return { views: [], inquiries: [], contracts: [] };
   };
 
-  window.saveActivity = function(act) {
+  window.saveActivity = function (act) {
     // 보관 기한 지난 항목 자동 정리
     const cutoff = Date.now() - RETENTION_MS;
     const keep = e => new Date(e.ts).getTime() >= cutoff;
     const clean = {
-      views:     (act.views     || []).filter(keep),
+      views: (act.views || []).filter(keep),
       inquiries: (act.inquiries || []).filter(keep),
       contracts: (act.contracts || []).filter(keep),
     };
-    try { localStorage.setItem(ACTIVITY_KEY, JSON.stringify(clean)); } catch (e) {}
+    try { localStorage.setItem(ACTIVITY_KEY, JSON.stringify(clean)); } catch (e) { }
     return clean;
   };
 
-  window.resetActivity = function() {
+  window.resetActivity = function () {
     localStorage.removeItem(ACTIVITY_KEY);
     localStorage.removeItem(ACTIVITY_SEED_KEY);
   };
 
-  window.trackCarView = function(carId) {
+  window.trackCarView = function (carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
     // 운영 도메인에서는 localStorage 활동 로그를 만들지 않는다.
@@ -805,27 +815,7 @@
     window.saveActivity(act);
   };
 
-   // 운영 모드: 차량 상세 조회를 서버 DB에 기록
-  // /api/track-view.php 가 cars.views +1 및 activity(kind='view') INSERT 처리
-  window.trackServerCarView = function(carId) {
-    const id = parseInt(carId, 10);
-    if (!id) return;
-
-    // 운영 도메인에서만 서버 조회 로그 기록
-    if (!_isProdHost()) return;
-
-    try {
-      fetch('/api/track-view.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ carId: id }),
-        credentials: 'same-origin',
-        keepalive: true,
-      }).catch(() => {});
-    } catch (e) {}
-  };
-
-  window.trackCarInquiry = function(carId) {
+  window.trackCarInquiry = function (carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
     // 운영 도메인에서는 submit-inquiry.php 가 DB inquiries/activity 를 처리한다.
@@ -835,7 +825,7 @@
     window.saveActivity(act);
   };
 
-  window.trackCarContract = function(carId) {
+  window.trackCarContract = function (carId) {
     const id = parseInt(carId, 10);
     if (!id) return;
     // 운영 도메인에서는 더미 계약 로그를 만들지 않는다.
@@ -846,7 +836,7 @@
   };
 
   // 입력된 차량명으로 carDatabase 매칭 (대소문자·공백 무시, 부분 일치)
-  window.findCarIdByName = function(name) {
+  window.findCarIdByName = function (name) {
     if (!name || !Array.isArray(window.carDatabase)) return null;
     const norm = s => String(s).toLowerCase().replace(/\s+/g, '');
     const q = norm(name);
@@ -862,15 +852,114 @@
     return hit ? hit.id : null;
   };
 
+
+
+  /* ── 견적 폼 차량 추천/자동 채우기 헬퍼 ──
+     카테고리 선택 → 해당 카테고리 차량만 datalist 추천.
+     input + datalist 구조라 사용자가 직접 입력도 가능. */
+  window.RENTCAR_CATEGORY_MAP = {
+    '월렌트': 'monthly',
+    '1개월 월렌트': 'monthly',
+    '12개월 기간약정': 'longterm',
+    '기간약정': 'longterm',
+    '중고차 장기렌트': 'used',
+    '중고차': 'used'
+  };
+
+  window.rentcarCategoryLabelFromKey = function (key) {
+    if (key === 'monthly') return '월렌트';
+    if (key === 'longterm') return '12개월 기간약정';
+    if (key === 'used') return '중고차 장기렌트';
+    return '';
+  };
+
+  window.setupCarSuggestionInput = function (opts) {
+    opts = opts || {};
+    const categoryEl = document.getElementById(opts.categoryId || 'formCategory');
+    const carInput = document.getElementById(opts.carInputId || 'formCar');
+    const list = document.getElementById(opts.datalistId || 'formCarList');
+    if (!categoryEl || !carInput || !list) return function () { };
+
+    const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+
+    const update = function () {
+      const categoryLabel = categoryEl.value || '';
+      const key = (window.RENTCAR_CATEGORY_MAP && window.RENTCAR_CATEGORY_MAP[categoryLabel]) || '';
+      const cars = Array.isArray(window.carDatabase) ? window.carDatabase : [];
+      const filtered = key ? cars.filter(c => (c.category || []).includes(key)) : cars;
+      const seen = new Set();
+
+      list.innerHTML = filtered
+        .filter(c => {
+          const name = String(c && c.name ? c.name : '').trim();
+          if (!name || seen.has(name)) return false;
+          seen.add(name);
+          return true;
+        })
+        .map(c => `<option value="${esc(c.name)}"></option>`)
+        .join('');
+
+      carInput.placeholder = key ? '차량을 선택하거나 직접 입력해주세요.' : '희망하시는 차량명을 입력해주세요.';
+    };
+
+    categoryEl.addEventListener('change', update);
+    document.addEventListener('rentcar:hydrated', update);
+    update();
+    return update;
+  };
+
+  window.prefillQuoteFormFromQuery = function (opts) {
+    opts = opts || {};
+    const params = new URLSearchParams(window.location.search || '');
+    const categoryEl = document.getElementById(opts.categoryId || 'formCategory');
+    const carInput = document.getElementById(opts.carInputId || 'formCar');
+    const updateSuggestions = typeof opts.updateSuggestions === 'function' ? opts.updateSuggestions : null;
+
+    if (!categoryEl && !carInput) return;
+
+    const from = params.get('from') || '';
+    const id = parseInt(params.get('id') || params.get('carId') || '', 10);
+    let category = params.get('category') || window.rentcarCategoryLabelFromKey(from);
+    let carName = params.get('car') || params.get('carName') || '';
+
+    if ((!carName || !category) && id && Array.isArray(window.carDatabase)) {
+      const hit = window.carDatabase.find(c => Number(c.id) === id);
+      if (hit) {
+        if (!carName) carName = hit.name || '';
+        if (!category) {
+          const cats = Array.isArray(hit.category) ? hit.category : [];
+          category = window.rentcarCategoryLabelFromKey(cats[0]);
+        }
+      }
+    }
+
+    if (categoryEl && category) {
+      categoryEl.value = category;
+      if (categoryEl.value !== category) {
+        const opt = Array.from(categoryEl.options || []).find(o => o.textContent.trim() === category || o.value === category);
+        if (opt) categoryEl.value = opt.value;
+      }
+      categoryEl.classList.add('selected');
+      categoryEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    if (updateSuggestions) updateSuggestions();
+
+    if (carInput && carName) {
+      carInput.value = carName;
+    }
+  };
+
+
   // 특정 차량의 최근 N일(기본 7일) 활동 집계
-  window.getCarStats = function(carId, days) {
+  window.getCarStats = function (carId, days) {
     const id = parseInt(carId, 10);
     const ms = (days || 7) * 86400000;
     const cutoff = Date.now() - ms;
     const act = window.loadActivity();
     const cnt = (arr) => arr.filter(e => e.carId === id && new Date(e.ts).getTime() >= cutoff).length;
     return {
-      views:     cnt(act.views),
+      views: cnt(act.views),
       inquiries: cnt(act.inquiries),
       contracts: cnt(act.contracts),
     };
@@ -878,7 +967,7 @@
 
   // 데모용: activity 로그가 비어있으면, DEFAULT_CARS 의 lifetime 통계를 기반으로
   // 최근 7일에 분산된 가짜 활동을 한 번 생성. 실사용자 활동이 쌓이면 자연스럽게 갱신됨.
-  window.seedActivityIfEmpty = function() {
+  window.seedActivityIfEmpty = function () {
     // 운영 도메인에서는 더미 조회수/문의수/계약수를 만들지 않는다.
     if (_isProdHost()) return;
     if (localStorage.getItem(ACTIVITY_SEED_KEY)) return;
@@ -890,16 +979,16 @@
       const WEEKLY_SHARE = 0.12;
       const randTs = () => new Date(now - Math.random() * WEEK_MS).toISOString();
       window.carDatabase.forEach(car => {
-        const v = Math.round((car.views     || 0) * WEEKLY_SHARE);
+        const v = Math.round((car.views || 0) * WEEKLY_SHARE);
         const q = Math.round((car.inquiries || 0) * WEEKLY_SHARE);
         const k = Math.round((car.contracts || 0) * WEEKLY_SHARE);
-        for (let i = 0; i < v; i++) act.views.push({     carId: car.id, ts: randTs() });
+        for (let i = 0; i < v; i++) act.views.push({ carId: car.id, ts: randTs() });
         for (let i = 0; i < q; i++) act.inquiries.push({ carId: car.id, ts: randTs() });
         for (let i = 0; i < k; i++) act.contracts.push({ carId: car.id, ts: randTs() });
       });
       window.saveActivity(act);
     }
-    try { localStorage.setItem(ACTIVITY_SEED_KEY, '1'); } catch (e) {}
+    try { localStorage.setItem(ACTIVITY_SEED_KEY, '1'); } catch (e) { }
   };
 
   /* ══════════════════════════════════════════════════════════
@@ -914,7 +1003,7 @@
        const out = await optimizeImageFile(file);
        // → { dataUrl, blob, name, mime, originalBytes, optimizedBytes, width, height }
      ══════════════════════════════════════════════════════════ */
-  window.optimizeImageFile = async function(file, options) {
+  window.optimizeImageFile = async function (file, options) {
     const opts = Object.assign({
       maxDim: 1600,          // 가로/세로 한도
       quality: 0.82,          // 인코딩 품질
@@ -954,7 +1043,7 @@
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(bitmap, 0, 0, outW, outH);
-    if (bitmap.close) try { bitmap.close(); } catch (e) {}
+    if (bitmap.close) try { bitmap.close(); } catch (e) { }
 
     // 출력 인코딩 (WebP → 큰 효과)
     const canvasToBlob = (mime, quality) =>
@@ -1002,7 +1091,7 @@
   };
 
   // 클립보드 paste 이벤트에서 이미지 추출
-  window.extractImagesFromClipboard = function(clipboardEvent) {
+  window.extractImagesFromClipboard = function (clipboardEvent) {
     const items = (clipboardEvent.clipboardData && clipboardEvent.clipboardData.items) || [];
     const files = [];
     for (let i = 0; i < items.length; i++) {
@@ -1025,7 +1114,7 @@
   };
 
   /* ── 이미지 URL 리졸버 (uploaded:, data:, http://, 일반 파일명 처리) ── */
-  window.resolveImageUrl = function(spec, baseDir) {
+  window.resolveImageUrl = function (spec, baseDir) {
     if (!spec) return '';
     const s = String(spec);
     if (s.indexOf('uploaded:') === 0) {
@@ -1038,7 +1127,7 @@
   };
 
   /* ── Image URL helper (차량/일반) ── */
-  window.carImageUrl = function(file) {
+  window.carImageUrl = function (file) {
     return window.resolveImageUrl(file, 'images/');
   };
 
@@ -1093,14 +1182,14 @@
      pageCategory === 'used' (중고차 장기렌트): 가격 대신 "별도문의" 노출 */
   // XSS 방지용 HTML escape (관리자 입력 stored XSS 방어)
   // 외부 입력은 아니지만, 관리자 계정 탈취 시나리오 대비 + URL/attribute 컨텍스트 안전화
-  window.escHtml = function(v) {
+  window.escHtml = function (v) {
     if (v == null) return '';
     return String(v).replace(/[&<>"']/g, c => (
-      {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
     ));
   };
 
-  window.renderCarCards = function(containerId, cars, badgeOverride, pageCategory) {
+  window.renderCarCards = function (containerId, cars, badgeOverride, pageCategory) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const hidePrice = pageCategory === 'used';
@@ -1108,8 +1197,8 @@
     const fragment = document.createDocumentFragment();
     const temp = document.createElement('div');
     temp.innerHTML = cars.map((car, idx) => {
-      const priceLabel = hidePrice ? '별도문의' : `${Number(car.price||0).toLocaleString()} 원`;
-      const dataPrice  = hidePrice ? '별도문의' : Number(car.price||0).toLocaleString();
+      const priceLabel = hidePrice ? '별도문의' : `${Number(car.price || 0).toLocaleString()} 원`;
+      const dataPrice = hidePrice ? '별도문의' : Number(car.price || 0).toLocaleString();
       // 첫 3개 카드는 즉시 로드(LCP 후보), 나머지는 lazy.
       // background-image 는 native lazy 미지원이므로 data-bg 속성 + IntersectionObserver 사용.
       const bg = car.image ? carImageUrl(car.image) : '';
@@ -1127,7 +1216,7 @@
           ${(badgeOverride || car.badge) ? `<div class="card-badge">${esc(badgeOverride || car.badge)}</div>` : ''}
         </div>
         <div class="card-name">${esc(car.name)}</div>
-        <div class="card-tags">${tags.map(t => '#'+esc(t)).join(' ')}</div>
+        <div class="card-tags">${tags.map(t => '#' + esc(t)).join(' ')}</div>
         <div class="card-price${hidePrice ? ' card-price--inquiry' : ''}">${esc(priceLabel)}</div>
       </div>
     `;
@@ -1165,7 +1254,7 @@
   };
 
   /* ── Slider dots for mobile ── */
-  window.initSliderDots = function(gridId, dotsId) {
+  window.initSliderDots = function (gridId, dotsId) {
     const grid = document.getElementById(gridId);
     const dotsWrap = document.getElementById(dotsId);
     if (!grid || !dotsWrap) return;
@@ -1202,7 +1291,7 @@
   };
 
   /* ── Sort ── */
-  window.initSortBar = function(containerId, cars, badgeOverride, pageCategory) {
+  window.initSortBar = function (containerId, cars, badgeOverride, pageCategory) {
     const sortBtn = document.getElementById('sortBtn');
     const sortDD = document.getElementById('sortDropdown');
     if (!sortBtn || !sortDD) return;
@@ -1218,10 +1307,10 @@
         sortDD.classList.remove('open');
         let sorted = [...cars];
         const k = opt.dataset.sort;
-        if      (k === 'price-low')  sorted.sort((a, b) => a.price - b.price);
+        if (k === 'price-low') sorted.sort((a, b) => a.price - b.price);
         else if (k === 'price-high') sorted.sort((a, b) => b.price - a.price);
-        else if (k === 'year-new')   sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
-        else if (k === 'year-old')   sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
+        else if (k === 'year-new') sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
+        else if (k === 'year-old') sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
         renderCarCards(containerId, sorted, badgeOverride, pageCategory);
       };
     });
@@ -1233,7 +1322,7 @@
      getTopN(cars)        — 차량의 lifetime 정적 통계 기반 (관리자 참고용)
      getWeeklyTopN(cars)  — activity 로그의 최근 7일 활동 기반 (공개 사이트 금주 TOP 5)
      점수 = 정규화된 inquiries·views·contracts 의 가중합 (0.4 / 0.25 / 0.35).
-     동점/무활동 처리: 전체 활동이 0이면 점수도 0으로 처리하고 TOP5 후보에서 제외.
+     동점/무활동 처리: _norm 이 모두 1로 평탄화하여 다른 차원으로 정렬됨.
      ────────────────────────────────────────── */
   window.Top5RankingEngine = class {
     constructor(w = {}) {
@@ -1241,37 +1330,21 @@
       this.n = w.topN || 5;
     }
     _norm(arr) {
-      if (!Array.isArray(arr) || !arr.length) return [];
       const mn = Math.min(...arr), mx = Math.max(...arr);
-      // 전체 활동이 0이면 모두 0점 처리 — 활동 없는 차량이 TOP5에 노출되는 문제 방지
-      if (mx === 0) return arr.map(() => 0);
-      // 모두 같은 값이지만 0은 아니면 동일 점수
       return mx === mn ? arr.map(() => 1) : arr.map(v => (v - mn) / (mx - mn));
     }
     _rank(cars, statsFn) {
-      if (!Array.isArray(cars) || !cars.length) return [];
-      const stats = cars.map(c => statsFn(c) || {});
+      const stats = cars.map(c => statsFn(c));
       const ni = this._norm(stats.map(s => s.inquiries || 0));
-      const nv = this._norm(stats.map(s => s.views     || 0));
+      const nv = this._norm(stats.map(s => s.views || 0));
       const nc = this._norm(stats.map(s => s.contracts || 0));
       return cars
-        .map((car, i) => {
-          const weeklyViews     = stats[i].views     || 0;
-          const weeklyInquiries = stats[i].inquiries || 0;
-          const weeklyContracts = stats[i].contracts || 0;
-          return Object.assign({}, car, {
-            weeklyViews,
-            weeklyInquiries,
-            weeklyContracts,
-            score: (ni[i] || 0) * this.w.i + (nv[i] || 0) * this.w.v + (nc[i] || 0) * this.w.c,
-          });
-        })
-        // 최근 7일 조회·문의·계약이 모두 0인 차량은 TOP5 후보에서 제외
-        .filter(car =>
-          (car.weeklyViews || 0) > 0 ||
-          (car.weeklyInquiries || 0) > 0 ||
-          (car.weeklyContracts || 0) > 0
-        )
+        .map((car, i) => Object.assign({}, car, {
+          weeklyViews: stats[i].views || 0,
+          weeklyInquiries: stats[i].inquiries || 0,
+          weeklyContracts: stats[i].contracts || 0,
+          score: ni[i] * this.w.i + nv[i] * this.w.v + nc[i] * this.w.c,
+        }))
         .sort((a, b) => b.score - a.score)
         .slice(0, this.n);
     }
@@ -1294,7 +1367,7 @@
      • 첫 슬라이드는 HTML 인라인 유지 (LCP 보호)
      • 도트·좌우 화살표 + 4.5초 오토플레이
      ══════════════════════════════ */
-  window.initHeroSlider = function(elId) {
+  window.initHeroSlider = function (elId) {
     elId = elId || 'heroSlider';
     const heroEl = document.getElementById(elId);
     if (!heroEl) return;
@@ -1416,10 +1489,10 @@
     }
 
     // 외부에서 호출 가능한 정리 함수 — 재초기화 / 페이지 unload 대비
-    heroEl._heroCleanup = function() {
+    heroEl._heroCleanup = function () {
       if (heroAuto) { clearInterval(heroAuto); heroAuto = null; }
       listeners.splice(0).forEach(l => {
-        try { l.target.removeEventListener(l.event, l.handler, l.opts); } catch (e) {}
+        try { l.target.removeEventListener(l.event, l.handler, l.opts); } catch (e) { }
       });
     };
 
@@ -1457,13 +1530,13 @@
     applyHeroBanner: window.applyHeroBanner,
     // 사이트 설정 / 회사정보 / 사업자정보 / 약관 등
     loadSettings: window.loadSettings, saveSettings: window.saveSettings, resetSettings: window.resetSettings,
-    loadAbout: window.loadAbout,       saveAbout: window.saveAbout,       resetAbout: window.resetAbout,
+    loadAbout: window.loadAbout, saveAbout: window.saveAbout, resetAbout: window.resetAbout,
     loadBusiness: window.loadBusiness, saveBusiness: window.saveBusiness, resetBusiness: window.resetBusiness,
-    loadFaq: window.loadFaq,           saveFaq: window.saveFaq,           resetFaq: window.resetFaq,
-    loadInfo: window.loadInfo,         saveInfo: window.saveInfo,         resetInfo: window.resetInfo,
+    loadFaq: window.loadFaq, saveFaq: window.saveFaq, resetFaq: window.resetFaq,
+    loadInfo: window.loadInfo, saveInfo: window.saveInfo, resetInfo: window.resetInfo,
     loadFormOptions: window.loadFormOptions, saveFormOptions: window.saveFormOptions, resetFormOptions: window.resetFormOptions,
-    loadTerms: window.loadTerms,       saveTerms: window.saveTerms,       resetTerms: window.resetTerms,
-    loadPrivacy: window.loadPrivacy,   savePrivacy: window.savePrivacy,   resetPrivacy: window.resetPrivacy,
+    loadTerms: window.loadTerms, saveTerms: window.saveTerms, resetTerms: window.resetTerms,
+    loadPrivacy: window.loadPrivacy, savePrivacy: window.savePrivacy, resetPrivacy: window.resetPrivacy,
     // 이미지 업로드
     loadUploadedImages: window.loadUploadedImages,
     saveUploadedImages: window.saveUploadedImages,
@@ -1475,7 +1548,7 @@
     // 문의 / 활동 로그
     loadInquiries: window.loadInquiries, saveInquiries: window.saveInquiries, addInquiry: window.addInquiry,
     loadActivity: window.loadActivity, saveActivity: window.saveActivity, resetActivity: window.resetActivity,
-    trackCarView: window.trackCarView, trackCarInquiry: window.trackCarInquiry, trackCarContract: window.trackCarContract,
+    trackCarView: window.trackCarView, trackServerCarView: window.trackServerCarView, trackCarInquiry: window.trackCarInquiry, trackCarContract: window.trackCarContract,
     seedActivityIfEmpty: window.seedActivityIfEmpty,
     findCarIdByName: window.findCarIdByName,
     getCarStats: window.getCarStats,
@@ -1531,31 +1604,31 @@
       if (res.ok) {
         const d = await res.json();
         if (d && d.ok && d.settings) {
-          if (d.settings.site)     window._serverSiteSettings    = d.settings.site;
-          if (d.settings.about)    window._serverAboutContent    = d.settings.about;
+          if (d.settings.site) window._serverSiteSettings = d.settings.site;
+          if (d.settings.about) window._serverAboutContent = d.settings.about;
           if (d.settings.business) window._serverBusinessContent = d.settings.business;
-          if (d.settings.banners)  window._serverBanners         = d.settings.banners;
-          if (d.settings.banner_meta) window._serverBannerMeta   = d.settings.banner_meta;
+          if (d.settings.banners) window._serverBanners = d.settings.banners;
+          if (d.settings.banner_meta) window._serverBannerMeta = d.settings.banner_meta;
           if (d.settings.hero_banners) window._serverHeroBanners = d.settings.hero_banners;
-          if (d.settings.faq)      window._serverFAQ             = d.settings.faq;
-          if (d.settings.info)     window._serverInfo            = d.settings.info;
+          if (d.settings.faq) window._serverFAQ = d.settings.faq;
+          if (d.settings.info) window._serverInfo = d.settings.info;
           if (d.settings.form_options) window._serverFormOptions = d.settings.form_options;
-          if (d.settings.terms)    window._serverTerms           = d.settings.terms;
-          if (d.settings.privacy)  window._serverPrivacy         = d.settings.privacy;
+          if (d.settings.terms) window._serverTerms = d.settings.terms;
+          if (d.settings.privacy) window._serverPrivacy = d.settings.privacy;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 렌더 재실행 — 로드 직후 정적으로 그려진 화면을 DB 데이터로 갱신
-    try { typeof applySiteSettings === 'function' && applySiteSettings(); } catch (e) {}
-    try { typeof applyAboutContent  === 'function' && applyAboutContent();  } catch (e) {}
-    try { typeof window.applyHeroBanner === 'function' && window.applyHeroBanner(); } catch (e) {}
-    try { typeof window.renderCarCards === 'function' && document.querySelectorAll('[data-cars]').forEach(el => window.renderCarCards(el)); } catch (e) {}
+    try { typeof applySiteSettings === 'function' && applySiteSettings(); } catch (e) { }
+    try { typeof applyAboutContent === 'function' && applyAboutContent(); } catch (e) { }
+    try { typeof window.applyHeroBanner === 'function' && window.applyHeroBanner(); } catch (e) { }
+    try { typeof window.renderCarCards === 'function' && document.querySelectorAll('[data-cars]').forEach(el => window.renderCarCards(el)); } catch (e) { }
     document.dispatchEvent(new CustomEvent('rentcar:hydrated', { detail: { mode: window._backend && window._backend.mode } }));
   }
 
   /* ── 차량 상세 조회수 트래킹 (서버측, fire-and-forget) ── */
-  window.trackServerCarView = function(carId) {
+  window.trackServerCarView = function (carId) {
     if (!_isProdHost() || !carId) return;
     try {
       fetch('/api/track-view.php', {
@@ -1564,8 +1637,8 @@
         body: JSON.stringify({ carId: Number(carId) }),
         keepalive: true,
         credentials: 'same-origin',
-      }).catch(() => {});
-    } catch (e) {}
+      }).catch(() => { });
+    } catch (e) { }
   };
 
   /* ══════════════════════════════════════════════════════════
@@ -1575,8 +1648,8 @@
      · Naver Analytics: https://analytics.naver.com 에서 사이트 등록 후 wcs_account 키 입력
      · 두 값 모두 빈 문자열이면 자동 skip — 운영 전 미설정 상태에서 오류·노이즈 없음
      ══════════════════════════════════════════════════════════ */
-  const GA4_ID         = '';  // 예: 'G-XXXXXXXXXX'
-  const NAVER_WCS_ID   = '';  // 예: 's_abcd1234'
+  const GA4_ID = '';  // 예: 'G-XXXXXXXXXX'
+  const NAVER_WCS_ID = '';  // 예: 's_abcd1234'
 
   function loadAnalytics() {
     if (!_isProdHost()) return;
@@ -1587,7 +1660,7 @@
       s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA4_ID);
       document.head.appendChild(s);
       window.dataLayer = window.dataLayer || [];
-      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag = function () { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
       window.gtag('config', GA4_ID, { anonymize_ip: true });
     }
@@ -1596,7 +1669,7 @@
       const s = document.createElement('script');
       s.async = true;
       s.src = '//wcs.naver.net/wcslog.js';
-      s.onload = function() {
+      s.onload = function () {
         if (!window.wcs_add) window.wcs_add = {};
         window.wcs_add._nasa = NAVER_WCS_ID;
         if (window.wcs && window.wcs.inflow) window.wcs.inflow();
@@ -1614,7 +1687,7 @@
     // 관리자 페이지에서는 SW 사용 안 함 (no-cache 정책)
     if (location.pathname.startsWith('/admin/')) return;
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+      navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => { });
     });
   }
 
