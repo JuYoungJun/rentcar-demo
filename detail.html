@@ -383,6 +383,8 @@
       const params = new URLSearchParams(window.location.search);
       const carId = parseInt(params.get('id')) || 1;
       const fromPage = params.get('from') || 'monthly';
+      const fromLabel = fromPage === 'longterm' ? '기간약정월렌트' : fromPage === 'used' ? '중고차 장기렌트' : '월렌트';
+      const fromPath = fromPage === 'longterm' ? '/longterm.html' : fromPage === 'used' ? '/used.html' : '/monthly.html';
       const car = carDatabase.find(c => c.id === carId) || carDatabase[0];
 
       // 실제 조회 1회 기록 — 금주 TOP 5 산정에 반영됨
@@ -454,8 +456,6 @@
         if (typeof window.setActiveNav === 'function') window.setActiveNav();
 
         // ── 동적 SEO 메타 업데이트 (크롤러는 정적 메타만 읽지만, 소셜 미리보기·일부 봇은 갱신 반영) ──
-        const fromLabel = fromPage === 'longterm' ? '기간약정월렌트' : fromPage === 'used' ? '중고차 장기렌트' : '월렌트';
-        const fromPath = fromPage === 'longterm' ? '/longterm.html' : fromPage === 'used' ? '/used.html' : '/monthly.html';
         const carUrl = 'https://www.haetae-rentcar.com/detail.html?id=' + car.id + '&from=' + fromPage;
         const carImage = car.image ? ('https://www.haetae-rentcar.com/images/' + car.image) : 'https://www.haetae-rentcar.com/images/banner_1.webp';
         const newTitle = car.name + ' ' + fromLabel + ' (월 ' + (car.price ? car.price.toLocaleString() : '문의') + '원) — 해태렌트카';
