@@ -856,20 +856,60 @@
 
   /* ── 견적 폼 차량 추천/자동 채우기 헬퍼 ──
      카테고리 선택 → 해당 카테고리 차량만 datalist 추천.
-     input + datalist 구조라 사용자가 직접 입력도 가능. */
+     input + datalist 구조라 사용자가 직접 입력도 가능.
+     상세페이지에서 quote.html?from=monthly&id=...&car=... 로 넘어오면 자동 채움. */
   window.RENTCAR_CATEGORY_MAP = {
     '월렌트': 'monthly',
     '1개월 월렌트': 'monthly',
+    '단기 월렌트': 'monthly',
     '12개월 기간약정': 'longterm',
     '기간약정': 'longterm',
+    '기간약정월렌트': 'longterm',
     '중고차 장기렌트': 'used',
-    '중고차': 'used'
+    '중고차': 'used',
+    '중고차렌트': 'used'
   };
 
   window.rentcarCategoryLabelFromKey = function (key) {
     if (key === 'monthly') return '월렌트';
     if (key === 'longterm') return '12개월 기간약정';
     if (key === 'used') return '중고차 장기렌트';
+    return '';
+  };
+
+  window.rentcarCategoryKeyFromLabel = function (label) {
+    const s = String(label || '').trim();
+    if (!s) return '';
+    if (window.RENTCAR_CATEGORY_MAP && window.RENTCAR_CATEGORY_MAP[s]) return window.RENTCAR_CATEGORY_MAP[s];
+    if (s.includes('중고')) return 'used';
+    if (s.includes('12') || s.includes('기간') || s.toLowerCase().includes('long')) return 'longterm';
+    if (s.includes('월') || s.includes('1개월') || s.toLowerCase().includes('month')) return 'monthly';
+    return '';
+  };
+
+  window.selectRentcarCategoryOption = function (categoryEl, categoryOrKey) {
+    if (!categoryEl || !categoryOrKey) return '';
+    const wanted = String(categoryOrKey || '').trim();
+    const wantedKey = window.rentcarCategoryKeyFromLabel(wanted) || wanted;
+    const options = Array.from(categoryEl.options || []);
+
+    // 1) value 또는 label 정확 일치
+    let hit = options.find(o => String(o.value).trim() === wanted || String(o.textContent).trim() === wanted);
+    // 2) option label/value 를 카테고리 키로 환산해서 일치
+    if (!hit && wantedKey) {
+      hit = options.find(o => {
+        const vKey = window.rentcarCategoryKeyFromLabel(o.value);
+        const tKey = window.rentcarCategoryKeyFromLabel(o.textContent);
+        return vKey === wantedKey || tKey === wantedKey;
+      });
+    }
+
+    if (hit) {
+      categoryEl.value = hit.value;
+      categoryEl.classList.add('selected');
+      categoryEl.dispatchEvent(new Event('change', { bubbles: true }));
+      return categoryEl.value;
+    }
     return '';
   };
 
@@ -884,7 +924,7 @@
 
     const update = function () {
       const categoryLabel = categoryEl.value || '';
-      const key = (window.RENTCAR_CATEGORY_MAP && window.RENTCAR_CATEGORY_MAP[categoryLabel]) || '';
+      const key = window.rentcarCategoryKeyFromLabel(categoryLabel);
       const cars = Array.isArray(window.carDatabase) ? window.carDatabase : [];
       const filtered = key ? cars.filter(c => (c.category || []).includes(key)) : cars;
       const seen = new Set();
@@ -922,25 +962,25 @@
     let category = params.get('category') || window.rentcarCategoryLabelFromKey(from);
     let carName = params.get('car') || params.get('carName') || '';
 
-    if ((!carName || !category) && id && Array.isArray(window.carDatabase)) {
+    // id가 있으면 DB/현재 차량 목록에서 차량명과 카테고리를 보강한다.
+    if (id && Array.isArray(window.carDatabase)) {
       const hit = window.carDatabase.find(c => Number(c.id) === id);
       if (hit) {
         if (!carName) carName = hit.name || '';
-        if (!category) {
+        // 쿼리 category가 현재 select 옵션과 안 맞을 수 있으므로 from/id 기준 카테고리도 준비
+        if (!category || (categoryEl && !window.selectRentcarCategoryOption(categoryEl, category))) {
           const cats = Array.isArray(hit.category) ? hit.category : [];
-          category = window.rentcarCategoryLabelFromKey(cats[0]);
+          category = window.rentcarCategoryLabelFromKey(from || cats[0]);
         }
       }
     }
 
+    // category select 값 설정: label/value가 조금 달라도 monthly/longterm/used 키로 매칭
     if (categoryEl && category) {
-      categoryEl.value = category;
-      if (categoryEl.value !== category) {
-        const opt = Array.from(categoryEl.options || []).find(o => o.textContent.trim() === category || o.value === category);
-        if (opt) categoryEl.value = opt.value;
-      }
-      categoryEl.classList.add('selected');
-      categoryEl.dispatchEvent(new Event('change', { bubbles: true }));
+      const selected = window.selectRentcarCategoryOption(categoryEl, category);
+      if (!selected && from) window.selectRentcarCategoryOption(categoryEl, from);
+    } else if (categoryEl && from) {
+      window.selectRentcarCategoryOption(categoryEl, from);
     }
 
     if (updateSuggestions) updateSuggestions();
@@ -949,7 +989,6 @@
       carInput.value = carName;
     }
   };
-
 
   // 특정 차량의 최근 N일(기본 7일) 활동 집계
   window.getCarStats = function (carId, days) {
@@ -1551,6 +1590,11 @@
     trackCarView: window.trackCarView, trackServerCarView: window.trackServerCarView, trackCarInquiry: window.trackCarInquiry, trackCarContract: window.trackCarContract,
     seedActivityIfEmpty: window.seedActivityIfEmpty,
     findCarIdByName: window.findCarIdByName,
+    setupCarSuggestionInput: window.setupCarSuggestionInput,
+    prefillQuoteFormFromQuery: window.prefillQuoteFormFromQuery,
+    selectRentcarCategoryOption: window.selectRentcarCategoryOption,
+    rentcarCategoryLabelFromKey: window.rentcarCategoryLabelFromKey,
+    rentcarCategoryKeyFromLabel: window.rentcarCategoryKeyFromLabel,
     getCarStats: window.getCarStats,
     // UI 유틸
     showToast: window.showToast,
