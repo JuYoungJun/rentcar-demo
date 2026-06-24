@@ -442,8 +442,8 @@
         : function () { };
 
       if (typeof prefillQuoteFormFromQuery === 'function') {
-        prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions });
-        document.addEventListener('rentcar:hydrated', () => prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions }));
+        prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions: updateCarSuggestions });
+        document.addEventListener('rentcar:hydrated', () => prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions: updateCarSuggestions }));
       }
 
       // ── FAQ 동적 렌더 ──

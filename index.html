@@ -471,8 +471,8 @@
         ? setupCarSuggestionInput({ categoryId: 'formCategory', carInputId: 'formCar', datalistId: 'formCarList' })
         : function () { };
       if (typeof prefillQuoteFormFromQuery === 'function') {
-        prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions });
-        document.addEventListener('rentcar:hydrated', () => prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions }));
+        prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions: updateCarSuggestions });
+        document.addEventListener('rentcar:hydrated', () => prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions: updateCarSuggestions }));
       }
 
       // Form

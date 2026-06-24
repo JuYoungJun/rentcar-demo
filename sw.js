@@ -7,7 +7,7 @@
    · 오프라인 시 캐시 미스 → /404.html 로 fallback
    ══════════════════════════════════════════════════════════ */
 
-const SW_VERSION = 'v1.0.1';
+const SW_VERSION = 'v1.0.2';
 const PRECACHE = `haetae-precache-${SW_VERSION}`;
 const RUNTIME = `haetae-runtime-${SW_VERSION}`;
 
