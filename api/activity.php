@@ -1,19 +1,21 @@
 <?php
 /**
- * Activity 관리 — admin 전용
+ * Activity 관리
  * ─────────────────────────────────────────────
  * GET    /api/activity.php?summary=weekly
  *  - 최근 7일 activity 테이블 기준 TOP5 집계
+ *  - 메인 페이지에서도 읽어야 하므로 공개 조회 허용
  *
  * DELETE /api/activity.php?all=1
  *  - activity 테이블 전체 삭제
  *  - cars.views / cars.inquiries / cars.contracts 를 0으로 초기화
+ *  - 관리자 super 권한 필요
  */
 require_once __DIR__ . '/_helpers.php';
 cors();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$sess = require_auth();
+$sess = null;
 
 function norm_values(array $values): array {
   if (!$values) return [];
@@ -117,6 +119,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'DELETE') {
+  $sess = require_auth();
   require_csrf($sess);
 
   if (empty($_GET['all'])) {
