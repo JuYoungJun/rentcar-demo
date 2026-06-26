@@ -7,7 +7,7 @@
    · 관리자 페이지(/admin/*): 캐시하지 않음
    ══════════════════════════════════════════════════════════ */
 
-const SW_VERSION = 'v1.0.5';
+const SW_VERSION = 'v1.0.6';
 const PRECACHE = `haetae-precache-${SW_VERSION}`;
 const RUNTIME = `haetae-runtime-${SW_VERSION}`;
 

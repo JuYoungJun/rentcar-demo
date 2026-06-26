@@ -16,9 +16,9 @@
   <meta name="geo.placename" content="광주광역시 광산구 신창동">
   <meta name="geo.position" content="35.1860;126.8050">
   <meta name="ICBM" content="35.1860, 126.8050">
-  <link rel="canonical" href="http://haetae1.com/longterm.html">
-  <link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/longterm.html">
-  <link rel="alternate" hreflang="x-default" href="http://haetae1.com/longterm.html">
+  <link rel="canonical" href="https://haetae1.com/longterm.html">
+  <link rel="alternate" hreflang="ko-KR" href="https://haetae1.com/longterm.html">
+  <link rel="alternate" hreflang="x-default" href="https://haetae1.com/longterm.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="해태렌트카">
   <meta property="og:title" content="광주 장기렌트 — 12개월 기간약정 (무심사·무보증)">
@@ -89,13 +89,21 @@
   <script src="js/common.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const getCars = () => (Array.isArray(window.carDatabase) ? window.carDatabase : [])
+        .filter(c => Array.isArray(c.category) && c.category.includes('longterm'));
 
-      const cars = carDatabase.filter(c => c.category.includes('longterm'));
-      renderCarCards('carListGrid', cars, '12개월', 'longterm');
-      initSortBar('carListGrid', cars, '12개월', 'longterm');
+      const renderList = () => {
+        const cars = getCars();
+        renderCarCards('carListGrid', cars, '12개월', 'longterm');
+        initSortBar('carListGrid', cars, '12개월', 'longterm');
+      };
+
+      renderList();
+      document.addEventListener('rentcar:hydrated', renderList);
 
       if (window.HaetaeSEO) {
         const S = window.HaetaeSEO;
+        const cars = getCars();
         const prices = cars.map(c => c.price).filter(p => p > 0);
         try {
           S.inject([
@@ -116,7 +124,7 @@
               lowPrice: prices.length ? Math.min(...prices) : 450000,
               highPrice: prices.length ? Math.max(...prices) : 1100000,
               offerCount: cars.length,
-              audience: '저신용자, 자영업자, 법인, 일반 소비자'
+              audience: '저신용자, 자영업자, 일반 소비자'
             }),
             S.vehicleList(cars, 'longterm', '/longterm.html')
           ]);

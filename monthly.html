@@ -16,9 +16,9 @@
   <meta name="geo.placename" content="광주광역시 광산구 신창동">
   <meta name="geo.position" content="35.1860;126.8050">
   <meta name="ICBM" content="35.1860, 126.8050">
-  <link rel="canonical" href="http://haetae1.com/monthly.html">
-  <link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/monthly.html">
-  <link rel="alternate" hreflang="x-default" href="http://haetae1.com/monthly.html">
+  <link rel="canonical" href="https://haetae1.com/monthly.html">
+  <link rel="alternate" hreflang="ko-KR" href="https://haetae1.com/monthly.html">
+  <link rel="alternate" hreflang="x-default" href="https://haetae1.com/monthly.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="해태렌트카">
   <meta property="og:title" content="광주 월렌트 — 경차 1개월 단기 렌트카 (월 55만원~)">
@@ -87,15 +87,29 @@
   <script src="js/common.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      let currentList = [];
 
-      const cars = carDatabase.filter(c => c.category.includes('monthly'));
-      const fullList = [...cars, ...cars, ...cars, ...cars].slice(0, 12);
-      renderCarCards('carListGrid', fullList, '1개월', 'monthly');
-      initSortBar('carListGrid', fullList, '1개월', 'monthly');
+      const getCars = () => (Array.isArray(window.carDatabase) ? window.carDatabase : [])
+        .filter(c => Array.isArray(c.category) && c.category.includes('monthly'));
+
+      const buildList = () => {
+        const cars = getCars();
+        return [...cars, ...cars, ...cars, ...cars].slice(0, 12);
+      };
+
+      const renderList = () => {
+        currentList = buildList();
+        renderCarCards('carListGrid', currentList, '1개월', 'monthly');
+        initSortBar('carListGrid', currentList, '1개월', 'monthly');
+      };
+
+      renderList();
+      document.addEventListener('rentcar:hydrated', renderList);
 
       // ── SEO / GEO / AEO — Service + ItemList + Breadcrumb ──
       if (window.HaetaeSEO) {
         const S = window.HaetaeSEO;
+        const cars = getCars();
         const prices = cars.map(c => c.price).filter(p => p > 0);
         try {
           S.inject([

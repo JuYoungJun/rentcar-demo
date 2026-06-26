@@ -15,9 +15,9 @@
   <meta name="geo.placename" content="광주광역시 광산구 신창동">
   <meta name="geo.position" content="35.1860;126.8050">
   <meta name="ICBM" content="35.1860, 126.8050">
-  <link rel="canonical" href="http://haetae1.com/detail.html">
-  <link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/detail.html">
-  <link rel="alternate" hreflang="x-default" href="http://haetae1.com/detail.html">
+  <link rel="canonical" href="https://haetae1.com/detail.html">
+  <link rel="alternate" hreflang="ko-KR" href="https://haetae1.com/detail.html">
+  <link rel="alternate" hreflang="x-default" href="https://haetae1.com/detail.html">
   <meta property="og:type" content="product">
   <meta property="product:price:currency" content="KRW">
   <meta property="og:site_name" content="해태렌트카">
@@ -457,7 +457,7 @@
 
         // ── 동적 SEO 메타 업데이트 (크롤러는 정적 메타만 읽지만, 소셜 미리보기·일부 봇은 갱신 반영) ──
         const carUrl = 'http://haetae1.com/detail.html?id=' + car.id + '&from=' + fromPage;
-        const carImage = car.image ? ('http://haetae1.com/images/' + car.image) : 'http://haetae1.com/images/banner_1.webp';
+        const carImage = car.image ? (String(carImageUrl(car.image)).startsWith('http') ? carImageUrl(car.image) : 'http://haetae1.com' + carImageUrl(car.image)) : 'http://haetae1.com/images/banner_1.webp';
         const newTitle = car.name + ' ' + fromLabel + ' (월 ' + (car.price ? car.price.toLocaleString() : '문의') + '원) — 해태렌트카';
         const newDesc = '해태렌트카 ' + fromLabel + ' — ' + car.name + ', 월 임대료 ' + (car.price ? car.price.toLocaleString() + '원' : '상담') +
           (car.fuelType ? ', ' + car.fuelType : '') + (car.transmission ? ', ' + car.transmission : '') +
@@ -497,7 +497,7 @@
                 url: '/detail.html?id=' + car.id + '&from=' + fromPage,
                 title: newTitle,
                 description: newDesc,
-                image: '/images/' + (car.image || 'banner_1.webp'),
+                image: car.image ? carImageUrl(car.image) : '/images/banner_1.webp',
                 breadcrumb: S.breadcrumb([
                   { name: '홈', url: '/' },
                   { name: fromLabel, url: fromPath },
@@ -543,6 +543,57 @@
         // 차량 컨텍스트가 있으면 alt 도 차량명 포함하여 SEO/접근성 향상
         if (cta && car && car.name) cta.alt = `${car.name} ${fromLabel} 상세 안내 — 해태렌트카`;
       }
+
+
+      // DB hydration 이후 상세페이지도 최신 차량 정보/이미지로 다시 반영
+      const refreshDetailFromBackend = () => {
+        const fresh = (Array.isArray(window.carDatabase) ? window.carDatabase : []).find(c => Number(c.id) === carId);
+        if (!fresh) return;
+        const detailImg = document.querySelector('.detail-image .img-placeholder');
+        if (detailImg && fresh.image && typeof carImageUrl === 'function') {
+          detailImg.style.backgroundImage = `url('${carImageUrl(fresh.image)}')`;
+        }
+        const nameEl = document.getElementById('detailName');
+        const bcName = document.getElementById('bcCarName');
+        if (nameEl && fresh.name) nameEl.textContent = fresh.name;
+        if (bcName && fresh.name) bcName.textContent = fresh.name;
+        const badgeEl = document.getElementById('detailBadge');
+        if (badgeEl) badgeEl.textContent = fresh.badge || '1개월';
+        const priceEl = document.getElementById('detailPrice');
+        if (priceEl) {
+          if (fromPage === 'used') {
+            priceEl.textContent = '별도문의';
+            priceEl.classList.add('detail-price--inquiry');
+          } else {
+            priceEl.textContent = Number(fresh.price || 0).toLocaleString() + ' 원';
+          }
+        }
+        if (fresh.detailImage) {
+          const longWrap = document.getElementById('detailLongImage');
+          const longImg = document.getElementById('detailLongImageImg');
+          if (longWrap && longImg && typeof carImageUrl === 'function') {
+            longImg.src = carImageUrl(fresh.detailImage);
+            longImg.alt = (fresh.name || '') + ' 상세 안내';
+            longWrap.hidden = false;
+            const defaultWrap = document.querySelector('.detail-banners');
+            if (defaultWrap) defaultWrap.hidden = true;
+          }
+        }
+        const q = new URLSearchParams();
+        const categoryLabel = (typeof window.rentcarCategoryLabelFromKey === 'function')
+          ? window.rentcarCategoryLabelFromKey(fromPage)
+          : (fromPage === 'longterm' ? '12개월 기간약정' : fromPage === 'used' ? '중고차 장기렌트' : '월렌트');
+        if (categoryLabel) q.set('category', categoryLabel);
+        if (fresh.name) q.set('car', fresh.name);
+        if (fresh.id) q.set('id', fresh.id);
+        if (fromPage) q.set('from', fromPage);
+        const quoteUrl = 'quote.html?' + q.toString() + '#contact';
+        const inquire = document.getElementById('btnInquire');
+        const cta = document.getElementById('bannerCta');
+        if (inquire) inquire.onclick = () => { window.location.href = quoteUrl; };
+        if (cta) cta.onclick = () => { window.location.href = quoteUrl; };
+      };
+      document.addEventListener('rentcar:hydrated', refreshDetailFromBackend);
 
 
       const buildQuoteUrl = () => {

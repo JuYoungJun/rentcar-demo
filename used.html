@@ -16,9 +16,9 @@
   <meta name="geo.placename" content="광주광역시 광산구 신창동">
   <meta name="geo.position" content="35.1860;126.8050">
   <meta name="ICBM" content="35.1860, 126.8050">
-  <link rel="canonical" href="http://haetae1.com/used.html">
-  <link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/used.html">
-  <link rel="alternate" hreflang="x-default" href="http://haetae1.com/used.html">
+  <link rel="canonical" href="https://haetae1.com/used.html">
+  <link rel="alternate" hreflang="ko-KR" href="https://haetae1.com/used.html">
+  <link rel="alternate" hreflang="x-default" href="https://haetae1.com/used.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="해태렌트카">
   <meta property="og:title" content="광주 중고차 장기렌트 — 월 70만원~">
@@ -87,15 +87,26 @@
   <script src="js/common.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const getCars = () => (Array.isArray(window.carDatabase) ? window.carDatabase : [])
+        .filter(c => Array.isArray(c.category) && c.category.includes('used'));
 
-      const cars = carDatabase.filter(c => c.category.includes('used'));
-      const fullList = [...cars, ...cars, ...cars].slice(0, 9);
-      // No badge for used cars per mockup
-      renderCarCards('carListGrid', fullList, '', 'used');
-      initSortBar('carListGrid', fullList, '', 'used');
+      const buildList = () => {
+        const cars = getCars();
+        return [...cars, ...cars, ...cars].slice(0, 9);
+      };
+
+      const renderList = () => {
+        const fullList = buildList();
+        renderCarCards('carListGrid', fullList, '', 'used');
+        initSortBar('carListGrid', fullList, '', 'used');
+      };
+
+      renderList();
+      document.addEventListener('rentcar:hydrated', renderList);
 
       if (window.HaetaeSEO) {
         const S = window.HaetaeSEO;
+        const cars = getCars();
         const prices = cars.map(c => c.price).filter(p => p > 0);
         try {
           S.inject([
