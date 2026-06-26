@@ -11,14 +11,62 @@ cors();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+function normalize_car_payload(array $b): array {
+  $name  = trim((string)($b['name'] ?? ''));
+  $price = (int)($b['price'] ?? 0);
+  $cats  = isset($b['category']) && is_array($b['category']) ? $b['category'] : [];
+
+  $cats = array_values(array_filter($cats, function ($v) {
+    return in_array($v, ['monthly', 'longterm', 'used'], true);
+  }));
+
+  if ($name === '') json_out(['ok' => false, 'message' => '차량명 필수'], 400);
+  if (mb_strlen($name) > 80) $name = mb_substr($name, 0, 80);
+  if ($price <= 0) json_out(['ok' => false, 'message' => '가격은 0보다 커야 합니다'], 400);
+  if (!$cats) json_out(['ok' => false, 'message' => '카테고리 1개 이상 필요'], 400);
+
+  $year = isset($b['year']) && $b['year'] !== '' ? (int)$b['year'] : null;
+  if ($year !== null && ($year < 1990 || $year > 2099)) {
+    json_out(['ok' => false, 'message' => '연식은 1990~2099 사이여야 합니다'], 400);
+  }
+
+  $seats = isset($b['seats']) && $b['seats'] !== '' ? (int)$b['seats'] : null;
+  if ($seats !== null && ($seats < 1 || $seats > 20)) {
+    json_out(['ok' => false, 'message' => '승차 인원은 1~20명 사이여야 합니다'], 400);
+  }
+
+  $mileage = isset($b['mileage']) && $b['mileage'] !== '' ? (int)$b['mileage'] : null;
+  if ($mileage !== null && $mileage < 0) {
+    json_out(['ok' => false, 'message' => '주행거리는 0 이상이어야 합니다'], 400);
+  }
+
+  return [
+    'name' => $name,
+    'year' => $year,
+    'price' => $price,
+    'badge' => mb_substr((string)($b['badge'] ?? ''), 0, 20) ?: null,
+    'image' => $b['image'] ?? null,
+    'category' => $cats,
+    'tags' => isset($b['tags']) && is_array($b['tags']) ? $b['tags'] : [],
+    'fuelType' => $b['fuelType'] ?? null,
+    'transmission' => $b['transmission'] ?? null,
+    'seats' => $seats,
+    'mileage' => $mileage,
+    'description' => $b['description'] ?? null,
+    'features' => isset($b['features']) && is_array($b['features']) ? $b['features'] : [],
+    'detailImage' => $b['detailImage'] ?? null,
+    'views' => max(0, (int)($b['views'] ?? 0)),
+    'inquiries' => max(0, (int)($b['inquiries'] ?? 0)),
+    'contracts' => max(0, (int)($b['contracts'] ?? 0)),
+  ];
+}
+
 if ($method === 'GET') {
   $rows = db()->query('SELECT * FROM cars ORDER BY sort_order ASC, id ASC')->fetchAll();
-  // JSON 컬럼은 string 으로 오므로 디코딩
   foreach ($rows as &$r) {
     $r['categories'] = json_decode($r['categories'] ?? '[]', true) ?: [];
     $r['tags']       = json_decode($r['tags']       ?? '[]', true) ?: [];
     $r['features']   = json_decode($r['features']   ?? '[]', true) ?: [];
-    // 프론트엔드 데이터 모델과 일치하도록 컬럼명 변환
     $r['fuelType']     = $r['fuel_type'];     unset($r['fuel_type']);
     $r['detailImage']  = $r['detail_image'];  unset($r['detail_image']);
     $r['category']     = $r['categories'];    unset($r['categories']);
@@ -26,40 +74,32 @@ if ($method === 'GET') {
   json_out(['ok' => true, 'cars' => $rows]);
 }
 
-// 이하 admin 전용
 $sess = require_auth();
 require_csrf($sess);
 
 if ($method === 'POST') {
-  $b = json_in();
-  // 입력 검증
-  $name  = trim((string)($b['name'] ?? ''));
-  $price = (int)($b['price'] ?? 0);
-  if (!$name)        json_out(['ok' => false, 'message' => '차량명 필수'], 400);
-  if ($price <= 0)   json_out(['ok' => false, 'message' => '가격은 0보다 커야 합니다'], 400);
-  $cats = isset($b['category']) && is_array($b['category']) ? $b['category'] : [];
-  if (!$cats)        json_out(['ok' => false, 'message' => '카테고리 1개 이상 필요'], 400);
+  $b = normalize_car_payload(json_in());
 
   $sql = 'INSERT INTO cars (name, year, price, badge, image, categories, tags, fuel_type, transmission, seats, mileage, description, features, detail_image, views, inquiries, contracts)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   db()->prepare($sql)->execute([
-    mb_substr($name, 0, 80),
-    isset($b['year']) ? (int)$b['year'] : null,
-    $price,
-    $b['badge'] ?? null,
-    $b['image'] ?? null,
-    json_encode($cats, JSON_UNESCAPED_UNICODE),
-    json_encode($b['tags'] ?? [], JSON_UNESCAPED_UNICODE),
-    $b['fuelType'] ?? null,
-    $b['transmission'] ?? null,
-    isset($b['seats']) ? (int)$b['seats'] : null,
-    isset($b['mileage']) ? (int)$b['mileage'] : null,
-    $b['description'] ?? null,
-    json_encode($b['features'] ?? [], JSON_UNESCAPED_UNICODE),
-    $b['detailImage'] ?? null,
-    (int)($b['views'] ?? 0),
-    (int)($b['inquiries'] ?? 0),
-    (int)($b['contracts'] ?? 0),
+    $b['name'],
+    $b['year'],
+    $b['price'],
+    $b['badge'],
+    $b['image'],
+    json_encode($b['category'], JSON_UNESCAPED_UNICODE),
+    json_encode($b['tags'], JSON_UNESCAPED_UNICODE),
+    $b['fuelType'],
+    $b['transmission'],
+    $b['seats'],
+    $b['mileage'],
+    $b['description'],
+    json_encode($b['features'], JSON_UNESCAPED_UNICODE),
+    $b['detailImage'],
+    $b['views'],
+    $b['inquiries'],
+    $b['contracts'],
   ]);
   json_out(['ok' => true, 'id' => (int)db()->lastInsertId()]);
 }
@@ -67,36 +107,54 @@ if ($method === 'POST') {
 if ($method === 'PUT') {
   $id = (int)($_GET['id'] ?? 0);
   if (!$id) json_out(['ok' => false, 'message' => 'id 필수'], 400);
-  $b = json_in();
+
+  $b = normalize_car_payload(json_in());
+
   $sql = 'UPDATE cars SET name=?, year=?, price=?, badge=?, image=?, categories=?, tags=?, fuel_type=?, transmission=?, seats=?, mileage=?, description=?, features=?, detail_image=?, views=?, inquiries=?, contracts=? WHERE id=?';
-  db()->prepare($sql)->execute([
-    mb_substr((string)($b['name'] ?? ''), 0, 80),
-    isset($b['year']) ? (int)$b['year'] : null,
-    (int)($b['price'] ?? 0),
-    $b['badge'] ?? null,
-    $b['image'] ?? null,
-    json_encode($b['category'] ?? [], JSON_UNESCAPED_UNICODE),
-    json_encode($b['tags'] ?? [], JSON_UNESCAPED_UNICODE),
-    $b['fuelType'] ?? null,
-    $b['transmission'] ?? null,
-    isset($b['seats']) ? (int)$b['seats'] : null,
-    isset($b['mileage']) ? (int)$b['mileage'] : null,
-    $b['description'] ?? null,
-    json_encode($b['features'] ?? [], JSON_UNESCAPED_UNICODE),
-    $b['detailImage'] ?? null,
-    (int)($b['views'] ?? 0),
-    (int)($b['inquiries'] ?? 0),
-    (int)($b['contracts'] ?? 0),
+  $st = db()->prepare($sql);
+  $st->execute([
+    $b['name'],
+    $b['year'],
+    $b['price'],
+    $b['badge'],
+    $b['image'],
+    json_encode($b['category'], JSON_UNESCAPED_UNICODE),
+    json_encode($b['tags'], JSON_UNESCAPED_UNICODE),
+    $b['fuelType'],
+    $b['transmission'],
+    $b['seats'],
+    $b['mileage'],
+    $b['description'],
+    json_encode($b['features'], JSON_UNESCAPED_UNICODE),
+    $b['detailImage'],
+    $b['views'],
+    $b['inquiries'],
+    $b['contracts'],
     $id,
   ]);
-  json_out(['ok' => true]);
+  json_out(['ok' => true, 'updated' => $st->rowCount()]);
 }
 
 if ($method === 'DELETE') {
   $id = (int)($_GET['id'] ?? 0);
   if (!$id) json_out(['ok' => false, 'message' => 'id 필수'], 400);
-  db()->prepare('DELETE FROM cars WHERE id = ?')->execute([$id]);
-  json_out(['ok' => true]);
+
+  $pdo = db();
+  $pdo->beginTransaction();
+
+  try {
+    $pdo->prepare('DELETE FROM activity WHERE car_id = ?')->execute([$id]);
+    $pdo->prepare('UPDATE inquiries SET car_id = NULL WHERE car_id = ?')->execute([$id]);
+    $st = $pdo->prepare('DELETE FROM cars WHERE id = ?');
+    $st->execute([$id]);
+
+    $pdo->commit();
+    json_out(['ok' => true, 'deleted' => $st->rowCount()]);
+  } catch (Throwable $e) {
+    $pdo->rollBack();
+    @error_log('[car-delete-failed] ' . $e->getMessage());
+    json_out(['ok' => false, 'message' => '차량 삭제 실패'], 500);
+  }
 }
 
 json_out(['error' => 'METHOD'], 405);

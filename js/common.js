@@ -440,16 +440,20 @@
   const FAQ_KEY = 'rentcar_faq';
   window.DEFAULT_FAQ = DEFAULT_FAQ;
   window.loadFaq = function () {
-    // 1) 운영 모드: hydrateFromBackend 가 채워둔 서버 데이터 우선
+    // 1) 운영 모드: 서버 FAQ가 있고 내용이 있을 때만 사용
     if (Array.isArray(window._serverFAQ)) {
-      return window._serverFAQ.filter(x => x && x.q && x.a);
+      const list = window._serverFAQ.filter(x => x && x.q && x.a);
+      if (list.length) return list;
     }
     // 2) localStorage (admin 데모/오프라인 fallback)
     try {
       const s = localStorage.getItem(FAQ_KEY);
       if (s) {
         const p = JSON.parse(s);
-        if (Array.isArray(p)) return p.filter(x => x && x.q && x.a);
+        if (Array.isArray(p)) {
+          const list = p.filter(x => x && x.q && x.a);
+          if (list.length) return list;
+        }
       }
     } catch (e) { }
     return DEFAULT_FAQ.slice();
@@ -853,11 +857,7 @@
   };
 
 
-
-  /* ── 견적 폼 차량 추천/자동 채우기 헬퍼 ──
-     카테고리 선택 → 해당 카테고리 차량만 datalist 추천.
-     input + datalist 구조라 사용자가 직접 입력도 가능.
-     상세페이지에서 quote.html?from=monthly&id=...&car=... 로 넘어오면 자동 채움. */
+  /* ── 견적 폼 차량 추천/URL 자동 입력 헬퍼 ── */
   window.RENTCAR_CATEGORY_MAP = {
     '월렌트': 'monthly',
     '1개월 월렌트': 'monthly',
@@ -893,9 +893,7 @@
     const wantedKey = window.rentcarCategoryKeyFromLabel(wanted) || wanted;
     const options = Array.from(categoryEl.options || []);
 
-    // 1) value 또는 label 정확 일치
     let hit = options.find(o => String(o.value).trim() === wanted || String(o.textContent).trim() === wanted);
-    // 2) option label/value 를 카테고리 키로 환산해서 일치
     if (!hit && wantedKey) {
       hit = options.find(o => {
         const vKey = window.rentcarCategoryKeyFromLabel(o.value);
@@ -917,32 +915,24 @@
     opts = opts || {};
     const categoryEl = document.getElementById(opts.categoryId || 'formCategory');
     const carInput = document.getElementById(opts.carInputId || 'formCar');
-    const list = document.getElementById(opts.datalistId || 'formCarList');
-    if (!categoryEl || !carInput || !list) return function () { };
+    const datalist = document.getElementById(opts.datalistId || 'formCarList');
+    if (!carInput || !datalist) return function () { };
 
     const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
 
     const update = function () {
-      const categoryLabel = categoryEl.value || '';
-      const key = window.rentcarCategoryKeyFromLabel(categoryLabel);
+      const selected = categoryEl ? (categoryEl.value || categoryEl.options[categoryEl.selectedIndex]?.textContent || '') : '';
+      const key = window.rentcarCategoryKeyFromLabel(selected);
       const cars = Array.isArray(window.carDatabase) ? window.carDatabase : [];
-      const filtered = key ? cars.filter(c => (c.category || []).includes(key)) : cars;
-      const seen = new Set();
-
-      list.innerHTML = filtered
-        .filter(c => {
-          const name = String(c && c.name ? c.name : '').trim();
-          if (!name || seen.has(name)) return false;
-          seen.add(name);
-          return true;
-        })
+      const filtered = key ? cars.filter(c => Array.isArray(c.category) && c.category.includes(key)) : cars;
+      datalist.innerHTML = filtered
+        .filter(c => c && c.name)
         .map(c => `<option value="${esc(c.name)}"></option>`)
         .join('');
-
       carInput.placeholder = key ? '차량을 선택하거나 직접 입력해주세요.' : '희망하시는 차량명을 입력해주세요.';
     };
 
-    categoryEl.addEventListener('change', update);
+    if (categoryEl) categoryEl.addEventListener('change', update);
     document.addEventListener('rentcar:hydrated', update);
     update();
     return update;
@@ -962,12 +952,10 @@
     let category = params.get('category') || window.rentcarCategoryLabelFromKey(from);
     let carName = params.get('car') || params.get('carName') || '';
 
-    // id가 있으면 DB/현재 차량 목록에서 차량명과 카테고리를 보강한다.
     if (id && Array.isArray(window.carDatabase)) {
       const hit = window.carDatabase.find(c => Number(c.id) === id);
       if (hit) {
         if (!carName) carName = hit.name || '';
-        // 쿼리 category가 현재 select 옵션과 안 맞을 수 있으므로 from/id 기준 카테고리도 준비
         if (!category || (categoryEl && !window.selectRentcarCategoryOption(categoryEl, category))) {
           const cats = Array.isArray(hit.category) ? hit.category : [];
           category = window.rentcarCategoryLabelFromKey(from || cats[0]);
@@ -975,7 +963,6 @@
       }
     }
 
-    // category select 값 설정: label/value가 조금 달라도 monthly/longterm/used 키로 매칭
     if (categoryEl && category) {
       const selected = window.selectRentcarCategoryOption(categoryEl, category);
       if (!selected && from) window.selectRentcarCategoryOption(categoryEl, from);
@@ -984,10 +971,7 @@
     }
 
     if (updateSuggestions) updateSuggestions();
-
-    if (carInput && carName) {
-      carInput.value = carName;
-    }
+    if (carInput && carName) carInput.value = carName;
   };
 
   // 특정 차량의 최근 N일(기본 7일) 활동 집계
@@ -1156,13 +1140,18 @@
   window.resolveImageUrl = function (spec, baseDir) {
     if (!spec) return '';
     const s = String(spec);
+
+    // 서버 업로드 이미지/절대 URL/data URL은 그대로 사용
+    if (/^(https?:)?\/\//i.test(s) || s.indexOf('data:') === 0 || s.charAt(0) === '/') return s;
+
+    // 과거 localStorage 업로드 포맷 호환
     if (s.indexOf('uploaded:') === 0) {
       const name = s.slice(9);
-      const uploads = window.loadUploadedImages();
+      const uploads = (typeof window.loadUploadedImages === 'function') ? window.loadUploadedImages() : {};
       return uploads[name] || '';
     }
-    if (s.indexOf('data:') === 0 || s.indexOf('http') === 0) return s;
-    return (baseDir || 'images/') + encodeURI(s).replace(/'/g, '%27');
+
+    return (baseDir || 'images/') + encodeURI(s).replace(/%2F/g, '/').replace(/'/g, '%27');
   };
 
   /* ── Image URL helper (차량/일반) ── */
@@ -1587,14 +1576,14 @@
     // 문의 / 활동 로그
     loadInquiries: window.loadInquiries, saveInquiries: window.saveInquiries, addInquiry: window.addInquiry,
     loadActivity: window.loadActivity, saveActivity: window.saveActivity, resetActivity: window.resetActivity,
-    trackCarView: window.trackCarView, trackServerCarView: window.trackServerCarView, trackCarInquiry: window.trackCarInquiry, trackCarContract: window.trackCarContract,
+    trackCarView: window.trackCarView, trackCarInquiry: window.trackCarInquiry, trackCarContract: window.trackCarContract,
     seedActivityIfEmpty: window.seedActivityIfEmpty,
     findCarIdByName: window.findCarIdByName,
-    setupCarSuggestionInput: window.setupCarSuggestionInput,
-    prefillQuoteFormFromQuery: window.prefillQuoteFormFromQuery,
-    selectRentcarCategoryOption: window.selectRentcarCategoryOption,
     rentcarCategoryLabelFromKey: window.rentcarCategoryLabelFromKey,
     rentcarCategoryKeyFromLabel: window.rentcarCategoryKeyFromLabel,
+    selectRentcarCategoryOption: window.selectRentcarCategoryOption,
+    setupCarSuggestionInput: window.setupCarSuggestionInput,
+    prefillQuoteFormFromQuery: window.prefillQuoteFormFromQuery,
     getCarStats: window.getCarStats,
     // UI 유틸
     showToast: window.showToast,

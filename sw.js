@@ -4,14 +4,13 @@
    · 정적 자산(CSS/JS/이미지/폰트): Cache-First (즉시 응답, 백그라운드 갱신)
    · HTML 페이지: Network-First (최신 콘텐츠 우선, 네트워크 실패 시 캐시)
    · API 호출(/api/*): 캐시하지 않음 (항상 네트워크)
-   · 오프라인 시 캐시 미스 → /404.html 로 fallback
+   · 관리자 페이지(/admin/*): 캐시하지 않음
    ══════════════════════════════════════════════════════════ */
 
-const SW_VERSION = 'v1.0.2';
+const SW_VERSION = 'v1.0.4';
 const PRECACHE = `haetae-precache-${SW_VERSION}`;
 const RUNTIME = `haetae-runtime-${SW_VERSION}`;
 
-// 설치 시 미리 캐시할 핵심 자산 (오프라인 최소 동작 보장)
 const PRECACHE_URLS = [
   '/',
   '/index.html',
@@ -52,17 +51,13 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
-
-  // 1) Same-origin 만 처리 (외부 폰트/지도 등은 브라우저 캐시에 맡김)
   if (url.origin !== location.origin) return;
 
-  // 2) API 는 캐시 우회 — 항상 네트워크
+  // API/관리자/서버 업로드 이미지는 운영 최신 상태가 중요하므로 캐시하지 않음
   if (url.pathname.startsWith('/api/')) return;
-
-  // 3) 관리자 페이지 캐시 금지 (CSP·no-cache 정책과 일치)
   if (url.pathname.startsWith('/admin/')) return;
+  if (url.pathname.startsWith('/images/uploads/')) return;
 
-  // 4) HTML 페이지 — Network-First
   const accept = req.headers.get('accept') || '';
   const isHTML = req.mode === 'navigate' || accept.includes('text/html');
 
@@ -70,7 +65,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          // 200 OK 인 경우만 runtime 캐시에 보관
           if (res && res.ok && res.type === 'basic') {
             const copy = res.clone();
             caches.open(RUNTIME).then((c) => c.put(req, copy)).catch(() => { });
@@ -82,7 +76,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 5) 정적 자산 — Cache-First (백그라운드 갱신)
   event.respondWith(
     caches.match(req).then((cached) => {
       const networked = fetch(req).then((res) => {

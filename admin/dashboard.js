@@ -232,13 +232,32 @@
       if (typeof window.resetActivity === 'function') window.resetActivity();
     },
     async fetchUploadedImages() {
-      // 운영 모드는 파일 시스템 + DB 메타로 관리되어 localStorage 와 모델이 다름 — 추후 확장
+      if (USE_BACKEND()) {
+        const d = await apiGet('/upload-image.php');
+        const map = {};
+        (d.images || []).forEach(img => {
+          if (img && img.name && img.url) map[img.name] = img.url;
+        });
+        return map;
+      }
       return window.loadUploadedImages();
     },
-    async addUploadedImage(name, dataUrl) {
-      window.addUploadedImage(name, dataUrl);
+    async addUploadedImage(file) {
+      if (USE_BACKEND()) {
+        const form = new FormData();
+        form.append('file', file);
+        const r = await AdminAuth.fetchAuthed(API + '/upload-image.php', {
+          method: 'POST',
+          body: form,
+        });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok || !d.ok) throw new Error(d.message || '이미지 업로드 실패');
+        return d;
+      }
+      return null;
     },
     async removeUploadedImage(name) {
+      if (USE_BACKEND()) return apiSend('DELETE', '/upload-image.php?name=' + encodeURIComponent(name));
       window.removeUploadedImage(name);
     },
   };
@@ -277,6 +296,7 @@
   let banners = [];
   let inquiries = [];
   let editingId = null;
+  let uploadedImages = (typeof window.loadUploadedImages === 'function') ? window.loadUploadedImages() : {};
 
   /* ── UTILS ───────────────────────────────────────── */
   const $ = sel => document.querySelector(sel);
@@ -318,15 +338,18 @@
     // (공개 페이지에서의 변경, 다른 탭에서의 변경이 즉시 반영되도록)
     if (name === 'cars') {
       cars = await DataLayer.fetchCars();
+      await refreshUploadedImages();
       populateImageSelect();
       renderCars();
     }
     else if (name === 'banners') {
       banners = await DataLayer.fetchBanners();
+      await refreshUploadedImages();
       populateImageSelect();
       renderBanners();
     }
     else if (name === 'heroes') {
+      await refreshUploadedImages();
       await renderHeroBanners();
     }
     else if (name === 'inquiries') {
@@ -344,26 +367,55 @@
     else if (name === 'info') await renderInfoForm();
     else if (name === 'formopts') await renderFormOpts();
     else if (name === 'legal') await renderLegalForm();
-    else if (name === 'images') renderImages();
+    else if (name === 'images') await renderImages();
   }
 
   /* ── 이미지 옵션 (파일 + 업로드) ─────────────────── */
   function getImageOptions() {
-    const uploads = Object.keys(window.loadUploadedImages());
+    const uploads = Object.keys(uploadedImages || {});
     return [
       ...getAllKnownImages().map(f => ({ value: f, label: f })),
-      ...uploads.map(n => ({ value: 'uploaded:' + n, label: '업로드: ' + n })),
+      ...uploads.map(n => ({ value: uploadedImages[n], label: '업로드: ' + n })),
     ];
   }
   function getBannerOptions() {
-    const uploads = Object.keys(window.loadUploadedImages());
+    const uploads = Object.keys(uploadedImages || {});
     return [
       ...AVAILABLE_BANNERS.map(f => ({ value: f, label: f })),
-      ...uploads.map(n => ({ value: 'uploaded:' + n, label: '업로드: ' + n })),
+      ...uploads.map(n => ({ value: uploadedImages[n], label: '업로드: ' + n })),
     ];
   }
   function imageDisplayUrl(spec) {
     return window.resolveImageUrl(spec, '../images/');
+  }
+
+  async function refreshUploadedImages() {
+    try {
+      uploadedImages = await DataLayer.fetchUploadedImages();
+    } catch (err) {
+      console.error(err);
+      uploadedImages = (typeof window.loadUploadedImages === 'function') ? window.loadUploadedImages() : {};
+      toast('업로드 이미지 목록을 불러오지 못했습니다: ' + (err.message || err), 'error');
+    }
+    return uploadedImages;
+  }
+
+  async function uploadImageForOption(file, options) {
+    if (!file) throw new Error('파일이 없습니다.');
+    if (USE_BACKEND()) {
+      const d = await DataLayer.addUploadedImage(file);
+      if (!d || !d.url || !d.name) throw new Error('업로드 응답이 올바르지 않습니다.');
+      uploadedImages[d.name] = d.url;
+      return { name: d.name, value: d.url, url: d.url, originalBytes: d.bytes || file.size || 0, optimizedBytes: d.bytes || file.size || 0 };
+    }
+
+    const opt = await window.optimizeImageFile(file, options || { maxDim: 1600, quality: 0.82 });
+    const map = window.loadUploadedImages();
+    const name = uniqueImageName(map, opt.name);
+    map[name] = opt.dataUrl;
+    window.saveUploadedImages(map);
+    uploadedImages = map;
+    return { name, value: 'uploaded:' + name, url: opt.dataUrl, originalBytes: opt.originalBytes || file.size || 0, optimizedBytes: opt.optimizedBytes || 0 };
   }
 
   /* ── CARS RENDER ──────────────────────────────────── */
@@ -429,14 +481,15 @@
     const id = parseInt(carId, 10);
     if (!id) return;
     const car = cars.find(c => c.id === id);
-    const titleEl  = $('#detailPreviewTitle');
-    const frame    = $('#detailPreviewFrame');
+    const titleEl = $('#detailPreviewTitle');
+    const frame = $('#detailPreviewFrame');
     const openLink = $('#detailPreviewOpenLink');
-    const modal    = $('#detailPreviewModal');
+    const modal = $('#detailPreviewModal');
     const viewport = $('#detailPreviewViewport');
     if (!frame || !modal) return;
     if (titleEl) titleEl.textContent = car ? `상세 페이지 미리보기 — ${car.name}` : '상세 페이지 미리보기';
-    const url = `../detail.html?id=${id}&from=monthly&preview=admin`;
+    const from = (car && Array.isArray(car.category) && car.category[0]) ? car.category[0] : 'monthly';
+    const url = `../detail.html?id=${id}&from=${encodeURIComponent(from)}&preview=admin`;
     frame.src = url;
     if (openLink) openLink.href = url;
     if (viewport) {
@@ -540,13 +593,13 @@
       category: cats,
       tags,
       // detail.html 노출 필드
-      fuelType:     $('#cf_fuelType').value     || undefined,
+      fuelType: $('#cf_fuelType').value || undefined,
       transmission: $('#cf_transmission').value || undefined,
-      seats:        parseInt($('#cf_seats').value, 10)   || undefined,
-      mileage:      parseInt($('#cf_mileage').value, 10) || undefined,
-      description:  $('#cf_description').value.trim() || undefined,
-      features:     features.length ? features : undefined,
-      detailImage:  $('#cf_detailImage').value || undefined,
+      seats: parseInt($('#cf_seats').value, 10) || undefined,
+      mileage: parseInt($('#cf_mileage').value, 10) || undefined,
+      description: $('#cf_description').value.trim() || undefined,
+      features: features.length ? features : undefined,
+      detailImage: $('#cf_detailImage').value || undefined,
       // 통계
       views: parseInt($('#cf_views').value, 10) || 0,
       inquiries: parseInt($('#cf_inquiries').value, 10) || 0,
@@ -612,6 +665,13 @@
     const meta = window.loadBannerMeta();
     meta[image] = Object.assign({}, meta[image] || {}, patch);
     window.saveBannerMeta(meta);
+    window._serverBannerMeta = meta;
+    if (USE_BACKEND()) {
+      DataLayer.saveSetting('banner_meta', meta).catch(err => {
+        console.error(err);
+        toast('배너 세부 설정 저장 실패: ' + (err.message || err), 'error');
+      });
+    }
   }
   function renderBanners() {
     const list = $('#bannerListV2');
@@ -662,7 +722,7 @@
           </div>
           <div class="banner-card-row banner-card-row--meta">
             <div class="field"><label>이미지 alt (SEO/접근성)</label>
-              <input type="text" data-act="alt" value="${escapeHtml(meta.alt || '')}" placeholder="배너 ${i+1}">
+              <input type="text" data-act="alt" value="${escapeHtml(meta.alt || '')}" placeholder="배너 ${i + 1}">
             </div>
             <div class="field"><label>클릭 이동 URL (선택)</label>
               <input type="text" data-act="url" value="${escapeHtml(meta.url || '')}" placeholder="https://... 또는 quote.html">
@@ -683,20 +743,20 @@
       const meta = getBannerMeta(image);
       const mobile = meta.mobileImage || '';
       card.querySelector('select[data-act="desktop"]').innerHTML = optsHtml(image, false);
-      card.querySelector('select[data-act="mobile"]').innerHTML  = optsHtml(mobile, true);
+      card.querySelector('select[data-act="mobile"]').innerHTML = optsHtml(mobile, true);
 
       // 인터랙션
       card.querySelectorAll('button[data-act]').forEach(btn => {
         const act = btn.dataset.act;
         btn.addEventListener('click', async () => {
           if (act === 'up' && idx > 0) {
-            [banners[idx-1], banners[idx]] = [banners[idx], banners[idx-1]];
+            [banners[idx - 1], banners[idx]] = [banners[idx], banners[idx - 1]];
             await DataLayer.saveBanners(banners); renderBanners();
           } else if (act === 'down' && idx < banners.length - 1) {
-            [banners[idx+1], banners[idx]] = [banners[idx], banners[idx+1]];
+            [banners[idx + 1], banners[idx]] = [banners[idx], banners[idx + 1]];
             await DataLayer.saveBanners(banners); renderBanners();
           } else if (act === 'del') {
-            if (!confirm(`슬라이드 ${idx+1} 을(를) 제거하시겠습니까?`)) return;
+            if (!confirm(`슬라이드 ${idx + 1} 을(를) 제거하시겠습니까?`)) return;
             banners.splice(idx, 1);
             await DataLayer.saveBanners(banners); renderBanners();
             toast('배너가 제거되었습니다.');
@@ -713,35 +773,35 @@
         fileIn.addEventListener('change', async (e) => {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
-          // PC=1920 / 모바일=900
-          const maxDim = variant === 'mobile' ? 900 : 1920;
-          const opt = await window.optimizeImageFile(file, { maxDim, quality: 0.82 });
-          const map = window.loadUploadedImages();
-          const name = uniqueImageName(map, opt.name);
-          map[name] = opt.dataUrl;
-          window.saveUploadedImages(map);
-          const newVal = 'uploaded:' + name;
-          if (variant === 'desktop') {
-            // 데스크탑 변경 = banners[idx] 자체를 바꿈 + 기존 meta 보존
-            const oldImage = banners[idx];
-            const oldMeta  = window.loadBannerMeta()[oldImage];
-            banners[idx] = newVal;
-            if (oldMeta) saveBannerMetaFor(newVal, oldMeta);
-            await DataLayer.saveBanners(banners);
-          } else {
-            // 모바일 변경 = meta.mobileImage 업데이트
-            saveBannerMetaFor(banners[idx], { mobileImage: newVal });
+          try {
+            const maxDim = variant === 'mobile' ? 900 : 1920;
+            const uploaded = await uploadImageForOption(file, { maxDim, quality: 0.82 });
+            const newVal = uploaded.value;
+            if (variant === 'desktop') {
+              const oldImage = banners[idx];
+              const oldMeta = window.loadBannerMeta()[oldImage];
+              banners[idx] = newVal;
+              if (oldMeta) saveBannerMetaFor(newVal, oldMeta);
+              await DataLayer.saveBanners(banners);
+            } else {
+              saveBannerMetaFor(banners[idx], { mobileImage: newVal });
+            }
+            await refreshUploadedImages();
+            renderBanners();
+            toast(`업로드 완료 — ${uploaded.name}`);
+          } catch (err) {
+            console.error(err);
+            toast(`업로드 실패: ${err.message || err}`, 'error');
+          } finally {
+            fileIn.value = '';
           }
-          renderBanners();
-          toast(`업로드 완료 — ${name}`);
-          fileIn.value = '';
         });
       });
       // select 변경
       card.querySelector('select[data-act="desktop"]').addEventListener('change', async (e) => {
         const newVal = e.target.value;
         const oldImage = banners[idx];
-        const oldMeta  = window.loadBannerMeta()[oldImage];
+        const oldMeta = window.loadBannerMeta()[oldImage];
         banners[idx] = newVal;
         if (oldMeta) saveBannerMetaFor(newVal, oldMeta);
         await DataLayer.saveBanners(banners);
@@ -780,7 +840,7 @@
     if (!confirm('배너 설정을 기본값으로 복원하시겠습니까?\n(슬라이드 순서, 모바일 매핑, alt, URL 모두 초기화)')) return;
     await DataLayer.resetBanners();
     // 메타도 초기화
-    try { localStorage.removeItem('rentcar_banner_meta'); } catch (e) {}
+    try { localStorage.removeItem('rentcar_banner_meta'); } catch (e) { }
     banners = await DataLayer.fetchBanners();
     renderBanners();
     toast('기본값으로 복원되었습니다.');
@@ -790,9 +850,9 @@
      HERO BANNERS (서브페이지: 월렌트/12개월/중고차)
      ══════════════════════════════ */
   const HERO_PAGES = [
-    { key: 'monthly',  label: '월렌트',          page: 'monthly.html' },
+    { key: 'monthly', label: '월렌트', page: 'monthly.html' },
     { key: 'longterm', label: '12개월 기간약정', page: 'longterm.html' },
-    { key: 'used',     label: '중고차 장기렌트', page: 'used.html' },
+    { key: 'used', label: '중고차 장기렌트', page: 'used.html' },
   ];
   let heroState = null;
   async function renderHeroBanners() {
@@ -866,22 +926,21 @@
         fileIn.addEventListener('change', async (e) => {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
-          // PC = 가로 1920 max, 모바일 = 가로 900 max
-          const maxDim = variant === 'mobile' ? 900 : 1920;
-          // 업로드 → 새 옵션이 select 에 자동 포함되도록 패널 재렌더 후 값 셋
-          const opt = await window.optimizeImageFile(file, { maxDim, quality: 0.82 });
-          const map = window.loadUploadedImages();
-          const name = uniqueImageName(map, opt.name);
-          map[name] = opt.dataUrl;
-          window.saveUploadedImages(map);
-          // state 갱신 + 즉시 저장
-          heroState[key] = heroState[key] || {};
-          heroState[key][variant] = 'uploaded:' + name;
-          DataLayer.saveHeroBanners(heroState);
-          // 패널 전체 재렌더 (모든 select 가 새 옵션 포함하도록)
-          renderHeroBanners();
-          fileIn.value = '';
-          toast(`업로드 완료 — ${name}`);
+          try {
+            const maxDim = variant === 'mobile' ? 900 : 1920;
+            const uploaded = await uploadImageForOption(file, { maxDim, quality: 0.82 });
+            heroState[key] = heroState[key] || {};
+            heroState[key][variant] = uploaded.value;
+            await DataLayer.saveHeroBanners(heroState);
+            await refreshUploadedImages();
+            renderHeroBanners();
+            toast(`업로드 완료 — ${uploaded.name}`);
+          } catch (err) {
+            console.error(err);
+            toast(`업로드 실패: ${err.message || err}`, 'error');
+          } finally {
+            fileIn.value = '';
+          }
         });
       });
     });
@@ -912,7 +971,7 @@
         <tr>
           <td><strong>${i + 1}</strong></td>
           <td>${escapeHtml(c.name)}</td>
-          <td>${(c.weeklyViews     || 0).toLocaleString()}</td>
+          <td>${(c.weeklyViews || 0).toLocaleString()}</td>
           <td>${(c.weeklyInquiries || 0).toLocaleString()}</td>
           <td>${(c.weeklyContracts || 0).toLocaleString()}</td>
           <td>${Number(c.score || 0).toFixed(3)}</td>
@@ -964,15 +1023,15 @@
     const d = new Date(iso);
     if (isNaN(d)) return '-';
     const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 
   const STATUS_DEFS = {
-    new:        { label: '신규',     cls: 'status-new' },
-    contacted:  { label: '상담중',   cls: 'status-contacted' },
-    quoted:     { label: '견적완료', cls: 'status-quoted' },
+    new: { label: '신규', cls: 'status-new' },
+    contacted: { label: '상담중', cls: 'status-contacted' },
+    quoted: { label: '견적완료', cls: 'status-quoted' },
     contracted: { label: '계약완료', cls: 'status-contracted' },
-    cancelled:  { label: '취소',     cls: 'status-cancelled' },
+    cancelled: { label: '취소', cls: 'status-cancelled' },
   };
   function statusOf(it) { return it.status || (it.isRead ? 'contacted' : 'new'); }
   function statusBadge(s) {
@@ -981,9 +1040,9 @@
   }
   function statusSelect(currentStatus, idAttr) {
     return `<select class="status-sel" data-action="status" data-id="${idAttr}">
-      ${Object.entries(STATUS_DEFS).map(([k,v]) =>
-        `<option value="${k}" ${k === currentStatus ? 'selected' : ''}>${v.label}</option>`
-      ).join('')}
+      ${Object.entries(STATUS_DEFS).map(([k, v]) =>
+      `<option value="${k}" ${k === currentStatus ? 'selected' : ''}>${v.label}</option>`
+    ).join('')}
     </select>`;
   }
 
@@ -1026,9 +1085,9 @@
           <td>${it.isRead ? '' : '<span class="dot-unread" title="미읽음"></span>'}</td>
           <td>${formatDateShort(it.createdAt)}</td>
           <td>${statusSelect(st, it.id)}</td>
-          <td><strong>${escapeHtml(it.carName || '-')}</strong>${it.category ? ' <span class="cat-pill">'+escapeHtml(it.category)+'</span>' : ''}</td>
+          <td><strong>${escapeHtml(it.carName || '-')}</strong>${it.category ? ' <span class="cat-pill">' + escapeHtml(it.category) + '</span>' : ''}</td>
           <td>${escapeHtml(it.name || '-')}</td>
-          <td><a href="tel:${escapeHtml(String(it.phone||'').replace(/[^0-9+]/g,''))}" style="color:inherit">${escapeHtml(it.phone || '-')}</a></td>
+          <td><a href="tel:${escapeHtml(String(it.phone || '').replace(/[^0-9+]/g, ''))}" style="color:inherit">${escapeHtml(it.phone || '-')}</a></td>
           <td>${escapeHtml(it.source || '-')}</td>
           <td>
             <div class="row-actions">
@@ -1078,8 +1137,8 @@
 
   function exportInquiriesCsv() {
     if (!inquiries.length) return toast('내보낼 문의가 없습니다.', 'error');
-    const cols = ['id','createdAt','status','isRead','source','type','category','carName','name','phone','region','period','startDate','experience','message'];
-    const head = ['ID','접수일','상태','읽음','출처','유형','카테고리','차량명','이름','연락처','지역','기간','희망일','경력','메시지'];
+    const cols = ['id', 'createdAt', 'status', 'isRead', 'source', 'type', 'category', 'carName', 'name', 'phone', 'region', 'period', 'startDate', 'experience', 'message'];
+    const head = ['ID', '접수일', '상태', '읽음', '출처', '유형', '카테고리', '차량명', '이름', '연락처', '지역', '기간', '희망일', '경력', '메시지'];
     const esc = v => {
       if (v == null) return '';
       const s = String(v).replace(/"/g, '""');
@@ -1254,7 +1313,7 @@
      ABOUT (회사소개)
      ══════════════════════════════ */
   const ABOUT_TEXT_FIELDS = ['heading', 'subheading', 'description'];
-  const ABOUT_STAT_FIELDS = ['stat1Label','stat1Value','stat2Label','stat2Value','stat3Label','stat3Value','stat4Label','stat4Value'];
+  const ABOUT_STAT_FIELDS = ['stat1Label', 'stat1Value', 'stat2Label', 'stat2Value', 'stat3Label', 'stat3Value', 'stat4Label', 'stat4Value'];
   async function renderAboutForm() {
     const a = await DataLayer.fetchAbout();
     ABOUT_TEXT_FIELDS.forEach(k => { const el = $('#abt_' + k); if (el) el.value = a[k] || ''; });
@@ -1282,7 +1341,7 @@
   /* ══════════════════════════════
      BUSINESS INFO (사업자 정보)
      ══════════════════════════════ */
-  const BIZ_FIELDS = ['companyName','ceoName','bizRegNumber','corpRegNumber','openedAt','onlineSalesNumber','industry','address','headOfficeAddress','contactEmail','privacyOfficerName','privacyEmail','privacyPhone','kakaoChatUrl'];
+  const BIZ_FIELDS = ['companyName', 'ceoName', 'bizRegNumber', 'corpRegNumber', 'openedAt', 'onlineSalesNumber', 'industry', 'address', 'headOfficeAddress', 'contactEmail', 'privacyOfficerName', 'privacyEmail', 'privacyPhone', 'kakaoChatUrl'];
   async function renderBusinessForm() {
     const b = await DataLayer.fetchBusiness();
     BIZ_FIELDS.forEach(k => { const el = $('#biz_' + k); if (el) el.value = b[k] || ''; });
@@ -1321,7 +1380,7 @@
             <button class="icon-btn" data-act="up"   ${i === 0 ? 'disabled' : ''} title="위로" aria-label="위로">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="18 15 12 9 6 15"/></svg>
             </button>
-            <button class="icon-btn" data-act="down" ${i === faqList.length-1 ? 'disabled' : ''} title="아래로" aria-label="아래로">
+            <button class="icon-btn" data-act="down" ${i === faqList.length - 1 ? 'disabled' : ''} title="아래로" aria-label="아래로">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <button class="icon-btn icon-btn-danger" data-act="del" title="제거" aria-label="제거">
@@ -1344,10 +1403,10 @@
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.closest('.faq-edit-item').dataset.idx, 10);
         const a = btn.dataset.act;
-        if (a === 'up' && idx > 0) { [faqList[idx-1], faqList[idx]] = [faqList[idx], faqList[idx-1]]; }
-        else if (a === 'down' && idx < faqList.length-1) { [faqList[idx+1], faqList[idx]] = [faqList[idx], faqList[idx+1]]; }
+        if (a === 'up' && idx > 0) { [faqList[idx - 1], faqList[idx]] = [faqList[idx], faqList[idx - 1]]; }
+        else if (a === 'down' && idx < faqList.length - 1) { [faqList[idx + 1], faqList[idx]] = [faqList[idx], faqList[idx + 1]]; }
         else if (a === 'del') {
-          if (!confirm(`Q${idx+1} 항목을 삭제하시겠습니까?`)) return;
+          if (!confirm(`Q${idx + 1} 항목을 삭제하시겠습니까?`)) return;
           faqList.splice(idx, 1);
         }
         DataLayer.saveFaq(faqList);
@@ -1399,7 +1458,7 @@
             <button class="icon-btn" data-act="up"   ${i === 0 ? 'disabled' : ''} title="위로" aria-label="위로">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="18 15 12 9 6 15"/></svg>
             </button>
-            <button class="icon-btn" data-act="down" ${i === infoState.sections.length-1 ? 'disabled' : ''} title="아래로" aria-label="아래로">
+            <button class="icon-btn" data-act="down" ${i === infoState.sections.length - 1 ? 'disabled' : ''} title="아래로" aria-label="아래로">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <button class="icon-btn icon-btn-danger" data-act="del" title="제거" aria-label="제거">
@@ -1422,8 +1481,8 @@
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.closest('.info-edit-item').dataset.idx, 10);
         const a = btn.dataset.act;
-        if (a === 'up' && idx > 0) [infoState.sections[idx-1], infoState.sections[idx]] = [infoState.sections[idx], infoState.sections[idx-1]];
-        else if (a === 'down' && idx < infoState.sections.length-1) [infoState.sections[idx+1], infoState.sections[idx]] = [infoState.sections[idx], infoState.sections[idx+1]];
+        if (a === 'up' && idx > 0) [infoState.sections[idx - 1], infoState.sections[idx]] = [infoState.sections[idx], infoState.sections[idx - 1]];
+        else if (a === 'down' && idx < infoState.sections.length - 1) [infoState.sections[idx + 1], infoState.sections[idx]] = [infoState.sections[idx], infoState.sections[idx + 1]];
         else if (a === 'del') { if (!confirm('이 섹션을 삭제할까요?')) return; infoState.sections.splice(idx, 1); }
         renderInfoForm();
       });
@@ -1474,9 +1533,9 @@
         </button>
       </div>
     `;
-    const listEl  = el.querySelector('[data-role="list"]');
+    const listEl = el.querySelector('[data-role="list"]');
     const inputEl = el.querySelector('[data-role="input"]');
-    const addEl   = el.querySelector('[data-role="add"]');
+    const addEl = el.querySelector('[data-role="add"]');
 
     function repaint() {
       if (!el._items.length) {
@@ -1590,22 +1649,35 @@
   /* ══════════════════════════════
      FORM OPTIONS (드롭다운 옵션) — 칩 에디터 사용
      ══════════════════════════════ */
-  const FO_FIELDS = ['categories','regions','periods','experiences'];
+  const FO_FIELDS = ['categories', 'regions', 'periods', 'experiences'];
+  let formOptsSaveTimer = null;
+
+  function scheduleSaveFormOptions() {
+    clearTimeout(formOptsSaveTimer);
+    formOptsSaveTimer = setTimeout(async () => {
+      try {
+        const data = {};
+        FO_FIELDS.forEach(k2 => {
+          const e2 = $('#fo_' + k2);
+          if (e2) data[k2] = readChipEditor(e2);
+        });
+        await DataLayer.saveFormOptions(data);
+        toast('폼 옵션이 저장되었습니다.');
+      } catch (err) {
+        console.error(err);
+        toast('폼 옵션 저장 실패: ' + (err.message || err), 'error');
+      }
+    }, 500);
+  }
+
   async function renderFormOpts() {
     const o = await DataLayer.fetchFormOptions();
     FO_FIELDS.forEach(k => {
       const el = $('#fo_' + k);
       if (!el) return;
       mountChipEditor(el, o[k] || []);
-      // chip-change 이벤트마다 자동 저장 → "저장" 버튼 의존도 제거
-      el.addEventListener('chip-change', () => {
-        const data = {};
-        FO_FIELDS.forEach(k2 => {
-          const e2 = $('#fo_' + k2);
-          if (e2) data[k2] = readChipEditor(e2);
-        });
-        DataLayer.saveFormOptions(data);
-      });
+      // chip-change 이벤트마다 자동 저장하되, 실패하면 관리자에게 즉시 알림
+      el.addEventListener('chip-change', scheduleSaveFormOptions);
     });
   }
   async function saveFormOpts() {
@@ -1640,10 +1712,10 @@
   async function renderLegalForm() {
     const api = legalApi();
     legalState = await DataLayer.fetchLegalDoc(api.key, api.fallback);
-    $('#legal_title').value     = legalState.title || '';
+    $('#legal_title').value = legalState.title || '';
     $('#legal_effective').value = legalState.effective || '';
-    $('#legal_intro').value     = legalState.intro || '';
-    $('#legal_note').value      = legalState.note  || '';
+    $('#legal_intro').value = legalState.intro || '';
+    $('#legal_note').value = legalState.note || '';
     const list = $('#legalSectionList');
     if (!list) return;
     if (!legalState.sections.length) {
@@ -1659,7 +1731,7 @@
             <button class="icon-btn" data-act="up"   ${i === 0 ? 'disabled' : ''} title="위로" aria-label="위로">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="18 15 12 9 6 15"/></svg>
             </button>
-            <button class="icon-btn" data-act="down" ${i === legalState.sections.length-1 ? 'disabled' : ''} title="아래로" aria-label="아래로">
+            <button class="icon-btn" data-act="down" ${i === legalState.sections.length - 1 ? 'disabled' : ''} title="아래로" aria-label="아래로">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <button class="icon-btn icon-btn-danger" data-act="del" title="제거" aria-label="제거">
@@ -1681,8 +1753,8 @@
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.closest('.info-edit-item').dataset.idx, 10);
         const a = btn.dataset.act;
-        if (a === 'up' && idx > 0) [legalState.sections[idx-1], legalState.sections[idx]] = [legalState.sections[idx], legalState.sections[idx-1]];
-        else if (a === 'down' && idx < legalState.sections.length-1) [legalState.sections[idx+1], legalState.sections[idx]] = [legalState.sections[idx], legalState.sections[idx+1]];
+        if (a === 'up' && idx > 0) [legalState.sections[idx - 1], legalState.sections[idx]] = [legalState.sections[idx], legalState.sections[idx - 1]];
+        else if (a === 'down' && idx < legalState.sections.length - 1) [legalState.sections[idx + 1], legalState.sections[idx]] = [legalState.sections[idx], legalState.sections[idx + 1]];
         else if (a === 'del') { if (!confirm('이 조항을 삭제할까요?')) return; legalState.sections.splice(idx, 1); }
         renderLegalForm();
       });
@@ -1702,10 +1774,10 @@
   }
   async function saveLegalForm() {
     if (!legalState) return;
-    legalState.title     = $('#legal_title').value;
+    legalState.title = $('#legal_title').value;
     legalState.effective = $('#legal_effective').value;
-    legalState.intro     = $('#legal_intro').value;
-    legalState.note      = $('#legal_note').value;
+    legalState.intro = $('#legal_intro').value;
+    legalState.note = $('#legal_note').value;
     const api = legalApi();
     await DataLayer.saveLegalDoc(api.key, legalState);
     toast(legalCurrent === 'privacy' ? '개인정보처리방침이 저장되었습니다.' : '이용약관이 저장되었습니다.');
@@ -1734,29 +1806,34 @@
   }
   function formatBytes(n) {
     if (n < 1024) return n + ' B';
-    if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB';
-    return (n/1024/1024).toFixed(2) + ' MB';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1024 / 1024).toFixed(2) + ' MB';
   }
 
-  function renderImages() {
-    const map = window.loadUploadedImages();
+  async function renderImages() {
+    await refreshUploadedImages();
+    const map = uploadedImages || {};
     const names = Object.keys(map);
     $('#imgStorageBytes').textContent = formatBytes(calcStorageBytes(map));
 
     const grid = $('#uploadedImageGrid');
+    if (!grid) return;
+
     if (!names.length) {
       grid.innerHTML = '<div class="empty">아직 업로드된 이미지가 없습니다.</div>';
       return;
     }
+
     grid.innerHTML = names.map(n => `
       <div class="img-card" data-name="${escapeHtml(n)}">
-        <div class="img-card-thumb" style="background-image:url('${map[n]}')"></div>
+        <div class="img-card-thumb" style="background-image:url('${escapeHtml(map[n])}')"></div>
         <div class="img-card-name" title="${escapeHtml(n)}">${escapeHtml(n)}</div>
         <div class="img-card-actions">
           <button class="btn btn-danger-ghost btn-sm" data-act="del">삭제</button>
         </div>
       </div>
     `).join('');
+
     grid.querySelectorAll('button[data-act]').forEach(btn => {
       btn.addEventListener('click', () => {
         const name = btn.closest('.img-card').dataset.name;
@@ -1767,42 +1844,60 @@
 
   async function handleImageUpload(files) {
     if (!files || !files.length) return;
+    const list = Array.from(files).filter(f => f.type && f.type.startsWith('image/'));
+    if (!list.length) { toast('이미지 파일이 아닙니다.', 'error'); return; }
+
+    if (USE_BACKEND()) {
+      let added = 0;
+      showUploadProgress(0, list.length);
+      for (let i = 0; i < list.length; i++) {
+        const f = list[i];
+        try {
+          await uploadImageForOption(f);
+          added++;
+        } catch (err) {
+          console.error(err);
+          toast(`"${f.name}" 업로드 실패: ${err.message || err}`, 'error');
+        }
+        showUploadProgress(i + 1, list.length);
+      }
+      hideUploadProgress();
+      await renderImages();
+      populateImageSelect();
+      populateBannerAddSelect();
+      if (added) toast(`${added}장 업로드 완료`);
+      return;
+    }
+
     const map = window.loadUploadedImages();
     let totalBytes = calcStorageBytes(map);
     let added = 0;
     let totalSaved = 0;
 
-    const list = Array.from(files).filter(f => f.type && f.type.startsWith('image/'));
-    if (!list.length) { toast('이미지 파일이 아닙니다.', 'error'); return; }
-
     showUploadProgress(0, list.length);
     for (let i = 0; i < list.length; i++) {
       const f = list[i];
       try {
-        // ─ 자동 최적화 (리사이즈 + WebP) ─
-        const opt = await window.optimizeImageFile(f, {
+        const uploaded = await uploadImageForOption(f, {
           maxDim: 1600,
           quality: 0.82,
           maxOutputBytes: 600 * 1024,
         });
-        const newBytes = totalBytes + opt.dataUrl.length;
+        const newBytes = totalBytes + (uploaded.url || '').length;
         if (newBytes > MAX_IMG_BYTES) {
           toast(`용량 한도(${formatBytes(MAX_IMG_BYTES)}) 초과로 "${f.name}"를 건너뜁니다.`, 'error');
           continue;
         }
-        const name = uniqueImageName(map, opt.name);
-        map[name] = opt.dataUrl;
         totalBytes = newBytes;
         added++;
-        totalSaved += (opt.originalBytes - opt.optimizedBytes);
+        totalSaved += ((uploaded.originalBytes || 0) - (uploaded.optimizedBytes || 0));
       } catch (e) {
         toast(`"${f.name}" 처리 실패: ${e.message || e}`, 'error');
       }
       showUploadProgress(i + 1, list.length);
     }
     hideUploadProgress();
-    window.saveUploadedImages(map);
-    renderImages();
+    await renderImages();
     populateImageSelect();
     populateBannerAddSelect();
     if (added) {
@@ -1817,9 +1912,9 @@
     wrap.hidden = false;
     const pct = total ? Math.round((done / total) * 100) : 0;
     const fill = $('#uploadProgressFill');
-    const txt  = $('#uploadProgressText');
+    const txt = $('#uploadProgressText');
     if (fill) fill.style.width = pct + '%';
-    if (txt)  txt.textContent  = `처리 중 ${done} / ${total} (${pct}%)`;
+    if (txt) txt.textContent = `처리 중 ${done} / ${total} (${pct}%)`;
   }
   function hideUploadProgress() {
     const wrap = $('#uploadProgress');
@@ -1836,7 +1931,7 @@
     return `${stem}_${i}${ext}`;
   }
   async function deleteUploadedImage(name) {
-    const refKey = 'uploaded:' + name;
+    const refKey = (uploadedImages && uploadedImages[name]) ? uploadedImages[name] : ('uploaded:' + name);
     // 1. 사용처 스캔
     const usingCars = (Array.isArray(window.carDatabase) ? window.carDatabase : [])
       .filter(c => c.image === refKey || c.detailImage === refKey);
@@ -1852,10 +1947,10 @@
     let msg = `업로드된 이미지 "${name}"를 삭제하시겠습니까?`;
     if (totalRefs > 0) {
       const detail = [];
-      if (usingCars.length)       detail.push(`차량 ${usingCars.length}대`);
-      if (usingBanners.length)    detail.push(`메인 슬라이드 PC ${usingBanners.length}장`);
+      if (usingCars.length) detail.push(`차량 ${usingCars.length}대`);
+      if (usingBanners.length) detail.push(`메인 슬라이드 PC ${usingBanners.length}장`);
       if (usingBannerMeta.length) detail.push(`메인 슬라이드 모바일 ${usingBannerMeta.length}장`);
-      if (usingHero.length)       detail.push(`서브페이지 히어로 ${usingHero.length}개`);
+      if (usingHero.length) detail.push(`서브페이지 히어로 ${usingHero.length}개`);
       msg += `\n\n⚠️ 사용 중: ${detail.join(', ')}\n삭제 시 해당 항목의 이미지가 빈 칸이 됩니다.\n\n그래도 삭제하시겠습니까?`;
     }
     if (!confirm(msg)) return;
@@ -1863,7 +1958,7 @@
     // 2. 참조 자동 정리 — 빈 문자열로 클리어 (placeholder 가능 시 그쪽으로)
     if (usingCars.length && Array.isArray(window.carDatabase)) {
       window.carDatabase.forEach(c => {
-        if (c.image === refKey)       delete c.image;
+        if (c.image === refKey) delete c.image;
         if (c.detailImage === refKey) delete c.detailImage;
       });
       window.saveCarDatabase(window.carDatabase);
@@ -1882,14 +1977,15 @@
       const newHero = JSON.parse(JSON.stringify(hero));
       usingHero.forEach(([k, v]) => {
         if (v.desktop === refKey) delete newHero[k].desktop;
-        if (v.mobile === refKey)  delete newHero[k].mobile;
+        if (v.mobile === refKey) delete newHero[k].mobile;
       });
       window.saveHeroBanners(newHero);
     }
 
     // 3. 이미지 자체 삭제
     await DataLayer.removeUploadedImage(name);
-    renderImages();
+    if (uploadedImages) delete uploadedImages[name];
+    await renderImages();
     populateImageSelect();
     populateBannerAddSelect();
     if (totalRefs > 0) toast(`이미지 삭제 완료 — ${totalRefs}곳에서 참조 정리됨`);
@@ -2001,7 +2097,7 @@
     const opts = getBannerOptions().filter(o => !banners.includes(o.value));
     addSel.innerHTML = opts.length
       ? '<option value="" disabled selected>추가할 배너 이미지 선택</option>' +
-        opts.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('')
+      opts.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('')
       : '<option value="" disabled selected>추가 가능한 배너가 없습니다</option>';
     addSel.disabled = !opts.length;
     $('#bannerAddBtn').disabled = !opts.length;
@@ -2030,8 +2126,8 @@
     const showErr = (msg) => { err.textContent = msg; err.classList.add('show'); };
     err.textContent = ''; err.classList.remove('show');
     const cur = $('#pw_current').value;
-    const nw  = $('#pw_new').value;
-    const cf  = $('#pw_confirm').value;
+    const nw = $('#pw_new').value;
+    const cf = $('#pw_confirm').value;
     if (nw !== cf) return showErr('새 비밀번호가 일치하지 않습니다.');
     const btn = e.target.querySelector('button[type="submit"]');
     btn.disabled = true; btn.textContent = '변경 중...';
@@ -2070,10 +2166,10 @@
     }));
 
     // 모바일 드로어 토글
-    const burger    = $('#adminBurger');
-    const backdrop  = $('#adminBackdrop');
-    const closeNav  = $('#adminCloseNav');
-    const sidebar   = $('#adminSidebar');
+    const burger = $('#adminBurger');
+    const backdrop = $('#adminBackdrop');
+    const closeNav = $('#adminCloseNav');
+    const sidebar = $('#adminSidebar');
     function openMobileNav() {
       if (sidebar) sidebar.classList.add('open');
       if (backdrop) backdrop.classList.add('open');
@@ -2098,8 +2194,8 @@
     const cpb = $('#changePwBtn');
     if (cpb) cpb.addEventListener('click', openPwModal);
     const pwc = $('#pwModalClose'); if (pwc) pwc.addEventListener('click', closePwModal);
-    const pwx = $('#pwCancel');     if (pwx) pwx.addEventListener('click', closePwModal);
-    const pwf = $('#pwForm');       if (pwf) pwf.addEventListener('submit', submitPwChange);
+    const pwx = $('#pwCancel'); if (pwx) pwx.addEventListener('click', closePwModal);
+    const pwf = $('#pwForm'); if (pwf) pwf.addEventListener('submit', submitPwChange);
     const pwm = $('#pwModal');
     if (pwm) pwm.addEventListener('click', (e) => { if (e.target.id === 'pwModal') closePwModal(); });
 
@@ -2127,7 +2223,7 @@
     $('#resetBannersBtn').addEventListener('click', resetAllBanners);
 
     // hero banners (서브페이지)
-    const shb = $('#saveHeroesBtn');  if (shb) shb.addEventListener('click', saveHeroBanners);
+    const shb = $('#saveHeroesBtn'); if (shb) shb.addEventListener('click', saveHeroBanners);
     const rhb = $('#resetHeroesBtn'); if (rhb) rhb.addEventListener('click', resetHeroBanners);
 
     // 차량 모달 — 상세 페이지 미리보기 버튼 (iframe 모달)
@@ -2162,7 +2258,7 @@
 
     // 차량 모달 — 이미지 직접 업로드
     const cfUpBtn = $('#cfImageUploadBtn');
-    const cfUpIn  = $('#cfImageUploadInput');
+    const cfUpIn = $('#cfImageUploadInput');
     if (cfUpBtn && cfUpIn) {
       cfUpBtn.addEventListener('click', () => cfUpIn.click());
       cfUpIn.addEventListener('change', async (e) => {
@@ -2179,7 +2275,7 @@
     const cfDetSel = $('#cf_detailImage');
     if (cfDetSel) cfDetSel.addEventListener('change', () => updateImagePreview('cfDetailImagePreview', cfDetSel.value));
     const cfDetUpBtn = $('#cfDetailImageUploadBtn');
-    const cfDetUpIn  = $('#cfDetailImageUploadInput');
+    const cfDetUpIn = $('#cfDetailImageUploadInput');
     if (cfDetUpBtn && cfDetUpIn) {
       cfDetUpBtn.addEventListener('click', () => cfDetUpIn.click());
       cfDetUpIn.addEventListener('change', async (e) => {
@@ -2212,7 +2308,7 @@
     const setDbSel = $('#set_defaultDetailBanner');
     if (setDbSel) setDbSel.addEventListener('change', () => updateSetDetailBannerPreview(setDbSel.value));
     const setDbUpBtn = $('#setDetailBannerUploadBtn');
-    const setDbUpIn  = $('#setDetailBannerUploadInput');
+    const setDbUpIn = $('#setDetailBannerUploadInput');
     if (setDbUpBtn && setDbUpIn) {
       setDbUpBtn.addEventListener('click', () => setDbUpIn.click());
       setDbUpIn.addEventListener('change', async (e) => {
@@ -2234,31 +2330,31 @@
     $('#resetAboutBtn').addEventListener('click', resetAboutForm);
 
     // business
-    const sbb = $('#saveBusinessBtn');   if (sbb) sbb.addEventListener('click', saveBusinessForm);
-    const rbb = $('#resetBusinessBtn');  if (rbb) rbb.addEventListener('click', resetBusinessForm);
+    const sbb = $('#saveBusinessBtn'); if (sbb) sbb.addEventListener('click', saveBusinessForm);
+    const rbb = $('#resetBusinessBtn'); if (rbb) rbb.addEventListener('click', resetBusinessForm);
 
     // faq
-    const afb = $('#addFaqBtn');         if (afb) afb.addEventListener('click', addFaqItem);
-    const rfb = $('#resetFaqBtn');       if (rfb) rfb.addEventListener('click', resetFaq);
+    const afb = $('#addFaqBtn'); if (afb) afb.addEventListener('click', addFaqItem);
+    const rfb = $('#resetFaqBtn'); if (rfb) rfb.addEventListener('click', resetFaq);
 
     // info page
-    const sib = $('#saveInfoBtn');       if (sib) sib.addEventListener('click', saveInfoForm);
+    const sib = $('#saveInfoBtn'); if (sib) sib.addEventListener('click', saveInfoForm);
     const aib = $('#addInfoSectionBtn'); if (aib) aib.addEventListener('click', addInfoSection);
-    const rib = $('#resetInfoBtn');      if (rib) rib.addEventListener('click', resetInfoForm);
+    const rib = $('#resetInfoBtn'); if (rib) rib.addEventListener('click', resetInfoForm);
 
     // form options
-    const sfob = $('#saveFormOptsBtn');  if (sfob) sfob.addEventListener('click', saveFormOpts);
+    const sfob = $('#saveFormOptsBtn'); if (sfob) sfob.addEventListener('click', saveFormOpts);
     const rfob = $('#resetFormOptsBtn'); if (rfob) rfob.addEventListener('click', resetFormOpts);
 
     // legal docs (terms / privacy)
-    const lsel = $('#legalDocSelect');        if (lsel) lsel.addEventListener('change', switchLegalDoc);
-    const slb  = $('#saveLegalBtn');          if (slb)  slb.addEventListener('click', saveLegalForm);
-    const alb  = $('#addLegalSectionBtn');    if (alb)  alb.addEventListener('click', addLegalSection);
-    const rlb  = $('#resetLegalBtn');         if (rlb)  rlb.addEventListener('click', resetLegalDoc);
+    const lsel = $('#legalDocSelect'); if (lsel) lsel.addEventListener('change', switchLegalDoc);
+    const slb = $('#saveLegalBtn'); if (slb) slb.addEventListener('click', saveLegalForm);
+    const alb = $('#addLegalSectionBtn'); if (alb) alb.addEventListener('click', addLegalSection);
+    const rlb = $('#resetLegalBtn'); if (rlb) rlb.addEventListener('click', resetLegalDoc);
 
     // inquiry — CSV + 상태 필터
-    const exp = $('#exportInquiriesBtn');     if (exp) exp.addEventListener('click', exportInquiriesCsv);
-    const isf = $('#inquiryStatusFilter');    if (isf) isf.addEventListener('change', renderInquiries);
+    const exp = $('#exportInquiriesBtn'); if (exp) exp.addEventListener('click', exportInquiriesCsv);
+    const isf = $('#inquiryStatusFilter'); if (isf) isf.addEventListener('change', renderInquiries);
 
     // images upload — 클릭 / 드래그&드롭 / 클립보드 paste 3종 입력
     $('#imgUploadBtn').addEventListener('click', () => $('#imgUploadInput').click());
@@ -2268,11 +2364,11 @@
     });
     const uz = $('#uploadZone');
     if (uz) {
-      ['dragenter','dragover'].forEach(ev => uz.addEventListener(ev, e => {
+      ['dragenter', 'dragover'].forEach(ev => uz.addEventListener(ev, e => {
         e.preventDefault(); e.stopPropagation();
         uz.classList.add('is-dragover');
       }));
-      ['dragleave','dragend','drop'].forEach(ev => uz.addEventListener(ev, e => {
+      ['dragleave', 'dragend', 'drop'].forEach(ev => uz.addEventListener(ev, e => {
         e.preventDefault(); e.stopPropagation();
         uz.classList.remove('is-dragover');
       }));

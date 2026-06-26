@@ -14,7 +14,6 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
   $rows = db()->query('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT 1000')->fetchAll();
-  // 컬럼명 → 프론트엔드 카멜케이스
   foreach ($rows as &$r) {
     $r['createdAt']  = $r['created_at']; unset($r['created_at']);
     $r['carName']    = $r['car_name'];   unset($r['car_name']);
@@ -28,35 +27,72 @@ if ($method === 'GET') {
 }
 
 require_csrf($sess);
-
-// 허용 status ENUM 화이트리스트 — DB ENUM 과 동기화
 const ALLOWED_STATUSES = ['new','contacted','quoted','contracted','cancelled'];
 
 if ($method === 'PUT') {
   $id = (int)($_GET['id'] ?? 0);
   if (!$id) json_out(['ok' => false, 'message' => 'id 필수'], 400);
+
   $b = json_in();
-  $fields = []; $vals = [];
+
+  $beforeSt = db()->prepare('SELECT id, status, car_id FROM inquiries WHERE id = ? LIMIT 1');
+  $beforeSt->execute([$id]);
+  $before = $beforeSt->fetch();
+  if (!$before) json_out(['ok' => false, 'message' => '문의가 없습니다'], 404);
+
+  $fields = [];
+  $vals = [];
+
   if (isset($b['status'])) {
     if (!in_array($b['status'], ALLOWED_STATUSES, true)) {
       json_out(['ok' => false, 'message' => '허용되지 않은 상태값'], 422);
     }
-    $fields[] = '`status` = ?';  $vals[] = $b['status'];
+    $fields[] = '`status` = ?';
+    $vals[] = $b['status'];
   }
-  if (isset($b['isRead']))  { $fields[] = '`is_read` = ?'; $vals[] = $b['isRead'] ? 1 : 0; }
+
+  if (isset($b['isRead'])) {
+    $fields[] = '`is_read` = ?';
+    $vals[] = $b['isRead'] ? 1 : 0;
+  }
+
   if (!$fields) json_out(['ok' => false, 'message' => '업데이트 필드 없음'], 400);
-  $vals[] = $id;
-  db()->prepare('UPDATE inquiries SET ' . implode(', ', $fields) . ' WHERE id = ?')->execute($vals);
-  json_out(['ok' => true]);
+
+  $pdo = db();
+  $pdo->beginTransaction();
+
+  try {
+    $vals[] = $id;
+    $pdo->prepare('UPDATE inquiries SET ' . implode(', ', $fields) . ' WHERE id = ?')->execute($vals);
+
+    $newStatus = $b['status'] ?? $before['status'];
+    $oldStatus = $before['status'] ?? '';
+    $carId = (int)($before['car_id'] ?? 0);
+
+    if ($newStatus === 'contracted' && $oldStatus !== 'contracted' && $carId > 0) {
+      $st = $pdo->prepare('UPDATE cars SET contracts = contracts + 1 WHERE id = ?');
+      $st->execute([$carId]);
+      if ($st->rowCount() > 0) {
+        $pdo->prepare("INSERT INTO activity (car_id, kind) VALUES (?, 'contract')")->execute([$carId]);
+      }
+    }
+
+    $pdo->commit();
+    json_out(['ok' => true]);
+  } catch (Throwable $e) {
+    $pdo->rollBack();
+    @error_log('[inquiry-update-failed] ' . $e->getMessage());
+    json_out(['ok' => false, 'message' => '문의 업데이트 실패'], 500);
+  }
 }
 
 if ($method === 'DELETE') {
   if (!empty($_GET['all'])) {
-    // 전체 삭제는 super admin 만 허용 (실수·악의적 호출 방지)
     require_super($sess);
     db()->exec('DELETE FROM inquiries');
     json_out(['ok' => true, 'deleted' => 'all']);
   }
+
   $id = (int)($_GET['id'] ?? 0);
   if (!$id) json_out(['ok' => false, 'message' => 'id 필수'], 400);
   db()->prepare('DELETE FROM inquiries WHERE id = ?')->execute([$id]);
