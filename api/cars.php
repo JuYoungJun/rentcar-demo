@@ -46,12 +46,17 @@ function normalize_car_payload(array $b): array {
     json_out(['ok' => false, 'message' => '주행거리는 0 이상이어야 합니다'], 400);
   }
 
+  $image = trim((string)($b['image'] ?? ''));
+  $detailImage = trim((string)($b['detailImage'] ?? ''));
+  if (mb_strlen($image) > 255) $image = mb_substr($image, 0, 255);
+  if (mb_strlen($detailImage) > 255) $detailImage = mb_substr($detailImage, 0, 255);
+
   return [
     'name' => $name,
     'year' => $year,
     'price' => $price,
     'badge' => mb_substr((string)($b['badge'] ?? ''), 0, 20) ?: null,
-    'image' => $b['image'] ?? null,
+    'image' => $image !== '' ? $image : null,
     'category' => $cats,
     'tags' => isset($b['tags']) && is_array($b['tags']) ? $b['tags'] : [],
     'fuelType' => $b['fuelType'] ?? null,
@@ -60,7 +65,7 @@ function normalize_car_payload(array $b): array {
     'mileage' => $mileage,
     'description' => $b['description'] ?? null,
     'features' => isset($b['features']) && is_array($b['features']) ? $b['features'] : [],
-    'detailImage' => $b['detailImage'] ?? null,
+    'detailImage' => $detailImage !== '' ? $detailImage : null,
     'views' => max(0, (int)($b['views'] ?? 0)),
     'inquiries' => max(0, (int)($b['inquiries'] ?? 0)),
     'contracts' => max(0, (int)($b['contracts'] ?? 0)),

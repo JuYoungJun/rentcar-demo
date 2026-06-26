@@ -9,9 +9,17 @@ require_once __DIR__ . '/_helpers.php';
 cors();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+function no_store_headers(): void {
+  header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+  header('Pragma: no-cache');
+  header('Expires: 0');
+}
+
 $sess = require_auth();
 
 if ($method === 'GET') {
+  no_store_headers();
   $rows = db()->query('SELECT id, name, path, mime, bytes, width, height, created_at FROM uploaded_images ORDER BY id DESC')->fetchAll();
   foreach ($rows as &$r) {
     $r['url'] = '/' . ltrim((string)$r['path'], '/');
@@ -110,6 +118,7 @@ try {
   json_out(['ok' => false, 'message' => '이미지 DB 등록 실패'], 500);
 }
 
+no_store_headers();
 json_out([
   'ok' => true,
   'name' => $name,

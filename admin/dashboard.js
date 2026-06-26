@@ -17,8 +17,16 @@
   const API = (window.AdminAuth && window.AdminAuth.config && window.AdminAuth.config.API_BASE) || '/api';
   const USE_BACKEND = () => !!(window.AdminAuth && window.AdminAuth.config && window.AdminAuth.config.MOCK_BACKEND === false);
 
+  function withNoCache(path) {
+    const sep = String(path).includes('?') ? '&' : '?';
+    return path + sep + '_ts=' + Date.now();
+  }
+
   async function apiGet(path) {
-    const r = await AdminAuth.fetchAuthed(API + path);
+    const r = await AdminAuth.fetchAuthed(API + withNoCache(path), {
+      method: 'GET',
+      cache: 'no-store',
+    });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.message || ('HTTP ' + r.status));
     return d;
@@ -317,7 +325,10 @@
   }
 
   function imageUrl(file) {
-    return window.resolveImageUrl ? window.resolveImageUrl(file, '../images/') : ('../images/' + encodeURI(file).replace(/'/g, '%27'));
+    if (!file) return '';
+    const s = String(file);
+    if (s.charAt(0) === '/' || /^https?:\/\//i.test(s) || s.indexOf('data:') === 0) return s;
+    return window.resolveImageUrl ? window.resolveImageUrl(s, '../images/') : ('../images/' + encodeURI(s).replace(/'/g, '%27'));
   }
 
   function nextId(list) {
@@ -371,22 +382,30 @@
   }
 
   /* ── 이미지 옵션 (파일 + 업로드) ─────────────────── */
+  function dedupeOptions(list) {
+    const seen = new Set();
+    return list.filter(o => {
+      if (!o || !o.value || seen.has(o.value)) return false;
+      seen.add(o.value);
+      return true;
+    });
+  }
   function getImageOptions() {
     const uploads = Object.keys(uploadedImages || {});
-    return [
+    return dedupeOptions([
       ...getAllKnownImages().map(f => ({ value: f, label: f })),
       ...uploads.map(n => ({ value: uploadedImages[n], label: '업로드: ' + n })),
-    ];
+    ]);
   }
   function getBannerOptions() {
     const uploads = Object.keys(uploadedImages || {});
-    return [
+    return dedupeOptions([
       ...AVAILABLE_BANNERS.map(f => ({ value: f, label: f })),
       ...uploads.map(n => ({ value: uploadedImages[n], label: '업로드: ' + n })),
-    ];
+    ]);
   }
   function imageDisplayUrl(spec) {
-    return window.resolveImageUrl(spec, '../images/');
+    return imageUrl(spec);
   }
 
   async function refreshUploadedImages() {
@@ -402,14 +421,30 @@
 
   async function uploadImageForOption(file, options) {
     if (!file) throw new Error('파일이 없습니다.');
+    if (!file.type || !file.type.startsWith('image/')) throw new Error('이미지 파일만 업로드할 수 있습니다.');
+
+    const optimizeOpts = Object.assign({ maxDim: 1600, quality: 0.82, maxOutputBytes: 900 * 1024 }, options || {});
+    const opt = (typeof window.optimizeImageFile === 'function')
+      ? await window.optimizeImageFile(file, optimizeOpts)
+      : null;
+
     if (USE_BACKEND()) {
-      const d = await DataLayer.addUploadedImage(file);
+      const uploadFile = opt && opt.blob
+        ? new File([opt.blob], opt.name || file.name || ('image-' + Date.now() + '.webp'), { type: opt.mime || opt.blob.type || file.type })
+        : file;
+      const d = await DataLayer.addUploadedImage(uploadFile);
       if (!d || !d.url || !d.name) throw new Error('업로드 응답이 올바르지 않습니다.');
       uploadedImages[d.name] = d.url;
-      return { name: d.name, value: d.url, url: d.url, originalBytes: d.bytes || file.size || 0, optimizedBytes: d.bytes || file.size || 0 };
+      return {
+        name: d.name,
+        value: d.url,
+        url: d.url,
+        originalBytes: opt ? opt.originalBytes : (file.size || 0),
+        optimizedBytes: d.bytes || (opt ? opt.optimizedBytes : file.size || 0),
+      };
     }
 
-    const opt = await window.optimizeImageFile(file, options || { maxDim: 1600, quality: 0.82 });
+    if (!opt) throw new Error('이미지 최적화 기능을 사용할 수 없습니다.');
     const map = window.loadUploadedImages();
     const name = uniqueImageName(map, opt.name);
     map[name] = opt.dataUrl;
@@ -1995,21 +2030,28 @@
   /* ── 차량/배너 select 옵션 갱신 (이미지 업로드 후 호출) ── */
   function populateImageSelect() {
     const opts = getImageOptions();
+    const optionHtml = (list) => list.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('');
+    const ensureCurrent = (list, cur) => {
+      if (!cur || list.some(o => o.value === cur)) return list;
+      return [{ value: cur, label: '현재 저장값: ' + cur }, ...list];
+    };
+
     // 메인 이미지 select
     const sel = $('#cf_image');
     if (sel) {
       const cur = sel.value;
-      sel.innerHTML = opts.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('');
-      if (cur && opts.some(o => o.value === cur)) sel.value = cur;
+      const list = ensureCurrent(opts, cur);
+      sel.innerHTML = optionHtml(list);
+      if (cur) sel.value = cur;
       updateImagePreview('cfImagePreview', sel.value);
     }
     // 상세 페이지 통이미지 select — "사용 안 함" 옵션이 맨 위
     const dsel = $('#cf_detailImage');
     if (dsel) {
       const dcur = dsel.value;
-      dsel.innerHTML = '<option value="">사용 안 함 (위 구조화 필드만 표시)</option>'
-        + opts.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('');
-      if (dcur && opts.some(o => o.value === dcur)) dsel.value = dcur;
+      const list = ensureCurrent(opts, dcur);
+      dsel.innerHTML = '<option value="">사용 안 함 (위 구조화 필드만 표시)</option>' + optionHtml(list);
+      if (dcur) dsel.value = dcur;
       updateImagePreview('cfDetailImagePreview', dsel.value);
     }
   }
@@ -2057,36 +2099,36 @@
 
   /* ── 단일 파일 빠른 업로드 + 결과를 select 에 자동 선택 ── */
   async function quickUploadAndSelect(file, selectEl, options) {
-    if (!file || !file.type.startsWith('image/')) {
+    if (!file || !file.type || !file.type.startsWith('image/')) {
       toast('이미지 파일이 아닙니다.', 'error'); return null;
     }
     try {
-      const opt = await window.optimizeImageFile(file, options || { maxDim: 1600, quality: 0.82 });
-      const map = window.loadUploadedImages();
-      const total = calcStorageBytes(map);
-      if (total + opt.dataUrl.length > MAX_IMG_BYTES) {
-        toast(`용량 한도(${formatBytes(MAX_IMG_BYTES)}) 초과로 업로드 실패.`, 'error');
-        return null;
-      }
-      const name = uniqueImageName(map, opt.name);
-      map[name] = opt.dataUrl;
-      window.saveUploadedImages(map);
-      // 선택지 갱신
+      const uploaded = await uploadImageForOption(file, options || { maxDim: 1600, quality: 0.82, maxOutputBytes: 900 * 1024 });
+      if (!uploaded || !uploaded.value) throw new Error('업로드 결과가 없습니다.');
+
+      await refreshUploadedImages();
       populateImageSelect();
       populateBannerAddSelect();
-      // 미리보기 & select 값 적용
+
       if (selectEl) {
-        const val = 'uploaded:' + name;
+        const val = uploaded.value;
         const opts = Array.from(selectEl.options).map(o => o.value);
-        if (opts.includes(val)) selectEl.value = val;
-        // 해당 select 의 미리보기 id를 추론
+        if (!opts.includes(val)) {
+          const opt = document.createElement('option');
+          opt.value = val;
+          opt.textContent = '업로드: ' + (uploaded.name || val);
+          selectEl.insertBefore(opt, selectEl.firstChild);
+        }
+        selectEl.value = val;
         const previewId = (selectEl.id === 'cf_detailImage') ? 'cfDetailImagePreview' : 'cfImagePreview';
         updateImagePreview(previewId, selectEl.value);
       }
-      const savedKb = Math.max(0, Math.round((opt.originalBytes - opt.optimizedBytes) / 1024));
-      toast(`업로드 완료 — "${name}" (${savedKb}KB 절감)`);
-      return name;
+
+      const savedKb = Math.max(0, Math.round(((uploaded.originalBytes || 0) - (uploaded.optimizedBytes || 0)) / 1024));
+      toast(savedKb > 0 ? `업로드 완료 — "${uploaded.name}" (${savedKb}KB 절감)` : `업로드 완료 — "${uploaded.name}"`);
+      return uploaded.name;
     } catch (e) {
+      console.error(e);
       toast('업로드 실패: ' + (e.message || e), 'error');
       return null;
     }
