@@ -5,53 +5,53 @@
 
   <!-- ════════ 메인 / 카테고리 ════════ -->
   <url>
-    <loc>https://www.haetae-rentcar.com/</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.haetae-rentcar.com/" />
+    <loc>http://haetae1.com/</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="http://haetae1.com/" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_1.webp</image:loc>
+      <image:loc>http://haetae1.com/images/banner_1.webp</image:loc>
       <image:title>해태렌트카 메인 배너 — 광주 광산구 신창동 경차 월렌트 전문</image:title>
       <image:caption>주식회사 해태렌트카 광주지점 — 경차 월렌트·12개월 기간약정·중고차 장기렌트</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/monthly.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/monthly.html" />
+    <loc>http://haetae1.com/monthly.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/monthly.html" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/hero_monthly.webp</image:loc>
+      <image:loc>http://haetae1.com/images/hero_monthly.webp</image:loc>
       <image:title>월렌트 (1개월 단기) 차량 리스트</image:title>
       <image:caption>월 55만원~120만원대, 무심사·무보증 옵션 포함</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/longterm.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/longterm.html" />
+    <loc>http://haetae1.com/longterm.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/longterm.html" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/hero_longterm.webp</image:loc>
+      <image:loc>http://haetae1.com/images/hero_longterm.webp</image:loc>
       <image:title>12개월 기간약정 월렌트 차량 리스트</image:title>
       <image:caption>약정 기간 월 임대료 고정 할인, 무심사·무보증 옵션</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/used.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/used.html" />
+    <loc>http://haetae1.com/used.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/used.html" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/hero_used.webp</image:loc>
+      <image:loc>http://haetae1.com/images/hero_used.webp</image:loc>
       <image:title>중고차 장기렌트 차량 리스트</image:title>
       <image:caption>정기 점검·검증을 마친 중고차 운영, 신차 대비 낮은 월 임대료</image:caption>
     </image:image>
@@ -59,24 +59,24 @@
 
   <!-- ════════ 견적·회사·이용안내 ════════ -->
   <url>
-    <loc>https://www.haetae-rentcar.com/quote.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/quote.html" />
+    <loc>http://haetae1.com/quote.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/quote.html" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/about.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/about.html" />
+    <loc>http://haetae1.com/about.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/about.html" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/info.html</loc>
-    <xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/info.html" />
+    <loc>http://haetae1.com/info.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/info.html" />
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -84,19 +84,19 @@
 
   <!-- ════════ 법적 페이지 ════════ -->
   <url>
-    <loc>https://www.haetae-rentcar.com/business.html</loc>
+    <loc>http://haetae1.com/business.html</loc>
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.haetae-rentcar.com/terms.html</loc>
+    <loc>http://haetae1.com/terms.html</loc>
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://www.haetae-rentcar.com/privacy.html</loc>
+    <loc>http://haetae1.com/privacy.html</loc>
     <lastmod>2026-06-17T09:00:00+09:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

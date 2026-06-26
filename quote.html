@@ -15,15 +15,15 @@
   <meta name="geo.placename" content="광주광역시 광산구 신창동">
   <meta name="geo.position" content="35.1860;126.8050">
   <meta name="ICBM" content="35.1860, 126.8050">
-  <link rel="canonical" href="https://www.haetae-rentcar.com/quote.html">
-  <link rel="alternate" hreflang="ko-KR" href="https://www.haetae-rentcar.com/quote.html">
-  <link rel="alternate" hreflang="x-default" href="https://www.haetae-rentcar.com/quote.html">
+  <link rel="canonical" href="http://haetae1.com/quote.html">
+  <link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/quote.html">
+  <link rel="alternate" hreflang="x-default" href="http://haetae1.com/quote.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="해태렌트카">
   <meta property="og:title" content="광주 렌트카 견적 문의 — 24시간 접수·1시간 회신">
   <meta property="og:description" content="온라인 견적 24시간 / 062-714-1688 / 카카오톡 오픈채팅 상담 가능.">
-  <meta property="og:url" content="https://www.haetae-rentcar.com/quote.html">
-  <meta property="og:image" content="https://www.haetae-rentcar.com/images/banner_1.webp">
+  <meta property="og:url" content="http://haetae1.com/quote.html">
+  <meta property="og:image" content="http://haetae1.com/images/banner_1.webp">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="해태렌트카 견적문의">
@@ -31,7 +31,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="광주 렌트카 견적 문의 — 24시간 접수·1시간 회신">
   <meta name="twitter:description" content="온라인 견적 24시간 / 062-714-1688 / 카카오톡 오픈채팅 상담 가능.">
-  <meta name="twitter:image" content="https://www.haetae-rentcar.com/images/banner_1.webp">
+  <meta name="twitter:image" content="http://haetae1.com/images/banner_1.webp">
   <meta name="theme-color" content="#E53935">
   <meta name="format-detection" content="telephone=yes">
   <link rel="icon" href="favicon.ico" sizes="any">
@@ -415,44 +415,61 @@
         } catch (e) { }
       }
 
-      // ── 폼 드롭다운 옵션 동적 렌더 (관리자 변경 즉시 반영) ──
-      if (typeof loadFormOptions === 'function') {
-        const opts = loadFormOptions();
-        // 관리자 입력값(opts.*)이 select option 의 value/label 컨텍스트로 들어가므로 escape
-        const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
-        const fill = (id, items, placeholder, valueAlias) => {
-          const sel = document.getElementById(id);
-          if (!sel) return;
-          const current = sel.value;
-          // 카테고리: 표시 라벨과 value 분리 (기존 호환)
-          const html = [`<option value="" disabled ${current ? '' : 'selected'}>${esc(placeholder)}</option>`]
-            .concat((items || []).map(v => `<option value="${esc(v)}">${esc(v)}${valueAlias && valueAlias[v] ? ' (' + esc(valueAlias[v]) + ')' : ''}</option>`));
-          sel.innerHTML = html.join('');
-          if (current) sel.value = current;
-        };
-        fill('formCategory', opts.categories, '카테고리를 선택해주세요.');
-        fill('formRegion', opts.regions, '희망 지역');
-        fill('formPeriod', opts.periods, '희망 기간');
-        fill('formExperience', opts.experiences, '운전 경력');
-      }
+      // ── 폼 드롭다운 옵션 렌더: 관리자 form_options + 서버 hydration 반영 ──
+      const renderQuoteFormOptions = () => {
+        if (typeof renderRentcarFormOptions === 'function') {
+          renderRentcarFormOptions({
+            categoryId: 'formCategory',
+            regionId: 'formRegion',
+            periodId: 'formPeriod',
+            experienceId: 'formExperience',
+            categoryPlaceholder: '카테고리를 선택해주세요.',
+            regionPlaceholder: '희망 지역',
+            periodPlaceholder: '희망 기간',
+            experiencePlaceholder: '운전 경력'
+          });
+        }
+      };
+
+      renderQuoteFormOptions();
 
       // 카테고리 선택에 따라 차량 추천 목록 변경 + 상세페이지/URL 자동 채우기
       const updateCarSuggestions = typeof setupCarSuggestionInput === 'function'
         ? setupCarSuggestionInput({ categoryId: 'formCategory', carInputId: 'formCar', datalistId: 'formCarList' })
         : function () { };
 
-      if (typeof prefillQuoteFormFromQuery === 'function') {
-        prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions: updateCarSuggestions });
-        document.addEventListener('rentcar:hydrated', () => prefillQuoteFormFromQuery({ categoryId: 'formCategory', carInputId: 'formCar', updateSuggestions: updateCarSuggestions }));
-      }
+      const runQuotePrefill = () => {
+        if (typeof prefillQuoteFormFromQuery === 'function') {
+          prefillQuoteFormFromQuery({
+            categoryId: 'formCategory',
+            carInputId: 'formCar',
+            updateSuggestions: updateCarSuggestions
+          });
+        }
+      };
 
-      // ── FAQ 동적 렌더 ──
-      if (typeof loadFaq === 'function') {
+      runQuotePrefill();
+
+      // ── FAQ 동적 렌더: 서버 FAQ hydration 이후에도 다시 렌더 ──
+      const bindFaqToggle = () => {
+        document.querySelectorAll('.faq-item').forEach(item => {
+          const btn = item.querySelector('.faq-q');
+          if (!btn) return;
+          btn.onclick = () => {
+            const wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!wasOpen) item.classList.add('open');
+          };
+        });
+      };
+
+      const renderFaqList = () => {
+        if (typeof loadFaq !== 'function') return;
         const list = loadFaq();
         const wrap = document.getElementById('faqList');
-        if (wrap) {
-          const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-          wrap.innerHTML = list.map(f => `
+        if (!wrap) return;
+        const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+        wrap.innerHTML = list.map(f => `
         <div class="faq-item">
           <button class="faq-q" type="button">
             <span class="faq-q-text">${esc(f.q)}</span>
@@ -463,8 +480,17 @@
           <div class="faq-a">${esc(f.a)}</div>
         </div>
       `).join('');
-        }
-      }
+        bindFaqToggle();
+      };
+
+      renderFaqList();
+
+      document.addEventListener('rentcar:hydrated', () => {
+        renderQuoteFormOptions();
+        updateCarSuggestions();
+        runQuotePrefill();
+        renderFaqList();
+      });
 
       // 연락처 자동 하이픈
       const phone = document.getElementById('formPhone');
@@ -547,16 +573,6 @@
           submitBtn.textContent = oldText;
         }
       };
-
-      // FAQ 토글
-      document.querySelectorAll('.faq-item').forEach(item => {
-        const btn = item.querySelector('.faq-q');
-        btn.onclick = () => {
-          const wasOpen = item.classList.contains('open');
-          document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-          if (!wasOpen) item.classList.add('open');
-        };
-      });
     });
   </script>
 </body>

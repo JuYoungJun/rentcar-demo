@@ -7,51 +7,51 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
-    <loc>https://www.haetae-rentcar.com/</loc>
+    <loc>http://haetae1.com/</loc>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_1.webp</image:loc>
+      <image:loc>http://haetae1.com/images/banner_1.webp</image:loc>
       <image:title>해태렌트카 메인 배너 1</image:title>
       <image:caption>경차 월렌트 전문 — 광주광역시 광산구 신창동</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_2.webp</image:loc>
+      <image:loc>http://haetae1.com/images/banner_2.webp</image:loc>
       <image:title>해태렌트카 메인 배너 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_3.webp</image:loc>
+      <image:loc>http://haetae1.com/images/banner_3.webp</image:loc>
       <image:title>해태렌트카 메인 배너 3</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_4.webp</image:loc>
+      <image:loc>http://haetae1.com/images/banner_4.webp</image:loc>
       <image:title>해태렌트카 메인 배너 4</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://www.haetae-rentcar.com/images/banner_5.webp</image:loc>
+      <image:loc>http://haetae1.com/images/banner_5.webp</image:loc>
       <image:title>해태렌트카 메인 배너 5</image:title>
     </image:image>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/monthly.html</loc>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/morning.webp</image:loc><image:title>모닝 (경차 월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/ray.webp</image:loc><image:title>레이 (경차 월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/casper.webp</image:loc><image:title>캐스퍼 (경차 월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/avante.webp</image:loc><image:title>아반떼 (월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/avante-2.webp</image:loc><image:title>아반떼 신형 (월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/k5.webp</image:loc><image:title>K5 (월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/sonata.webp</image:loc><image:title>소나타 (월렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/sonata-edge.webp</image:loc><image:title>소나타 디 엣지</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/seltos.webp</image:loc><image:title>셀토스 (SUV 월렌트)</image:title></image:image>
+    <loc>http://haetae1.com/monthly.html</loc>
+    <image:image><image:loc>http://haetae1.com/images/morning.webp</image:loc><image:title>모닝 (경차 월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/ray.webp</image:loc><image:title>레이 (경차 월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/casper.webp</image:loc><image:title>캐스퍼 (경차 월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/avante.webp</image:loc><image:title>아반떼 (월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/avante-2.webp</image:loc><image:title>아반떼 신형 (월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/k5.webp</image:loc><image:title>K5 (월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/sonata.webp</image:loc><image:title>소나타 (월렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/sonata-edge.webp</image:loc><image:title>소나타 디 엣지</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/seltos.webp</image:loc><image:title>셀토스 (SUV 월렌트)</image:title></image:image>
   </url>
 
   <url>
-    <loc>https://www.haetae-rentcar.com/used.html</loc>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/carnival.webp</image:loc><image:title>카니발 4세대 (중고차 장기렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/sorento.webp</image:loc><image:title>쏘렌토 (중고차 장기렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/santafe.webp</image:loc><image:title>싼타페 (중고차 장기렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur.webp</image:loc><image:title>그랜져 (중고차 장기렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur-2.webp</image:loc><image:title>그랜져 (중고차 장기렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/grandeur-gn7.webp</image:loc><image:title>그랜져 GN7 (장기렌트)</image:title></image:image>
-    <image:image><image:loc>https://www.haetae-rentcar.com/images/g80.webp</image:loc><image:title>G80 RG3 (프리미엄 장기렌트)</image:title></image:image>
+    <loc>http://haetae1.com/used.html</loc>
+    <image:image><image:loc>http://haetae1.com/images/carnival.webp</image:loc><image:title>카니발 4세대 (중고차 장기렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/sorento.webp</image:loc><image:title>쏘렌토 (중고차 장기렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/santafe.webp</image:loc><image:title>싼타페 (중고차 장기렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/grandeur.webp</image:loc><image:title>그랜져 (중고차 장기렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/grandeur-2.webp</image:loc><image:title>그랜져 (중고차 장기렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/grandeur-gn7.webp</image:loc><image:title>그랜져 GN7 (장기렌트)</image:title></image:image>
+    <image:image><image:loc>http://haetae1.com/images/g80.webp</image:loc><image:title>G80 RG3 (프리미엄 장기렌트)</image:title></image:image>
   </url>
 </urlset>

@@ -1,27 +1,72 @@
 {
   "name": "해태렌트카 — 월렌트·장기렌트 전문",
   "short_name": "해태렌트카",
-  "description": "월렌트·기간약정월렌트(6~24개월)·중고차 장기렌트 전문, 무심사·무보증 차량 다수 보유, 광주 본점 + 전국 8개 지점.",
-  "start_url": "./",
-  "scope": "./",
-  "id": "./",
+  "description": "광주 광산구 신창동 영업장의 월렌트·12개월 기간약정·중고차 장기렌트 전문. 무심사·무보증 차량 상담 가능.",
+  "start_url": "/",
+  "scope": "/",
+  "id": "http://haetae1.com/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#E53935",
   "lang": "ko-KR",
   "dir": "ltr",
-  "categories": ["business", "travel", "automotive", "shopping"],
+  "categories": [
+    "business",
+    "travel",
+    "automotive",
+    "shopping"
+  ],
   "icons": [
-    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "월렌트",           "short_name": "월렌트",   "url": "monthly.html",  "description": "1개월 단위 단기 렌트 차량 리스트" },
-    { "name": "기간약정월렌트",     "short_name": "장기",     "url": "longterm.html", "description": "6~24개월 약정 장기 렌트" },
-    { "name": "중고차 장기렌트",     "short_name": "중고",     "url": "used.html",     "description": "검증된 중고차 장기 렌트" },
-    { "name": "견적문의",          "short_name": "견적",     "url": "quote.html",    "description": "24시간 온라인 견적 접수" }
+    {
+      "name": "월렌트",
+      "short_name": "월렌트",
+      "url": "/monthly.html",
+      "description": "1개월 단위 단기 렌트 차량 리스트"
+    },
+    {
+      "name": "기간약정월렌트",
+      "short_name": "장기",
+      "url": "/longterm.html",
+      "description": "6~24개월 약정 장기 렌트"
+    },
+    {
+      "name": "중고차 장기렌트",
+      "short_name": "중고",
+      "url": "/used.html",
+      "description": "검증된 중고차 장기 렌트"
+    },
+    {
+      "name": "견적문의",
+      "short_name": "견적",
+      "url": "/quote.html",
+      "description": "24시간 온라인 견적 접수"
+    }
   ]
 }

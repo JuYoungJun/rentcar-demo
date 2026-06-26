@@ -2,28 +2,28 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko-KR">
   <title>해태렌트카 — 경차 월렌트 전문 (광주광역시 광산구)</title>
   <subtitle>주식회사 해태렌트카 광주지점 — 월렌트·12개월 기간약정·중고차 장기렌트</subtitle>
-  <link href="https://www.haetae-rentcar.com/" />
-  <link rel="self" href="https://www.haetae-rentcar.com/atom.xml" />
-  <id>https://www.haetae-rentcar.com/</id>
+  <link href="http://haetae1.com/" />
+  <link rel="self" href="http://haetae1.com/atom.xml" />
+  <id>http://haetae1.com/</id>
   <updated>2026-06-17T09:00:00+09:00</updated>
   <rights>© 2026 주식회사 해태렌트카 광주지점</rights>
   <author>
     <name>주식회사 해태렌트카 광주지점</name>
-    <email>contact@haetae-rentcar.com</email>
-    <uri>https://www.haetae-rentcar.com/</uri>
+    <email>contact@haetae1.com</email>
+    <uri>http://haetae1.com/</uri>
   </author>
-  <icon>https://www.haetae-rentcar.com/favicon.ico</icon>
-  <logo>https://www.haetae-rentcar.com/images/logo.png</logo>
+  <icon>http://haetae1.com/favicon.ico</icon>
+  <logo>http://haetae1.com/images/logo.png</logo>
   <category term="자동차 임대업" />
   <category term="월렌트" />
   <category term="장기렌트" />
   <category term="광주 렌트카" />
-  <generator uri="https://www.haetae-rentcar.com/">Haetae Rentcar Static Atom</generator>
+  <generator uri="http://haetae1.com/">Haetae Rentcar Static Atom</generator>
 
   <entry>
     <title>월렌트 (1개월 단기) — 경차 월 55만원~</title>
-    <link href="https://www.haetae-rentcar.com/monthly.html" />
-    <id>https://www.haetae-rentcar.com/monthly.html</id>
+    <link href="http://haetae1.com/monthly.html" />
+    <id>http://haetae1.com/monthly.html</id>
     <updated>2026-06-17T09:00:00+09:00</updated>
     <published>2026-06-17T09:00:00+09:00</published>
     <category term="월렌트" />
@@ -32,8 +32,8 @@
 
   <entry>
     <title>12개월 기간약정 월렌트 — 약정 할인</title>
-    <link href="https://www.haetae-rentcar.com/longterm.html" />
-    <id>https://www.haetae-rentcar.com/longterm.html</id>
+    <link href="http://haetae1.com/longterm.html" />
+    <id>http://haetae1.com/longterm.html</id>
     <updated>2026-06-17T09:00:00+09:00</updated>
     <published>2026-06-17T09:00:00+09:00</published>
     <category term="장기렌트" />
@@ -42,8 +42,8 @@
 
   <entry>
     <title>중고차 장기렌트 — 검증된 중고차 월 70만원~</title>
-    <link href="https://www.haetae-rentcar.com/used.html" />
-    <id>https://www.haetae-rentcar.com/used.html</id>
+    <link href="http://haetae1.com/used.html" />
+    <id>http://haetae1.com/used.html</id>
     <updated>2026-06-17T09:00:00+09:00</updated>
     <published>2026-06-17T09:00:00+09:00</published>
     <category term="중고차" />
@@ -52,8 +52,8 @@
 
   <entry>
     <title>회사소개 — 주식회사 해태렌트카 광주지점</title>
-    <link href="https://www.haetae-rentcar.com/about.html" />
-    <id>https://www.haetae-rentcar.com/about.html</id>
+    <link href="http://haetae1.com/about.html" />
+    <id>http://haetae1.com/about.html</id>
     <updated>2026-06-17T09:00:00+09:00</updated>
     <published>2022-12-13T00:00:00+09:00</published>
     <category term="회사소개" />
@@ -62,8 +62,8 @@
 
   <entry>
     <title>견적 문의 — 24시간 접수·1시간 회신</title>
-    <link href="https://www.haetae-rentcar.com/quote.html" />
-    <id>https://www.haetae-rentcar.com/quote.html</id>
+    <link href="http://haetae1.com/quote.html" />
+    <id>http://haetae1.com/quote.html</id>
     <updated>2026-06-17T09:00:00+09:00</updated>
     <published>2026-06-17T09:00:00+09:00</published>
     <category term="견적" />

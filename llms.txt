@@ -8,34 +8,34 @@
 
 ## 서비스
 
-- [월렌트 (1개월 단기)](https://www.haetae-rentcar.com/monthly.html): 1개월 단위 자유 연장·해지, 경차·준중형·중형·SUV, 월 55만원~120만원대, 무심사·무보증 옵션
-- [12개월 기간약정 월렌트](https://www.haetae-rentcar.com/longterm.html): 약정 기간 월 임대료 고정 할인 (월 40만원~), 신용등급 부담 없이 무심사·무보증으로 이용 가능
-- [중고차 장기렌트](https://www.haetae-rentcar.com/used.html): 정기 점검·검증을 마친 중고차 운영, 신차 대비 낮은 월 임대료, 카니발·쏘렌토·싼타페·그랜져·G80 등
-- [견적 문의](https://www.haetae-rentcar.com/quote.html): 24시간 온라인 접수, 영업시간 기준 1시간 이내 회신
-- [이용안내](https://www.haetae-rentcar.com/info.html): 상담 → 차량 선택 → 계약 → 인수 4단계 절차, 필요 서류, 보험 안내
+- [월렌트 (1개월 단기)](http://haetae1.com/monthly.html): 1개월 단위 자유 연장·해지, 경차·준중형·중형·SUV, 월 55만원~120만원대, 무심사·무보증 옵션
+- [12개월 기간약정 월렌트](http://haetae1.com/longterm.html): 약정 기간 월 임대료 고정 할인 (월 40만원~), 신용등급 부담 없이 무심사·무보증으로 이용 가능
+- [중고차 장기렌트](http://haetae1.com/used.html): 정기 점검·검증을 마친 중고차 운영, 신차 대비 낮은 월 임대료, 카니발·쏘렌토·싼타페·그랜져·G80 등
+- [견적 문의](http://haetae1.com/quote.html): 24시간 온라인 접수, 영업시간 기준 1시간 이내 회신
+- [이용안내](http://haetae1.com/info.html): 상담 → 차량 선택 → 계약 → 인수 4단계 절차, 필요 서류, 보험 안내
 
 ## 회사 정보
 
-- [회사소개](https://www.haetae-rentcar.com/about.html): 주식회사 해태렌트카 광주지점의 미션과 약속하는 가치
-- [사업자정보](https://www.haetae-rentcar.com/business.html): 법인등록·사업자등록번호·소재지·연락처·운영시간·개인정보 보호책임자 안내
-- [이용약관](https://www.haetae-rentcar.com/terms.html): 자동차 임대차 계약 조건, 회원·이용자의 권리·의무
-- [개인정보처리방침](https://www.haetae-rentcar.com/privacy.html): 수집·이용 목적, 보유 기간, 정보주체 권리, 권익침해 구제 4기관 안내
+- [회사소개](http://haetae1.com/about.html): 주식회사 해태렌트카 광주지점의 미션과 약속하는 가치
+- [사업자정보](http://haetae1.com/business.html): 법인등록·사업자등록번호·소재지·연락처·운영시간·개인정보 보호책임자 안내
+- [이용약관](http://haetae1.com/terms.html): 자동차 임대차 계약 조건, 회원·이용자의 권리·의무
+- [개인정보처리방침](http://haetae1.com/privacy.html): 수집·이용 목적, 보유 기간, 정보주체 권리, 권익침해 구제 4기관 안내
 
 ## 연락 채널
 
 - [대표 전화](tel:+82-62-714-1688): 062-714-1688 (영업시간 내 직접 상담)
 - [모바일](tel:+82-10-6611-6633): 010-6611-6633
 - [카카오톡 오픈채팅](https://open.kakao.com/o/sPZhlPzi): 24시간 실시간 메시지 상담 (영업시간 내 즉시 회신)
-- [대표 이메일](mailto:contact@haetae-rentcar.com): contact@haetae-rentcar.com
-- [개인정보 이메일](mailto:privacy@haetae-rentcar.com): privacy@haetae-rentcar.com
+- [대표 이메일](mailto:contact@haetae1.com): contact@haetae1.com
+- [개인정보 이메일](mailto:privacy@haetae1.com): privacy@haetae1.com
 
 ## Optional
 
-- [확장 컨텍스트 (llms-full.txt)](https://www.haetae-rentcar.com/llms-full.txt): 차종별 가격표, FAQ 10개, 보험 안내, 이용 절차 세부 (AI 답변 길이 여유 시 참조)
-- [Sitemap (인덱스)](https://www.haetae-rentcar.com/sitemap.xml): 정적 페이지·차량·이미지 sub-sitemap 통합
-- [차량 RSS (동적)](https://www.haetae-rentcar.com/api/rss.php): 관리자 등록 차량 30대 자동 갱신 피드
-- [서비스 RSS](https://www.haetae-rentcar.com/rss.xml): 카테고리 서비스 정적 피드
-- [Atom 1.0 피드](https://www.haetae-rentcar.com/atom.xml): Atom 표준 피드
-- [robots.txt](https://www.haetae-rentcar.com/robots.txt): 검색·AI 봇 크롤 정책
-- [ai.txt](https://www.haetae-rentcar.com/ai.txt): AI 학습·인용 정책 명시
-- [보안 신고 (RFC 9116)](https://www.haetae-rentcar.com/.well-known/security.txt): 보안 취약점 신고 채널
+- [확장 컨텍스트 (llms-full.txt)](http://haetae1.com/llms-full.txt): 차종별 가격표, FAQ 10개, 보험 안내, 이용 절차 세부 (AI 답변 길이 여유 시 참조)
+- [Sitemap (인덱스)](http://haetae1.com/sitemap.xml): 정적 페이지·차량·이미지 sub-sitemap 통합
+- [차량 RSS (동적)](http://haetae1.com/api/rss.php): 관리자 등록 차량 30대 자동 갱신 피드
+- [서비스 RSS](http://haetae1.com/rss.xml): 카테고리 서비스 정적 피드
+- [Atom 1.0 피드](http://haetae1.com/atom.xml): Atom 표준 피드
+- [robots.txt](http://haetae1.com/robots.txt): 검색·AI 봇 크롤 정책
+- [ai.txt](http://haetae1.com/ai.txt): AI 학습·인용 정책 명시
+- [보안 신고 (RFC 9116)](http://haetae1.com/.well-known/security.txt): 보안 취약점 신고 채널

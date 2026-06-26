@@ -382,9 +382,9 @@
     industry: '서비스업 / 렌트카',
     address: '광주광역시 광산구 북문대로433번길 45 (신창동)',
     headOfficeAddress: '전라남도 영광군 법성면 굴비로1길 146, 101호',
-    contactEmail: 'contact@haetae-rentcar.com',
+    contactEmail: 'contact@haetae1.com',
     privacyOfficerName: '이창은',
-    privacyEmail: 'privacy@haetae-rentcar.com',
+    privacyEmail: 'privacy@haetae1.com',
     privacyPhone: '010-6611-6633',
     kakaoChatUrl: 'https://open.kakao.com/o/sPZhlPzi',
   };
@@ -510,8 +510,8 @@
      폼 옵션 (지역/기간/운전경력/카테고리) — quote/index 폼 드롭다운
      ══════════════════════════════ */
   const DEFAULT_FORM_OPTIONS = {
-    categories: ['월렌트', '12개월 기간약정', '중고차 장기렌트', '법인 렌트'],
-    regions: ['서울', '경기', '인천', '부산', '대구', '광주', '대전', '제주'],
+    categories: ['월렌트', '12개월 기간약정', '중고차 장기렌트'],
+    regions: ['광주', '전남', '전북', '서울', '경기', '인천', '부산', '대구', '대전', '제주'],
     periods: ['1개월', '3개월', '6개월', '12개월', '24개월', '36개월', '48개월'],
     experiences: ['1년 미만', '1~3년', '3~5년', '5년 이상'],
   };
@@ -540,6 +540,55 @@
   window.resetFormOptions = function () {
     localStorage.removeItem(FORM_OPT_KEY);
   };
+
+  /* ── 공개 견적폼 select 옵션 렌더러 ──
+     관리자 > 폼 옵션 저장값(form_options)을 quote.html / index.html 하단 상담폼에 반영.
+     서버 settings hydration 이후에도 다시 호출하면 변경값이 즉시 화면에 반영됨. */
+  window.renderRentcarFormOptions = function (config) {
+    config = config || {};
+    const opts = (typeof window.loadFormOptions === 'function') ? window.loadFormOptions() : {};
+    const esc = window.escHtml || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c])));
+
+    const fill = (id, items, placeholder) => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+
+      const current = sel.value;
+      const cleanItems = Array.from(new Set((Array.isArray(items) ? items : []).map(v => String(v || '').trim()).filter(Boolean)));
+      const hasCurrent = current && cleanItems.includes(current);
+
+      sel.innerHTML = [
+        `<option value="" disabled ${hasCurrent ? '' : 'selected'}>${esc(placeholder)}</option>`,
+        ...cleanItems.map(v => `<option value="${esc(v)}">${esc(v)}</option>`)
+      ].join('');
+
+      if (hasCurrent) {
+        sel.value = current;
+        sel.classList.add('selected');
+      } else {
+        sel.selectedIndex = 0;
+        sel.classList.remove('selected');
+      }
+    };
+
+    if (config.categoryId !== false) {
+      fill(config.categoryId || 'formCategory', opts.categories, config.categoryPlaceholder || '카테고리를 선택해주세요.');
+    }
+    if (config.regionId) {
+      fill(config.regionId, opts.regions, config.regionPlaceholder || '희망 지역');
+    }
+    if (config.periodId) {
+      fill(config.periodId, opts.periods, config.periodPlaceholder || '희망 기간');
+    }
+    if (config.experienceId) {
+      fill(config.experienceId, opts.experiences, config.experiencePlaceholder || '운전 경력');
+    }
+
+    return opts;
+  };
+
 
   /* ══════════════════════════════
      약관 / 개인정보처리방침 — 섹션 단위 편집

@@ -1,8 +1,8 @@
 # ═════════════════════════════════════════════════════════════════
 # 해태렌트카 (Haetae Rentcar) — robots.txt
-# 사이트: https://www.haetae-rentcar.com/
+# 사이트: http://haetae1.com/
 # 운영자: 주식회사 해태렌트카 광주지점 (사업자등록번호 476-85-02430)
-# 연락: contact@haetae-rentcar.com / 062-714-1688
+# 연락: contact@haetae1.com / 062-714-1688
 #
 # 정책 요약:
 #   · 일반 검색엔진 + AI 답변엔진 모두 콘텐츠 인용 허용
@@ -17,13 +17,14 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Allow: /api/rss.php
 Disallow: /api/
 Disallow: /includes/
 Disallow: /docs/
 Disallow: /db/
 Disallow: /.git/
 Disallow: /.github/
-Disallow: /.well-known/
+Allow: /.well-known/security.txt
 Disallow: /*?*sort=
 Disallow: /*?*utm_
 Disallow: /*?*fbclid=
@@ -37,12 +38,12 @@ Crawl-delay: 1
 User-agent: Googlebot
 Allow: /
 Disallow: /admin/
+Allow: /api/rss.php
 Disallow: /api/
 Disallow: /includes/
 
 User-agent: Googlebot-Image
 Allow: /images/
-Disallow: /images/uploads/
 Disallow: /admin/
 
 User-agent: Googlebot-News
@@ -57,6 +58,7 @@ Allow: /
 User-agent: Yeti
 Allow: /
 Disallow: /admin/
+Allow: /api/rss.php
 Disallow: /api/
 Disallow: /includes/
 
@@ -207,16 +209,16 @@ Disallow: /admin/
 # ─────────────────────────────────────────────────────────────────
 # Sitemaps — 다중 등록 (search engine 자동 인지)
 # ─────────────────────────────────────────────────────────────────
-Sitemap: https://www.haetae-rentcar.com/sitemap.xml
-Sitemap: https://www.haetae-rentcar.com/sitemap-pages.xml
-Sitemap: https://www.haetae-rentcar.com/sitemap-vehicles.xml
-Sitemap: https://www.haetae-rentcar.com/sitemap-images.xml
+Sitemap: http://haetae1.com/sitemap.xml
+Sitemap: http://haetae1.com/sitemap-pages.xml
+Sitemap: http://haetae1.com/sitemap-vehicles.xml
+Sitemap: http://haetae1.com/sitemap-images.xml
 
 # RSS/Atom 피드 (일부 검색엔진 자동 구독)
 # Note: robots.txt 표준에 RSS 디렉티브 없음. 참고용 주석.
-# RSS: https://www.haetae-rentcar.com/rss.xml
-# Atom: https://www.haetae-rentcar.com/atom.xml
-# Dynamic: https://www.haetae-rentcar.com/api/rss.php
+# RSS: http://haetae1.com/rss.xml
+# Atom: http://haetae1.com/atom.xml
+# Dynamic: http://haetae1.com/api/rss.php
 
 # Host (Yandex 등 일부 검색엔진이 정규 도메인 식별용으로 사용)
-Host: https://www.haetae-rentcar.com
+Host: http://haetae1.com

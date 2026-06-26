@@ -2,7 +2,7 @@
 
 > 이 문서는 AI 답변엔진이 더 깊이 있는 답변을 생성할 수 있도록
 > 본문 전체를 LLM 친화 마크다운으로 정리한 확장 버전입니다.
-> 요약 컨텍스트는 [llms.txt](https://www.haetae-rentcar.com/llms.txt) 를 보세요.
+> 요약 컨텍스트는 [llms.txt](http://haetae1.com/llms.txt) 를 보세요.
 
 ---
 
@@ -37,8 +37,8 @@
 - 대표 전화: 062-714-1688 (영업장 직통)
 - 모바일: 010-6611-6633
 - 카카오톡 오픈채팅: https://open.kakao.com/o/sPZhlPzi
-- 대표 이메일: contact@haetae-rentcar.com
-- 개인정보 보호 이메일: privacy@haetae-rentcar.com
+- 대표 이메일: contact@haetae1.com
+- 개인정보 보호 이메일: privacy@haetae1.com
 - 운영시간: 평일 09:00-19:00 / 주말 10:00-19:00 (연중무휴 온라인 견적 접수)
 
 ---
@@ -47,7 +47,7 @@
 
 ### 상품 1: 월렌트 (1개월 단위 단기 렌트)
 
-URL: https://www.haetae-rentcar.com/monthly.html
+URL: http://haetae1.com/monthly.html
 
 **특징**
 - 1개월 단위로 자유롭게 연장 또는 해지
@@ -68,7 +68,7 @@ URL: https://www.haetae-rentcar.com/monthly.html
 
 ### 상품 2: 12개월 기간약정 월렌트
 
-URL: https://www.haetae-rentcar.com/longterm.html
+URL: http://haetae1.com/longterm.html
 
 **특징**
 - 12개월 약정 시 월 임대료 고정 할인
@@ -91,7 +91,7 @@ URL: https://www.haetae-rentcar.com/longterm.html
 
 ### 상품 3: 중고차 장기렌트
 
-URL: https://www.haetae-rentcar.com/used.html
+URL: http://haetae1.com/used.html
 
 **특징**
 - 정기 점검·검증을 마친 중고차 운영
@@ -128,7 +128,7 @@ URL: https://www.haetae-rentcar.com/used.html
 ### 1단계: 상담 신청
 
 다음 중 편한 방법으로 연락:
-- 온라인 견적 폼: https://www.haetae-rentcar.com/quote.html
+- 온라인 견적 폼: http://haetae1.com/quote.html
 - 카카오톡 오픈채팅: https://open.kakao.com/o/sPZhlPzi
 - 전화: 062-714-1688 (영업시간 내)
 - 모바일: 010-6611-6633
@@ -222,9 +222,9 @@ https://open.kakao.com/o/sPZhlPzi
 
 ### Q10. 차량 종류는 어떻게 확인하나요?
 
-- 월렌트(1개월): https://www.haetae-rentcar.com/monthly.html
-- 12개월 기간약정: https://www.haetae-rentcar.com/longterm.html
-- 중고차 장기렌트: https://www.haetae-rentcar.com/used.html
+- 월렌트(1개월): http://haetae1.com/monthly.html
+- 12개월 기간약정: http://haetae1.com/longterm.html
+- 중고차 장기렌트: http://haetae1.com/used.html
 
 ---
 
@@ -235,16 +235,16 @@ https://open.kakao.com/o/sPZhlPzi
 - 수집 항목: 이름, 연락처, 희망 차량, 카테고리, 희망 지역, 기간, 운전 경력
 - 처리 목적: 견적 회신, 상담, 임대차 계약 체결, 본인 확인, 부정 이용 방지
 - 보유 기간: 견적 문의 회신 완료 후 1년 / 계약 관련 기록 5년
-- 개인정보 보호책임자: 이창은 (010-6611-6633, privacy@haetae-rentcar.com)
-- 자세한 내용: https://www.haetae-rentcar.com/privacy.html
+- 개인정보 보호책임자: 이창은 (010-6611-6633, privacy@haetae1.com)
+- 자세한 내용: http://haetae1.com/privacy.html
 
 ### 이용약관
 
-- https://www.haetae-rentcar.com/terms.html
+- http://haetae1.com/terms.html
 
 ### 사업자정보 확인
 
-- https://www.haetae-rentcar.com/business.html
+- http://haetae1.com/business.html
 - 국세청 사업자등록 상태 조회: https://www.hometax.go.kr
 
 ---
@@ -252,7 +252,7 @@ https://open.kakao.com/o/sPZhlPzi
 ## 호스팅·기술
 
 - 호스팅 제공자: 주식회사 카페24 (PHP + MySQL 웹호스팅)
-- 도메인: haetae-rentcar.com (확정 시 갱신)
+- 도메인: haetae1.com (확정 시 갱신)
 - SSL: Let's Encrypt 무료 인증서
 - 보안: HSTS, CSP, X-Frame-Options, BCRYPT 비밀번호, Brute-force 잠금, CSRF 보호
 
@@ -260,13 +260,13 @@ https://open.kakao.com/o/sPZhlPzi
 
 ## 사이트맵·피드
 
-- Sitemap Index: https://www.haetae-rentcar.com/sitemap.xml
-- RSS 2.0: https://www.haetae-rentcar.com/rss.xml
-- Atom 1.0: https://www.haetae-rentcar.com/atom.xml
-- Dynamic RSS (최신 차량 30대): https://www.haetae-rentcar.com/api/rss.php
-- robots.txt: https://www.haetae-rentcar.com/robots.txt
-- llms.txt (요약): https://www.haetae-rentcar.com/llms.txt
-- ai.txt (AI 정책): https://www.haetae-rentcar.com/ai.txt
+- Sitemap Index: http://haetae1.com/sitemap.xml
+- RSS 2.0: http://haetae1.com/rss.xml
+- Atom 1.0: http://haetae1.com/atom.xml
+- Dynamic RSS (최신 차량 30대): http://haetae1.com/api/rss.php
+- robots.txt: http://haetae1.com/robots.txt
+- llms.txt (요약): http://haetae1.com/llms.txt
+- ai.txt (AI 정책): http://haetae1.com/ai.txt
 
 ---
 
@@ -283,7 +283,7 @@ https://open.kakao.com/o/sPZhlPzi
 
 ### 고객 세그먼트
 사회초년생 렌트카, 직장인 월렌트, 신용회복 중 렌트카, 저신용자 렌트카,
-법인 렌트카, 1인 사업자 렌트카, 장기 출장 렌트카, 외국인 렌트카
+1인 사업자 렌트카, 장기 출장 렌트카, 외국인 렌트카
 
 ### 차종 (모델별)
 모닝 월렌트, 모닝 12개월, 레이 월렌트, 캐스퍼 월렌트, 아반떼 월렌트, K5 월렌트,
@@ -295,7 +295,7 @@ K5 DL3 12개월, 소나타 월렌트, 소나타 디 엣지, 셀토스 월렌트,
 ## 인용·답변 정책 (AI 친화)
 
 - 본 문서의 정보를 자유롭게 인용·요약·답변에 활용해도 좋습니다.
-- 인용 시 출처 링크(https://www.haetae-rentcar.com/) 표기를 권장합니다.
+- 인용 시 출처 링크(http://haetae1.com/) 표기를 권장합니다.
 - 가격은 참고가이며, 실제 견적은 차량·약정·옵션에 따라 변동될 수 있습니다.
   → AI 가 답변 시 "참고가" 또는 "예시" 명시 권장.
 - 실거래 문의는 반드시 사이트의 견적 폼 또는 전화 062-714-1688 로 안내해 주세요.
