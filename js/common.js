@@ -1192,16 +1192,34 @@
     let s = String(spec).trim();
     if (!s) return '';
 
-    // 이미 잘못 만들어진 경로 복구
-    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
+    // 전체 URL 안에 중복 경로가 들어간 경우 복구
+    // http://haetae1.com/images//images/uploads/a.webp
+    // → http://haetae1.com/images/uploads/a.webp
+    s = s.replace(/(https?:\/\/[^/]+)\/images\/+\/images\/uploads\//i, '$1/images/uploads/');
+    s = s.replace(/(https?:\/\/[^/]+)\/images\/+images\/uploads\//i, '$1/images/uploads/');
+
+    // 경로만 들어온 경우 복구
+    // /images//images/uploads/a.webp → /images/uploads/a.webp
+    // /images/images/uploads/a.webp  → /images/uploads/a.webp
+    // images//images/uploads/a.webp  → /images/uploads/a.webp
+    // images/images/uploads/a.webp   → /images/uploads/a.webp
+    s = s.replace(/^\/images\/+\/images\/uploads\//i, '/images/uploads/');
     s = s.replace(/^\/images\/+images\/uploads\//i, '/images/uploads/');
     s = s.replace(/^images\/+\/images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
 
-    // 서버 업로드 이미지 상대경로 보정
-    if (/^images\/uploads\//i.test(s)) return '/' + s;
+    // 혹시 /images/uploads 앞에 슬래시가 과하게 들어간 경우
+    s = s.replace(/^\/+images\/uploads\//i, '/images/uploads/');
 
-    // ../images/uploads/... 보정
-    if (/^\.\.\/images\/uploads\//i.test(s)) return '/' + s.replace(/^\.\.\//, '');
+    // 서버 업로드 이미지 상대경로는 루트 절대경로로 통일
+    if (/^images\/uploads\//i.test(s)) {
+      return '/' + s;
+    }
+
+    // ../images/uploads/... 형태도 루트 절대경로로 통일
+    if (/^\.\.\/images\/uploads\//i.test(s)) {
+      return '/' + s.replace(/^\.\.\//, '');
+    }
 
     return s;
   };
