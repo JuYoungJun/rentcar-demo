@@ -7,6 +7,12 @@ cors();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+function no_store_headers(): void {
+  header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+  header('Pragma: no-cache');
+  header('Expires: 0');
+}
+
 const PUBLIC_SETTING_KEYS = [
   'site',
   'business',
@@ -22,6 +28,7 @@ const PUBLIC_SETTING_KEYS = [
 ];
 
 if ($method === 'GET') {
+  no_store_headers();
   $key = (string)($_GET['key'] ?? '');
 
   if ($key) {

@@ -11,6 +11,12 @@ cors();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+function no_store_headers(): void {
+  header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+  header('Pragma: no-cache');
+  header('Expires: 0');
+}
+
 function normalize_car_payload(array $b): array {
   $name  = trim((string)($b['name'] ?? ''));
   $price = (int)($b['price'] ?? 0);
@@ -62,6 +68,7 @@ function normalize_car_payload(array $b): array {
 }
 
 if ($method === 'GET') {
+  no_store_headers();
   $rows = db()->query('SELECT * FROM cars ORDER BY sort_order ASC, id ASC')->fetchAll();
   foreach ($rows as &$r) {
     $r['categories'] = json_decode($r['categories'] ?? '[]', true) ?: [];

@@ -17,6 +17,12 @@ cors();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $sess = null;
 
+function no_store_headers(): void {
+  header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+  header('Pragma: no-cache');
+  header('Expires: 0');
+}
+
 function norm_values(array $values): array {
   if (!$values) return [];
 
@@ -37,6 +43,7 @@ function norm_values(array $values): array {
 }
 
 if ($method === 'GET') {
+  no_store_headers();
   $summary = $_GET['summary'] ?? '';
 
   if ($summary !== 'weekly') {

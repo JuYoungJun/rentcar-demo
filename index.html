@@ -30,9 +30,9 @@
   <meta name="naver-site-verification" content="REPLACE_WITH_NAVER_VERIFICATION_TOKEN">
   <meta name="msvalidate.01" content="REPLACE_WITH_BING_VERIFICATION_TOKEN">
   <meta name="yandex-verification" content="REPLACE_WITH_YANDEX_VERIFICATION_TOKEN">
-  <link rel="canonical" href="http://haetae1.com/">
-  <link rel="alternate" hreflang="ko-KR" href="http://haetae1.com/">
-  <link rel="alternate" hreflang="x-default" href="http://haetae1.com/">
+  <link rel="canonical" href="https://haetae1.com/">
+  <link rel="alternate" hreflang="ko-KR" href="https://haetae1.com/">
+  <link rel="alternate" hreflang="x-default" href="https://haetae1.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="해태렌트카">
   <meta property="og:title" content="광주 렌트카·렌터카 — 해태렌트카 (광산구 신창동)">
@@ -398,9 +398,10 @@
 
       const loadTop5 = () => {
         if (isBackendHost()) {
-          fetch('/api/activity.php?summary=weekly', {
+          fetch('/api/activity.php?summary=weekly&ts=' + Date.now(), {
             method: 'GET',
             credentials: 'same-origin',
+            cache: 'no-store',
           })
             .then(r => r.json())
             .then(d => {

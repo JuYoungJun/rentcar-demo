@@ -620,7 +620,7 @@
     intro: '본 약관은 해태렌트카(이하 "회사")가 운영하는 웹사이트를 통해 제공하는 차량 임대차 정보 안내·견적 상담 서비스의 이용 조건과 절차에 관한 사항을 규정함을 목적으로 합니다.',
     sections: [
       { title: '제1조 (목적)', body: '본 약관은 회사가 제공하는 서비스의 이용에 관하여 회사와 이용자 사이의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.' },
-      { title: '제2조 (서비스의 내용)', body: '회사는 월렌트, 기간약정월렌트(6개월~24개월), 중고차 장기렌트, 법인 렌트 등 차량 정보 제공·견적 상담·차량 임대차 계약 알선 서비스를 제공합니다.' },
+      { title: '제2조 (서비스의 내용)', body: '회사는 월렌트, 기간약정월렌트(6개월~24개월), 중고차 장기렌트 등 차량 정보 제공·견적 상담·차량 임대차 계약 알선 서비스를 제공합니다.' },
       { title: '제3조 (서비스 이용 신청)', body: '이용자는 웹사이트 견적 문의 양식에 필수 항목을 기입하고 개인정보 수집·이용에 동의함으로써 서비스 이용을 신청할 수 있습니다.' },
       { title: '제4조 (이용자의 의무)', body: '이용자는 허위 정보 등록, 타인의 정보 도용, 회사의 업무 방해 행위 등을 하여서는 안 됩니다.' },
       { title: '제5조 (책임 제한)', body: '회사는 천재지변, 전쟁, 기간통신사업자의 서비스 중지 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 책임이 면제됩니다.' },
@@ -1670,7 +1670,7 @@
     const API = '/api';
     // 1) 차량 목록
     try {
-      const res = await fetch(API + '/cars.php', { credentials: 'same-origin' });
+      const res = await fetch(API + '/cars.php?ts=' + Date.now(), { credentials: 'same-origin', cache: 'no-store' });
       if (res.ok) {
         const d = await res.json();
         if (d && d.ok && Array.isArray(d.cars)) {
@@ -1682,7 +1682,7 @@
 
     // 2) 사이트 설정 (site / about / business)
     try {
-      const res = await fetch(API + '/settings.php', { credentials: 'same-origin' });
+      const res = await fetch(API + '/settings.php?ts=' + Date.now(), { credentials: 'same-origin', cache: 'no-store' });
       if (res.ok) {
         const d = await res.json();
         if (d && d.ok && d.settings) {
