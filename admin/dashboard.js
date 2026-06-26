@@ -324,9 +324,25 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  function normalizeStoredImageValue(value) {
+    let s = String(value || '').trim();
+    if (!s) return '';
+
+    // 이미 잘못 만들어진 업로드 경로 복구
+    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^\/images\/+images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^images\/+\/images\/uploads\//i, '/images/uploads/');
+
+    // 업로드 파일은 DB에 항상 /images/uploads/... 형태로 저장
+    if (/^images\/uploads\//i.test(s)) return '/' + s;
+    if (/^\.\.\/images\/uploads\//i.test(s)) return '/' + s.replace(/^\.\.\//, '');
+
+    return s;
+  }
+
   function imageUrl(file) {
-    if (!file) return '';
-    const s = String(file);
+    const s = normalizeStoredImageValue(file);
+    if (!s) return '';
     if (s.charAt(0) === '/' || /^https?:\/\//i.test(s) || s.indexOf('data:') === 0) return s;
     return window.resolveImageUrl ? window.resolveImageUrl(s, '../images/') : ('../images/' + encodeURI(s).replace(/'/g, '%27'));
   }
@@ -624,7 +640,7 @@
       year: yr || undefined,
       price,
       badge: $('#cf_badge').value.trim() || undefined,
-      image: $('#cf_image').value,
+      image: normalizeStoredImageValue($('#cf_image').value),
       category: cats,
       tags,
       // detail.html 노출 필드
@@ -634,7 +650,7 @@
       mileage: parseInt($('#cf_mileage').value, 10) || undefined,
       description: $('#cf_description').value.trim() || undefined,
       features: features.length ? features : undefined,
-      detailImage: $('#cf_detailImage').value || undefined,
+      detailImage: normalizeStoredImageValue($('#cf_detailImage').value) || undefined,
       // 통계
       views: parseInt($('#cf_views').value, 10) || 0,
       inquiries: parseInt($('#cf_inquiries').value, 10) || 0,
@@ -2125,8 +2141,12 @@
       }
 
       const savedKb = Math.max(0, Math.round(((uploaded.originalBytes || 0) - (uploaded.optimizedBytes || 0)) / 1024));
-      toast(savedKb > 0 ? `업로드 완료 — "${uploaded.name}" (${savedKb}KB 절감)` : `업로드 완료 — "${uploaded.name}"`);
-      return uploaded.name;
+      toast(
+        savedKb > 0
+          ? `업로드 완료 — "${uploaded.name}" (${savedKb}KB 절감). 차량 저장 버튼을 눌러야 공개 페이지에 반영됩니다.`
+          : `업로드 완료 — "${uploaded.name}". 차량 저장 버튼을 눌러야 공개 페이지에 반영됩니다.`
+      );
+      return uploaded.value || uploaded.name;
     } catch (e) {
       console.error(e);
       toast('업로드 실패: ' + (e.message || e), 'error');

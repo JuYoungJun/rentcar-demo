@@ -1186,9 +1186,31 @@
   };
 
   /* ── 이미지 URL 리졸버 (uploaded:, data:, http://, 일반 파일명 처리) ── */
+  window.normalizeImagePath = function (spec) {
+    if (!spec) return '';
+
+    let s = String(spec).trim();
+    if (!s) return '';
+
+    // 이미 잘못 만들어진 경로 복구
+    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^\/images\/+images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^images\/+\/images\/uploads\//i, '/images/uploads/');
+
+    // 서버 업로드 이미지 상대경로 보정
+    if (/^images\/uploads\//i.test(s)) return '/' + s;
+
+    // ../images/uploads/... 보정
+    if (/^\.\.\/images\/uploads\//i.test(s)) return '/' + s.replace(/^\.\.\//, '');
+
+    return s;
+  };
+
   window.resolveImageUrl = function (spec, baseDir) {
     if (!spec) return '';
-    const s = String(spec);
+
+    const s = window.normalizeImagePath(spec);
+    if (!s) return '';
 
     // 서버 업로드 이미지/절대 URL/data URL은 그대로 사용
     if (/^(https?:)?\/\//i.test(s) || s.indexOf('data:') === 0 || s.charAt(0) === '/') return s;

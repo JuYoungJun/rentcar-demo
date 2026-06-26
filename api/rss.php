@@ -16,7 +16,7 @@ require_once __DIR__ . '/_db.php';
 header('Content-Type: application/rss+xml; charset=utf-8');
 header('Cache-Control: public, max-age=1800');
 
-$site = 'https://www.haetae-rentcar.com';
+$site = 'http://haetae1.com';
 
 try {
   $rows = db()->query(
@@ -32,6 +32,22 @@ try {
 
 function rss_escape(?string $s): string {
   return htmlspecialchars((string)$s, ENT_QUOTES | ENT_XML1, 'UTF-8');
+}
+
+function rss_image_url(string $site, ?string $image): string {
+  $img = trim((string)$image);
+  if ($img === '') return $site . '/images/detail-page.webp';
+
+  $img = preg_replace('#^images/+images/uploads/#i', '/images/uploads/', $img);
+  $img = preg_replace('#^/images/+images/uploads/#i', '/images/uploads/', $img);
+  $img = preg_replace('#^images/+/images/uploads/#i', '/images/uploads/', $img);
+
+  if (preg_match('#^https?://#i', $img)) return $img;
+  if (strpos($img, '/images/uploads/') === 0) return $site . $img;
+  if (preg_match('#^images/uploads/#i', $img)) return $site . '/' . $img;
+  if ($img[0] === '/') return $site . $img;
+
+  return $site . '/images/' . $img;
 }
 
 $pubDate = date(DATE_RSS);
@@ -66,7 +82,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
   $priceStr = number_format($price);
   $catLabel = ['monthly' => '월렌트', 'longterm' => '12개월 기간약정', 'used' => '중고차 장기렌트'][$primary] ?? $primary;
   $title = rss_escape($r['name']) . ' — ' . $catLabel . ' (월 ' . $priceStr . '원)';
-  $imageUrl = $site . '/images/' . rss_escape($r['image'] ?? 'detail-page.webp');
+  $imageUrl = rss_escape(rss_image_url($site, $r['image'] ?? 'detail-page.webp'));
   $pub = date(DATE_RSS, strtotime($r['updated_at']));
   $desc = '차량명: ' . $r['name'] . '. 카테고리: ' . $catLabel . '. 월 임대료: ' . $priceStr . '원';
   if (!empty($r['fuel_type']))    $desc .= '. 연료: ' . $r['fuel_type'];
