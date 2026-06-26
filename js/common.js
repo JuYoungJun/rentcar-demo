@@ -1208,7 +1208,7 @@
     s = s.replace(/^images\/+\/images\/uploads\//i, '/images/uploads/');
     s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
 
-    // 혹시 /images/uploads 앞에 슬래시가 과하게 들어간 경우
+    // /images/uploads 앞에 슬래시가 과하게 들어간 경우 보정
     s = s.replace(/^\/+images\/uploads\//i, '/images/uploads/');
 
     // 서버 업로드 이미지 상대경로는 루트 절대경로로 통일
