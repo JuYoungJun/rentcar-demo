@@ -38,7 +38,10 @@
       }
       if (typeof window.loadBusiness === 'function') {
         const b = window.loadBusiness();
-        if (b && b.companyName) { out.companyName = b.companyName; out.legalName = b.companyName; }
+        if (b && b.companyName) {
+          out.companyName = b.companyName;
+          out.legalName = b.companyName;
+        }
         if (b && b.address) out.streetAddress = b.address;
         if (b && b.contactEmail) out.email = b.contactEmail;
       }
@@ -48,8 +51,61 @@
 
   function abs(url) {
     if (!url) return '';
-    if (/^https?:\/\//i.test(url)) return url;
-    return SITE + (String(url).charAt(0) === '/' ? url : '/' + url);
+    const s = String(url).trim();
+    if (/^https?:\/\//i.test(s)) return s;
+    return SITE + (s.charAt(0) === '/' ? s : '/' + s);
+  }
+
+  /*
+    차량 이미지 URL 보정 함수
+
+    정상 처리:
+    - morning.webp
+      → http://haetae1.com/images/morning.webp
+
+    - /images/uploads/2026/06/file.webp
+      → http://haetae1.com/images/uploads/2026/06/file.webp
+
+    - images/uploads/2026/06/file.webp
+      → http://haetae1.com/images/uploads/2026/06/file.webp
+
+    - 잘못 만들어진 /images//images/uploads/...
+      → http://haetae1.com/images/uploads/...
+  */
+  function carImg(src) {
+    let s = String(src || '').trim();
+
+    if (!s) return abs('/images/logo.png');
+
+    // 이미 잘못 만들어진 경로 복구
+    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^\/images\/+images\/uploads\//i, '/images/uploads/');
+
+    // 외부 URL
+    if (/^https?:\/\//i.test(s)) return s;
+
+    // protocol-relative URL
+    if (/^\/\//.test(s)) return s;
+
+    // data URL은 SEO 이미지로 부적절하므로 로고로 대체
+    if (s.indexOf('data:') === 0) return abs('/images/logo.png');
+
+    // 예전 localStorage 업로드 포맷은 SEO에서는 로고로 대체
+    if (s.indexOf('uploaded:') === 0) return abs('/images/logo.png');
+
+    // 서버 업로드 이미지: /images/uploads/...
+    if (s.charAt(0) === '/') return abs(s);
+
+    // 서버 업로드 이미지: images/uploads/...
+    if (/^images\/uploads\//i.test(s)) return abs('/' + s);
+
+    // 혹시 ../images/uploads/... 로 들어온 경우
+    if (/^\.\.\/images\/uploads\//i.test(s)) {
+      return abs('/' + s.replace(/^\.\.\//, ''));
+    }
+
+    // 기본 차량 이미지: morning.webp, ray.webp 등
+    return abs('/images/' + s.replace(/^images\//i, ''));
   }
 
   function breadcrumb(items) {
@@ -68,6 +124,7 @@
     const orgId = SITE + '/#organization';
     const businessId = SITE + '/#localbusiness';
     const siteId = SITE + '/#website';
+
     return [
       {
         '@type': 'Organization',
@@ -77,7 +134,15 @@
         url: SITE + '/',
         logo: abs('/images/logo.png'),
         sameAs: i.socialLinks,
-        contactPoint: [{ '@type': 'ContactPoint', telephone: i.phone, contactType: 'customer service', areaServed: 'KR', availableLanguage: ['ko'] }]
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            telephone: i.phone,
+            contactType: 'customer service',
+            areaServed: 'KR',
+            availableLanguage: ['ko']
+          }
+        ]
       },
       {
         '@type': ['LocalBusiness', 'AutoRental'],
@@ -97,12 +162,29 @@
           postalCode: i.postalCode,
           addressCountry: 'KR'
         },
-        geo: { '@type': 'GeoCoordinates', latitude: i.latitude, longitude: i.longitude },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: i.latitude,
+          longitude: i.longitude
+        },
         openingHoursSpecification: [
-          { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '19:00' },
-          { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday', 'Sunday'], opens: '10:00', closes: '19:00' }
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            opens: '09:00',
+            closes: '19:00'
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Saturday', 'Sunday'],
+            opens: '10:00',
+            closes: '19:00'
+          }
         ],
-        areaServed: i.areaServed.map(a => ({ '@type': 'AdministrativeArea', name: a })),
+        areaServed: i.areaServed.map(a => ({
+          '@type': 'AdministrativeArea',
+          name: a
+        })),
         sameAs: i.socialLinks,
         keywords: i.keywordsBlob
       },
@@ -112,10 +194,15 @@
         url: SITE + '/',
         name: i.companyName,
         inLanguage: 'ko-KR',
-        publisher: { '@id': orgId },
+        publisher: {
+          '@id': orgId
+        },
         potentialAction: {
           '@type': 'SearchAction',
-          target: { '@type': 'EntryPoint', urlTemplate: SITE + '/quote.html?q={search_term_string}' },
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: SITE + '/quote.html?q={search_term_string}'
+          },
           'query-input': 'required name=search_term_string'
         }
       }
@@ -131,13 +218,30 @@
       name: opts.title || '해태렌트카',
       description: opts.description || '광주 렌트카·렌터카 전문 해태렌트카',
       inLanguage: 'ko-KR',
-      isPartOf: { '@id': SITE + '/#website' },
-      about: { '@id': SITE + '/#localbusiness' },
-      publisher: { '@id': SITE + '/#organization' },
-      primaryImageOfPage: { '@type': 'ImageObject', url: abs(opts.image || '/images/banner_1.webp') }
+      isPartOf: {
+        '@id': SITE + '/#website'
+      },
+      about: {
+        '@id': SITE + '/#localbusiness'
+      },
+      publisher: {
+        '@id': SITE + '/#organization'
+      },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: abs(opts.image || '/images/banner_1.webp')
+      }
     };
+
     if (opts.breadcrumb) node.breadcrumb = opts.breadcrumb;
-    if (opts.speakableSelectors && opts.speakableSelectors.length) node.speakable = { '@type': 'SpeakableSpecification', cssSelector: opts.speakableSelectors };
+
+    if (opts.speakableSelectors && opts.speakableSelectors.length) {
+      node.speakable = {
+        '@type': 'SpeakableSpecification',
+        cssSelector: opts.speakableSelectors
+      };
+    }
+
     return node;
   }
 
@@ -150,40 +254,87 @@
       name: opts.name || '렌트카 상담',
       description: opts.description || '광주 렌트카 상담 서비스',
       url: abs(opts.url || '/quote.html'),
-      provider: { '@id': SITE + '/#localbusiness' },
-      offers: { '@type': 'AggregateOffer', priceCurrency: 'KRW', lowPrice: String(opts.lowPrice || 400000), highPrice: String(opts.highPrice || 1500000), availability: 'https://schema.org/InStock' }
+      provider: {
+        '@id': SITE + '/#localbusiness'
+      },
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'KRW',
+        lowPrice: String(opts.lowPrice || 400000),
+        highPrice: String(opts.highPrice || 1500000),
+        availability: 'https://schema.org/InStock'
+      }
     };
   }
 
   function vehicleList(cars, fromCategory, listUrl) {
     cars = Array.isArray(cars) ? cars : [];
+
     return {
       '@type': 'ItemList',
       '@id': abs(listUrl || '/') + '#itemlist',
       numberOfItems: cars.length,
-      itemListElement: cars.map((car, i) => ({ '@type': 'ListItem', position: i + 1, url: abs('/detail.html?id=' + car.id + '&from=' + (fromCategory || 'monthly')), name: car.name, image: abs('/images/' + (car.image || 'logo.png')) }))
+      itemListElement: cars.map((car, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: abs('/detail.html?id=' + car.id + '&from=' + (fromCategory || 'monthly')),
+        name: car.name,
+        image: carImg(car.image)
+      }))
     };
   }
 
   function vehicleProduct(car, fromCategory) {
     car = car || {};
     const url = '/detail.html?id=' + (car.id || '') + '&from=' + (fromCategory || 'monthly');
+
     return {
       '@type': ['Product', 'Vehicle'],
       '@id': abs(url) + '#product',
       name: car.name || '렌트 차량',
       url: abs(url),
-      image: abs('/images/' + (car.image || 'logo.png')),
+      image: carImg(car.image),
       description: car.description || '해태렌트카 차량 상담',
-      offers: { '@type': 'Offer', priceCurrency: 'KRW', price: String(car.price || 0), availability: 'https://schema.org/InStock', seller: { '@id': SITE + '/#localbusiness' } }
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'KRW',
+        price: String(car.price || 0),
+        availability: 'https://schema.org/InStock',
+        seller: {
+          '@id': SITE + '/#localbusiness'
+        }
+      }
     };
   }
 
   function faq(faqUrl) {
     let list = [];
-    try { if (typeof window.loadFaq === 'function') list = window.loadFaq(); } catch (e) { }
-    if (!Array.isArray(list) || !list.length) list = [{ q: '광주 렌트카 상담은 어떻게 신청하나요?', a: '홈페이지 견적문의 또는 전화 상담으로 신청하실 수 있습니다.' }];
-    return { '@type': 'FAQPage', '@id': abs(faqUrl || '/quote.html') + '#faq', mainEntity: list.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+
+    try {
+      if (typeof window.loadFaq === 'function') list = window.loadFaq();
+    } catch (e) { }
+
+    if (!Array.isArray(list) || !list.length) {
+      list = [
+        {
+          q: '광주 렌트카 상담은 어떻게 신청하나요?',
+          a: '홈페이지 견적문의 또는 전화 상담으로 신청하실 수 있습니다.'
+        }
+      ];
+    }
+
+    return {
+      '@type': 'FAQPage',
+      '@id': abs(faqUrl || '/quote.html') + '#faq',
+      mainEntity: list.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a
+        }
+      }))
+    };
   }
 
   function howto(url) {
@@ -192,34 +343,94 @@
       '@id': abs(url || '/info.html') + '#howto',
       name: '해태렌트카 렌트 이용 절차',
       step: [
-        { '@type': 'HowToStep', position: 1, name: '상담 신청', text: '온라인 견적 폼 또는 전화로 조건을 알려주세요.', url: abs('/quote.html') },
-        { '@type': 'HowToStep', position: 2, name: '차량 선택', text: '용도와 예산에 맞는 차량을 선택합니다.', url: abs('/monthly.html') },
-        { '@type': 'HowToStep', position: 3, name: '계약 체결', text: '필요 서류 확인 후 계약을 체결합니다.', url: abs('/info.html') },
-        { '@type': 'HowToStep', position: 4, name: '차량 인수', text: '지점 방문 또는 협의된 장소에서 차량을 인수합니다.', url: abs('/about.html') }
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: '상담 신청',
+          text: '온라인 견적 폼 또는 전화로 조건을 알려주세요.',
+          url: abs('/quote.html')
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: '차량 선택',
+          text: '용도와 예산에 맞는 차량을 선택합니다.',
+          url: abs('/monthly.html')
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: '계약 체결',
+          text: '필요 서류 확인 후 계약을 체결합니다.',
+          url: abs('/info.html')
+        },
+        {
+          '@type': 'HowToStep',
+          position: 4,
+          name: '차량 인수',
+          text: '지점 방문 또는 협의된 장소에서 차량을 인수합니다.',
+          url: abs('/about.html')
+        }
       ]
     };
   }
 
   function inject(extra) {
     const graph = coreGraph(info()).concat(extra || []);
+
     document.querySelectorAll('script[data-seo="haetae"]').forEach(n => n.remove());
+
     const el = document.createElement('script');
     el.type = 'application/ld+json';
     el.setAttribute('data-seo', 'haetae');
-    el.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+    el.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': graph
+    });
+
     document.head.appendChild(el);
   }
 
   window.HaetaeSEO = {
-    SITE, abs, info, inject, breadcrumb, webpage, service, vehicleList, vehicleProduct, faq, howto,
+    SITE,
+    abs,
+    carImg,
+    info,
+    inject,
+    breadcrumb,
+    webpage,
+    service,
+    vehicleList,
+    vehicleProduct,
+    faq,
+    howto,
     auto: function (pageKey) {
       if (pageKey === 'home') {
         return [
-          webpage({ url: '/', title: '광주 렌트카·렌터카 — 해태렌트카', description: '광주 렌트카·렌터카 전문 해태렌트카. 월렌트, 기간약정, 중고차 장기렌트 상담.', breadcrumb: breadcrumb([{ name: '홈', url: '/' }]), speakableSelectors: ['h1', '.section-heading'] }),
-          service({ url: '/monthly.html', serviceType: '월렌트', name: '광주 월렌트', description: '1개월 단위 월렌트 상담', lowPrice: 550000 }),
-          service({ url: '/longterm.html', serviceType: '기간약정월렌트', name: '광주 기간약정 렌트', description: '12개월 기간약정 렌트 상담', lowPrice: 400000 })
+          webpage({
+            url: '/',
+            title: '광주 렌트카·렌터카 — 해태렌트카',
+            description: '광주 렌트카·렌터카 전문 해태렌트카. 월렌트, 기간약정, 중고차 장기렌트 상담.',
+            breadcrumb: breadcrumb([{ name: '홈', url: '/' }]),
+            speakableSelectors: ['h1', '.section-heading']
+          }),
+          service({
+            url: '/monthly.html',
+            serviceType: '월렌트',
+            name: '광주 월렌트',
+            description: '1개월 단위 월렌트 상담',
+            lowPrice: 550000
+          }),
+          service({
+            url: '/longterm.html',
+            serviceType: '기간약정월렌트',
+            name: '광주 기간약정 렌트',
+            description: '12개월 기간약정 렌트 상담',
+            lowPrice: 400000
+          })
         ];
       }
+
       return [];
     }
   };
