@@ -328,14 +328,34 @@
     let s = String(value || '').trim();
     if (!s) return '';
 
-    // 이미 잘못 만들어진 업로드 경로 복구
-    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
+    // 전체 URL 안에 중복 경로가 들어간 경우 복구
+    // http://haetae1.com/images//images/uploads/a.webp
+    // → http://haetae1.com/images/uploads/a.webp
+    s = s.replace(/(https?:\/\/[^/]+)\/images\/+\/images\/uploads\//i, '$1/images/uploads/');
+    s = s.replace(/(https?:\/\/[^/]+)\/images\/+images\/uploads\//i, '$1/images/uploads/');
+
+    // 경로만 들어온 경우 복구
+    // /images//images/uploads/a.webp → /images/uploads/a.webp
+    // /images/images/uploads/a.webp  → /images/uploads/a.webp
+    // images//images/uploads/a.webp  → /images/uploads/a.webp
+    // images/images/uploads/a.webp   → /images/uploads/a.webp
+    s = s.replace(/^\/images\/+\/images\/uploads\//i, '/images/uploads/');
     s = s.replace(/^\/images\/+images\/uploads\//i, '/images/uploads/');
     s = s.replace(/^images\/+\/images\/uploads\//i, '/images/uploads/');
+    s = s.replace(/^images\/+images\/uploads\//i, '/images/uploads/');
+
+    // /images/uploads 앞에 슬래시가 과하게 들어간 경우
+    s = s.replace(/^\/+images\/uploads\//i, '/images/uploads/');
 
     // 업로드 파일은 DB에 항상 /images/uploads/... 형태로 저장
-    if (/^images\/uploads\//i.test(s)) return '/' + s;
-    if (/^\.\.\/images\/uploads\//i.test(s)) return '/' + s.replace(/^\.\.\//, '');
+    if (/^images\/uploads\//i.test(s)) {
+      return '/' + s;
+    }
+
+    // ../images/uploads/... 형태도 /images/uploads/... 로 통일
+    if (/^\.\.\/images\/uploads\//i.test(s)) {
+      return '/' + s.replace(/^\.\.\//, '');
+    }
 
     return s;
   }

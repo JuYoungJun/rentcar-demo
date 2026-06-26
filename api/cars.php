@@ -17,6 +17,40 @@ function no_store_headers(): void {
   header('Expires: 0');
 }
 
+
+function normalize_image_path_value($value): ?string {
+  $s = trim((string)$value);
+  if ($s === '') return null;
+
+  // 전체 URL 안의 중복 경로 복구
+  // http://haetae1.com/images//images/uploads/a.webp
+  // → http://haetae1.com/images/uploads/a.webp
+  $s = preg_replace('#(https?://[^/]+)/images/+/?images/uploads/#i', '$1/images/uploads/', $s);
+
+  // 경로만 들어온 중복 경로 복구
+  // /images//images/uploads/a.webp → /images/uploads/a.webp
+  // /images/images/uploads/a.webp  → /images/uploads/a.webp
+  // images//images/uploads/a.webp  → /images/uploads/a.webp
+  // images/images/uploads/a.webp   → /images/uploads/a.webp
+  $s = preg_replace('#^/images/+/?images/uploads/#i', '/images/uploads/', $s);
+  $s = preg_replace('#^images/+/?images/uploads/#i', '/images/uploads/', $s);
+
+  // /images/uploads 앞 슬래시 정리
+  $s = preg_replace('#^/+images/uploads/#i', '/images/uploads/', $s);
+
+  // images/uploads/... 는 /images/uploads/... 로 통일
+  if (preg_match('#^images/uploads/#i', $s)) {
+    $s = '/' . $s;
+  }
+
+  // ../images/uploads/... 도 /images/uploads/... 로 통일
+  if (preg_match('#^\.\./images/uploads/#i', $s)) {
+    $s = '/' . preg_replace('#^\.\./#', '', $s);
+  }
+
+  return mb_substr($s, 0, 255);
+}
+
 function normalize_car_payload(array $b): array {
   $name  = trim((string)($b['name'] ?? ''));
   $price = (int)($b['price'] ?? 0);
@@ -46,17 +80,15 @@ function normalize_car_payload(array $b): array {
     json_out(['ok' => false, 'message' => '주행거리는 0 이상이어야 합니다'], 400);
   }
 
-  $image = trim((string)($b['image'] ?? ''));
-  $detailImage = trim((string)($b['detailImage'] ?? ''));
-  if (mb_strlen($image) > 255) $image = mb_substr($image, 0, 255);
-  if (mb_strlen($detailImage) > 255) $detailImage = mb_substr($detailImage, 0, 255);
+  $image = normalize_image_path_value($b['image'] ?? '');
+  $detailImage = normalize_image_path_value($b['detailImage'] ?? '');
 
   return [
     'name' => $name,
     'year' => $year,
     'price' => $price,
     'badge' => mb_substr((string)($b['badge'] ?? ''), 0, 20) ?: null,
-    'image' => $image !== '' ? $image : null,
+    'image' => $image,
     'category' => $cats,
     'tags' => isset($b['tags']) && is_array($b['tags']) ? $b['tags'] : [],
     'fuelType' => $b['fuelType'] ?? null,
@@ -65,7 +97,7 @@ function normalize_car_payload(array $b): array {
     'mileage' => $mileage,
     'description' => $b['description'] ?? null,
     'features' => isset($b['features']) && is_array($b['features']) ? $b['features'] : [],
-    'detailImage' => $detailImage !== '' ? $detailImage : null,
+    'detailImage' => $detailImage,
     'views' => max(0, (int)($b['views'] ?? 0)),
     'inquiries' => max(0, (int)($b['inquiries'] ?? 0)),
     'contracts' => max(0, (int)($b['contracts'] ?? 0)),
