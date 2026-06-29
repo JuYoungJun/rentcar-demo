@@ -1,10 +1,10 @@
 /* 해태렌트카 — SEO / GEO / AEO 구조화 데이터
-   현재 운영 대표 URL: http://haetae1.com
+   현재 운영 대표 URL: https://haetae1.com
    SSL 적용 후 SITE만 https://haetae1.com 으로 변경하면 됩니다. */
 (function () {
   'use strict';
 
-  const SITE = 'http://haetae1.com';
+  const SITE = 'https://haetae1.com';
 
   const DEFAULT_INFO = {
     companyName: '주식회사 해태렌트카 광주지점',
@@ -61,16 +61,16 @@
 
     정상 처리:
     - morning.webp
-      → http://haetae1.com/images/morning.webp
+      → https://haetae1.com/images/morning.webp
 
     - /images/uploads/2026/06/file.webp
-      → http://haetae1.com/images/uploads/2026/06/file.webp
+      → https://haetae1.com/images/uploads/2026/06/file.webp
 
     - images/uploads/2026/06/file.webp
-      → http://haetae1.com/images/uploads/2026/06/file.webp
+      → https://haetae1.com/images/uploads/2026/06/file.webp
 
     - 잘못 만들어진 /images//images/uploads/...
-      → http://haetae1.com/images/uploads/...
+      → https://haetae1.com/images/uploads/...
   */
   function carImg(src) {
     let s = String(src || '').trim();

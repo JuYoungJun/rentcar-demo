@@ -8,15 +8,15 @@
 -->
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>http://haetae1.com/sitemap-pages.xml</loc>
+    <loc>https://haetae1.com/sitemap-pages.xml</loc>
     <lastmod>2026-06-17</lastmod>
   </sitemap>
   <sitemap>
-    <loc>http://haetae1.com/sitemap-vehicles.xml</loc>
+    <loc>https://haetae1.com/sitemap-vehicles.xml</loc>
     <lastmod>2026-06-17</lastmod>
   </sitemap>
   <sitemap>
-    <loc>http://haetae1.com/sitemap-images.xml</loc>
+    <loc>https://haetae1.com/sitemap-images.xml</loc>
     <lastmod>2026-06-17</lastmod>
   </sitemap>
 </sitemapindex>

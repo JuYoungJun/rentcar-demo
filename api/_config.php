@@ -34,8 +34,8 @@ define('LOCKOUT_WINDOW',       900);    // 실패 카운트 집계 윈도우 (15
 define('ALLOWED_ORIGINS', [
   // 'https://www.haetae-rentcar.com',
   // 'https://haetae-rentcar.com',
-  'http://www.haetae1.com',
-  'http://haetae1.com',
+  'https://www.haetae1.com',
+  'https://haetae1.com',
   // 로컬 개발 시 주석 해제:
   // 'http://localhost:8000',
   // 'http://127.0.0.1:8000',
@@ -46,8 +46,8 @@ define('ALLOWED_ORIGINS', [
 define('PUBLIC_FORM_ALLOWED_HOSTS', [
   // 'www.haetae-rentcar.com',
   // 'haetae-rentcar.com',
-  'http://www.haetae1.com',
-  'http://haetae1.com',
+  'https://www.haetae1.com',
+  'https://haetae1.com',
   'localhost',
   '127.0.0.1',
 ]);

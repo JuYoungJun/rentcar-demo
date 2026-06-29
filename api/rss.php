@@ -16,7 +16,7 @@ require_once __DIR__ . '/_db.php';
 header('Content-Type: application/rss+xml; charset=utf-8');
 header('Cache-Control: public, max-age=1800');
 
-$site = 'http://haetae1.com';
+$site = 'https://haetae1.com';
 
 try {
   $rows = db()->query(

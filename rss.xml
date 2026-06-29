@@ -5,8 +5,8 @@
      xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>해태렌트카 — 경차 월렌트 전문 (광주광역시 광산구)</title>
-    <link>http://haetae1.com/</link>
-    <atom:link href="http://haetae1.com/rss.xml" rel="self" type="application/rss+xml" />
+    <link>https://haetae1.com/</link>
+    <atom:link href="https://haetae1.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>주식회사 해태렌트카 광주지점 — 월렌트(1개월)·12개월 기간약정·중고차 장기렌트. 무심사·무보증 옵션 보유. 사회초년생·직장인 환영. 062-714-1688</description>
     <language>ko-KR</language>
     <copyright>© 2026 주식회사 해태렌트카 광주지점. All rights reserved.</copyright>
@@ -20,9 +20,9 @@
     <category>광주 렌트카</category>
     <ttl>60</ttl>
     <image>
-      <url>http://haetae1.com/images/logo.png</url>
+      <url>https://haetae1.com/images/logo.png</url>
       <title>해태렌트카</title>
-      <link>http://haetae1.com/</link>
+      <link>https://haetae1.com/</link>
       <width>120</width>
       <height>48</height>
     </image>
@@ -32,8 +32,8 @@
     <!-- ════════ 서비스 카테고리 피드 ════════ -->
     <item>
       <title>월렌트 (1개월 단기) — 모닝·레이·캐스퍼 월 55만원~</title>
-      <link>http://haetae1.com/monthly.html</link>
-      <guid isPermaLink="true">http://haetae1.com/monthly.html</guid>
+      <link>https://haetae1.com/monthly.html</link>
+      <guid isPermaLink="true">https://haetae1.com/monthly.html</guid>
       <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
       <category>월렌트</category>
       <dc:creator>해태렌트카 광주지점</dc:creator>
@@ -46,8 +46,8 @@
 
     <item>
       <title>12개월 기간약정 월렌트 — 약정 할인 + 무심사·무보증</title>
-      <link>http://haetae1.com/longterm.html</link>
-      <guid isPermaLink="true">http://haetae1.com/longterm.html</guid>
+      <link>https://haetae1.com/longterm.html</link>
+      <guid isPermaLink="true">https://haetae1.com/longterm.html</guid>
       <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
       <category>장기렌트</category>
       <dc:creator>해태렌트카 광주지점</dc:creator>
@@ -59,8 +59,8 @@
 
     <item>
       <title>중고차 장기렌트 — 검증된 중고차 월 70만원~</title>
-      <link>http://haetae1.com/used.html</link>
-      <guid isPermaLink="true">http://haetae1.com/used.html</guid>
+      <link>https://haetae1.com/used.html</link>
+      <guid isPermaLink="true">https://haetae1.com/used.html</guid>
       <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
       <category>중고차</category>
       <dc:creator>해태렌트카 광주지점</dc:creator>
@@ -72,8 +72,8 @@
 
     <item>
       <title>회사소개 — 주식회사 해태렌트카 광주지점</title>
-      <link>http://haetae1.com/about.html</link>
-      <guid isPermaLink="true">http://haetae1.com/about.html</guid>
+      <link>https://haetae1.com/about.html</link>
+      <guid isPermaLink="true">https://haetae1.com/about.html</guid>
       <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
       <category>회사소개</category>
       <dc:creator>해태렌트카 광주지점</dc:creator>
@@ -86,8 +86,8 @@
 
     <item>
       <title>견적 문의 — 24시간 접수·영업시간 내 1시간 회신</title>
-      <link>http://haetae1.com/quote.html</link>
-      <guid isPermaLink="true">http://haetae1.com/quote.html</guid>
+      <link>https://haetae1.com/quote.html</link>
+      <guid isPermaLink="true">https://haetae1.com/quote.html</guid>
       <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
       <category>견적</category>
       <dc:creator>해태렌트카 광주지점</dc:creator>
@@ -100,8 +100,8 @@
 
     <item>
       <title>이용안내 — 상담부터 차량 인수까지 4단계</title>
-      <link>http://haetae1.com/info.html</link>
-      <guid isPermaLink="true">http://haetae1.com/info.html</guid>
+      <link>https://haetae1.com/info.html</link>
+      <guid isPermaLink="true">https://haetae1.com/info.html</guid>
       <pubDate>Tue, 17 Jun 2026 09:00:00 +0900</pubDate>
       <category>이용안내</category>
       <dc:creator>해태렌트카 광주지점</dc:creator>

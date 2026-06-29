@@ -329,8 +329,8 @@
     if (!s) return '';
 
     // 전체 URL 안에 중복 경로가 들어간 경우 복구
-    // http://haetae1.com/images//images/uploads/a.webp
-    // → http://haetae1.com/images/uploads/a.webp
+    // https://haetae1.com/images//images/uploads/a.webp
+    // → https://haetae1.com/images/uploads/a.webp
     s = s.replace(/(https?:\/\/[^/]+)\/images\/+\/images\/uploads\//i, '$1/images/uploads/');
     s = s.replace(/(https?:\/\/[^/]+)\/images\/+images\/uploads\//i, '$1/images/uploads/');
 

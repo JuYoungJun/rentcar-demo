@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: http://haetae1.com
+      url: https://haetae1.com
 
     steps:
       - name: Checkout
@@ -91,8 +91,8 @@ jobs:
           define('LOCKOUT_WINDOW',       900);
 
           define('ALLOWED_ORIGINS', [
-            'http://www.haetae1.com',
-            'http://haetae1.com',
+            'https://www.haetae1.com',
+            'https://haetae1.com',
           ]);
 
           define('PUBLIC_FORM_ALLOWED_HOSTS', [
@@ -257,7 +257,7 @@ jobs:
           echo "Pinging $URL ..."
 
           for i in 1 2 3 4 5; do
-            resp=$(curl -sS -w "\n%{http_code}" "$URL" || echo -e "\n000")
+            resp=$(curl -L -sS -w "\n%{http_code}" "$URL" || echo -e "\n000")
             code=$(echo "$resp" | tail -n1)
             body=$(echo "$resp" | sed '$d')
 

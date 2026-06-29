@@ -23,8 +23,8 @@
   <meta property="og:site_name" content="해태렌트카">
   <meta property="og:title" content="광주 렌트카 차량 상세 — 해태렌트카">
   <meta property="og:description" content="차량 상세 정보·견적 문의 — 광주 광산구 신창동 영업장 해태렌트카.">
-  <meta property="og:url" content="http://haetae1.com/detail.html">
-  <meta property="og:image" content="http://haetae1.com/images/banner_1.webp">
+  <meta property="og:url" content="https://haetae1.com/detail.html">
+  <meta property="og:image" content="https://haetae1.com/images/banner_1.webp">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="해태렌트카 차량 상세">
@@ -32,7 +32,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="광주 렌트카 차량 상세 — 해태렌트카">
   <meta name="twitter:description" content="차량 상세 정보·견적 문의 — 광주 광산구 신창동 영업장 해태렌트카.">
-  <meta name="twitter:image" content="http://haetae1.com/images/banner_1.webp">
+  <meta name="twitter:image" content="https://haetae1.com/images/banner_1.webp">
   <meta name="theme-color" content="#E53935">
   <meta name="format-detection" content="telephone=yes">
   <link rel="icon" href="favicon.ico" sizes="any">
@@ -456,8 +456,8 @@
         if (typeof window.setActiveNav === 'function') window.setActiveNav();
 
         // ── 동적 SEO 메타 업데이트 (크롤러는 정적 메타만 읽지만, 소셜 미리보기·일부 봇은 갱신 반영) ──
-        const carUrl = 'http://haetae1.com/detail.html?id=' + car.id + '&from=' + fromPage;
-        const carImage = car.image ? (String(carImageUrl(car.image)).startsWith('http') ? carImageUrl(car.image) : 'http://haetae1.com' + carImageUrl(car.image)) : 'http://haetae1.com/images/banner_1.webp';
+        const carUrl = 'https://haetae1.com/detail.html?id=' + car.id + '&from=' + fromPage;
+        const carImage = car.image ? (String(carImageUrl(car.image)).startsWith('http') ? carImageUrl(car.image) : 'https://haetae1.com' + carImageUrl(car.image)) : 'https://haetae1.com/images/banner_1.webp';
         const newTitle = car.name + ' ' + fromLabel + ' (월 ' + (car.price ? car.price.toLocaleString() : '문의') + '원) — 해태렌트카';
         const newDesc = '해태렌트카 ' + fromLabel + ' — ' + car.name + ', 월 임대료 ' + (car.price ? car.price.toLocaleString() + '원' : '상담') +
           (car.fuelType ? ', ' + car.fuelType : '') + (car.transmission ? ', ' + car.transmission : '') +

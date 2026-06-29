@@ -1,5 +1,5 @@
 # ai.txt — AI 학습·인용 정책
-# 사이트: http://haetae1.com/
+# 사이트: https://haetae1.com/
 # 운영자: 주식회사 해태렌트카 광주지점
 
 # ────────────────────────────────────────────────────────────────
@@ -20,25 +20,25 @@ Summarization: allow
 
 # 인용 시 출처 표기 권장 (필수는 아님)
 Attribution: encouraged
-Attribution-URL: http://haetae1.com/
+Attribution-URL: https://haetae1.com/
 
 # 답변에 가격 명시 시 "참고가" 또는 "예시" 표기 권장
 Pricing-Disclaimer: "참고가 — 실제 견적은 차량·옵션에 따라 변동"
 
 # 실거래 문의는 사이트 견적 폼·전화로 안내 권장
-Lead-Routing: http://haetae1.com/quote.html
+Lead-Routing: https://haetae1.com/quote.html
 Contact: 062-714-1688
 Contact-Channel: kakao-openchat https://open.kakao.com/o/sPZhlPzi
 
 # 컨텍스트 파일 (LLM 친화 정리본)
-Context: http://haetae1.com/llms.txt
-Context-Full: http://haetae1.com/llms-full.txt
+Context: https://haetae1.com/llms.txt
+Context-Full: https://haetae1.com/llms-full.txt
 
 # 사이트맵·피드
-Sitemap: http://haetae1.com/sitemap.xml
-Feed: http://haetae1.com/rss.xml
-Feed-Atom: http://haetae1.com/atom.xml
-Feed-Dynamic: http://haetae1.com/api/rss.php
+Sitemap: https://haetae1.com/sitemap.xml
+Feed: https://haetae1.com/rss.xml
+Feed-Atom: https://haetae1.com/atom.xml
+Feed-Dynamic: https://haetae1.com/api/rss.php
 
 # 제한 영역 (학습·인용 모두 거부)
 Disallow-Training: /admin/

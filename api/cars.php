@@ -23,8 +23,8 @@ function normalize_image_path_value($value): ?string {
   if ($s === '') return null;
 
   // 전체 URL 안의 중복 경로 복구
-  // http://haetae1.com/images//images/uploads/a.webp
-  // → http://haetae1.com/images/uploads/a.webp
+  // https://haetae1.com/images//images/uploads/a.webp
+  // → https://haetae1.com/images/uploads/a.webp
   $s = preg_replace('#(https?://[^/]+)/images/+/?images/uploads/#i', '$1/images/uploads/', $s);
 
   // 경로만 들어온 중복 경로 복구
